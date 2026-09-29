@@ -161,6 +161,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
       step: 1,
       totalSteps: 4,
       stepLabel: 'Product',
+      actions: const [_ProfileButton()],
       ctaLabel: 'Define Design Requirements',
       onCta: () => Navigator.pushNamed(context, Routes.designSpecs),
       children: [
@@ -200,29 +201,29 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
           ],
         ),
         const SizedBox(height: 24),
-        Text('What are we making?', style: AppText.headlineMd),
-        const SizedBox(height: 6),
+        Text('What are we making?', style: _sectionStyle(c)),
+        const SizedBox(height: 8),
         Text(
           'Select the primary category for this job to set up the correct specification forms.',
-          style: AppText.bodyMd.copyWith(color: c.textMuted),
+          style: AppText.bodyLg.copyWith(color: c.textMuted),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         OptionLayout(
           columns: 2,
-          spacing: 12,
+          spacing: 16,
           children: [
             for (final (name, icon) in _categories)
-              IconOptionCard(
+              _CategoryTile(
                 icon: icon,
-                title: name,
+                label: name,
                 selected: selected == name,
                 onTap: () => setState(() => d.productCategory = name),
               ),
           ],
         ),
-        const SizedBox(height: 28),
-        Text('Start with a reference', style: AppText.headlineSm),
-        const SizedBox(height: 12),
+        const SizedBox(height: 32),
+        Text('Start with a reference', style: _sectionStyle(c)),
+        const SizedBox(height: 16),
         UploadBox(
           filledIcon: true,
           icon: Icons.add_a_photo_outlined,
@@ -238,24 +239,97 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
           onPressed: _fromPrevious,
           style: OutlinedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
-            shape: const StadiumBorder(),
-            backgroundColor: c.isDark ? c.surface : c.surfaceLow,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            side: BorderSide(color: c.isDark ? c.border : c.borderStrong),
+            backgroundColor: c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7),
+            textStyle: AppText.bodyLg.copyWith(fontWeight: FontWeight.w500),
           ),
           icon: const Icon(Icons.search, size: 20),
           label: const Text('Create from Previous Job'),
         ),
-        const SizedBox(height: 28),
-        Field(
-          label: 'Additional Product Notes',
-          child: DhTextField(
-            key: ValueKey(_notesVersion),
-            value: d.notes,
-            maxLines: 4,
-            hint: 'Any initial thoughts on material, sizing, or special requirements...',
-            onChanged: (v) => d.notes = v,
-          ),
+        const SizedBox(height: 32),
+        Text('Additional Product Notes', style: _sectionStyle(c)),
+        const SizedBox(height: 12),
+        DhTextField(
+          key: ValueKey(_notesVersion),
+          value: d.notes,
+          maxLines: 4,
+          hint: 'Any initial thoughts on material, sizing, or special requirements...',
+          onChanged: (v) => d.notes = v,
         ),
       ],
+    );
+  }
+}
+
+TextStyle _sectionStyle(DhColors c) =>
+    AppText.bodyLg.copyWith(fontSize: 17, fontWeight: FontWeight.w500, color: c.text);
+
+/// The design's black "profile" button at the right of the step header.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Tooltip(
+        message: 'Profile & settings',
+        child: Material(
+          color: c.action,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, Routes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox.square(dimension: 34, child: Icon(Icons.person_outline, size: 20, color: c.onAction)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tall tonal category tile (icon over label).
+class _CategoryTile extends StatelessWidget {
+  const _CategoryTile({required this.icon, required this.label, required this.selected, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final on = c.isDark ? c.gold : c.accent;
+    return Material(
+      color: selected ? c.accentSoft : (c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: selected ? BorderSide(color: on, width: 1.5) : (c.isDark ? BorderSide(color: c.border) : BorderSide.none),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          height: 116,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 30, color: selected ? on : c.text),
+              const SizedBox(height: 12),
+              Text(
+                label,
+                style: AppText.bodyLg.copyWith(
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                  color: selected ? on : c.text,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

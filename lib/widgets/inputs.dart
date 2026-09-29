@@ -20,8 +20,9 @@ class DashedBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Foreground so filled children (e.g. UploadBox's Material) don't cover the dashes.
     return CustomPaint(
-      painter: _DashPainter(color ?? context.c.borderStrong, radius, dash, gap, strokeWidth),
+      foregroundPainter: _DashPainter(color ?? context.c.borderStrong, radius, dash, gap, strokeWidth),
       child: child,
     );
   }

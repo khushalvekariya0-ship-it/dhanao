@@ -115,9 +115,16 @@ class _DesignSpecsScreenState extends State<DesignSpecsScreen> {
   Widget _single(List<(String, IconData)> options, String selected, int columns, ValueChanged<String> onChanged) {
     return OptionLayout(
       columns: columns,
+      spacing: 12,
       children: [
         for (final (name, icon) in options)
-          _IconTile(icon: icon, label: name, selected: selected == name, onTap: () => setState(() => onChanged(name))),
+          _IconTile(
+            icon: icon,
+            label: name,
+            square: columns == 3,
+            selected: selected == name,
+            onTap: () => setState(() => onChanged(name)),
+          ),
       ],
     );
   }
@@ -132,18 +139,22 @@ class _DesignSpecsScreenState extends State<DesignSpecsScreen> {
       step: 1,
       totalSteps: 4,
       stepLabel: 'Design',
+      actions: const [_ProfileButton()],
       ctaLabel: 'Next Step',
       onCta: _next,
+      padding: const EdgeInsets.only(bottom: 24),
       children: [
+        // Full-bleed "selected type" strip under the header.
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: c.isDark ? c.surface : c.surfaceHigh,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: c.border),
+            color: c.isDark ? c.surface : c.surfaceLow,
+            border: Border(bottom: BorderSide(color: c.border)),
           ),
           child: Row(
             children: [
+              Icon(Icons.diamond, size: 20, color: c.accent),
+              const SizedBox(width: 8),
               Text('SELECTED TYPE', style: AppText.labelSm.copyWith(color: c.textMuted, letterSpacing: 1.2)),
               const SizedBox(width: 12),
               Expanded(
@@ -152,102 +163,151 @@ class _DesignSpecsScreenState extends State<DesignSpecsScreen> {
                   textAlign: TextAlign.right,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppText.titleMd,
+                  style: AppText.bodyMd.copyWith(fontWeight: FontWeight.w600, color: c.text),
                 ),
               ),
             ],
           ),
         ),
-        if (ring) ...[
-          _Title(
-            'Size & Details',
-            trailing: _MiniToggle(
-              options: const ['US', 'India'],
-              selected: _us ? 'US' : 'India',
-              onChanged: _setSystem,
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: _StepperField(
-                  label: 'Ring Size (${_us ? 'US' : 'India'})',
-                  value: d.ringSize,
-                  onMinus: _size > (_us ? 3 : 1) ? () => _stepSize(-1) : null,
-                  onPlus: _size < (_us ? 13 : 30) ? () => _stepSize(1) : null,
+              if (ring) ...[
+                _Title(
+                  'Size & Details',
+                  primary: true,
+                  trailing: _MiniToggle(
+                    options: const ['US', 'India'],
+                    selected: _us ? 'US' : 'India',
+                    onChanged: _setSystem,
+                  ),
                 ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _StepperField(
+                        label: 'Ring Size (${_us ? 'US' : 'India'})',
+                        value: d.ringSize,
+                        onMinus: _size > (_us ? 3 : 1) ? () => _stepSize(-1) : null,
+                        onPlus: _size < (_us ? 13 : 30) ? () => _stepSize(1) : null,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _StepperField(
+                        label: 'Band Width (mm)',
+                        value: d.bandWidthMm.toStringAsFixed(1),
+                        onMinus: d.bandWidthMm > 1.5 ? () => _stepBand(-1) : null,
+                        onPlus: d.bandWidthMm < 8.0 ? () => _stepBand(1) : null,
+                      ),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                const _Title('Dimensions', primary: true),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _MmField(label: 'Length (mm)', controller: _length),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _MmField(label: 'Width (mm)', controller: _width),
+                    ),
+                  ],
+                ),
+              ],
+              const _Title('Setting Style'),
+              _single(_settingStyles, d.settingStyle, 3, (v) => d.settingStyle = v),
+              const _Title('Metal Finish'),
+              _single(_finishes, d.metalFinish, 2, (v) => d.metalFinish = v),
+              if (ring) ...[
+                const _Title('Band Profile'),
+                _single(_profiles, d.bandProfile, 3, (v) => d.bandProfile = v),
+              ],
+              const _Title('Side Stone Setting'),
+              _single(_sideStones, d.sideStoneSetting, 2, (v) => d.sideStoneSetting = v),
+              _Title(
+                'What matters most?',
+                trailing: Text('SELECT ANY', style: AppText.monoCaps.copyWith(color: c.textFaint)),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _StepperField(
-                  label: 'Band Width (mm)',
-                  value: d.bandWidthMm.toStringAsFixed(1),
-                  onMinus: d.bandWidthMm > 1.5 ? () => _stepBand(-1) : null,
-                  onPlus: d.bandWidthMm < 8.0 ? () => _stepBand(1) : null,
-                ),
+              OptionLayout(
+                columns: 2,
+                spacing: 12,
+                children: [
+                  for (final (name, icon) in _priorities)
+                    _IconTile(
+                      icon: icon,
+                      label: name,
+                      accentIcon: true,
+                      multi: true,
+                      selected: d.priorities.contains(name),
+                      onTap: () => setState(
+                        () => d.priorities.contains(name) ? d.priorities.remove(name) : d.priorities.add(name),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
-        ] else ...[
-          const _Title('Dimensions'),
-          Row(
-            children: [
-              Expanded(
-                child: _MmField(label: 'Length (mm)', controller: _length),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _MmField(label: 'Width (mm)', controller: _width),
-              ),
-            ],
-          ),
-        ],
-        const _Title('Setting Style'),
-        _single(_settingStyles, d.settingStyle, 3, (v) => d.settingStyle = v),
-        const _Title('Metal Finish'),
-        _single(_finishes, d.metalFinish, 2, (v) => d.metalFinish = v),
-        if (ring) ...[const _Title('Band Profile'), _single(_profiles, d.bandProfile, 3, (v) => d.bandProfile = v)],
-        const _Title('Side Stone Setting'),
-        _single(_sideStones, d.sideStoneSetting, 2, (v) => d.sideStoneSetting = v),
-        _Title(
-          'What matters most?',
-          trailing: Text('SELECT ANY', style: AppText.monoCaps.copyWith(color: c.textFaint)),
         ),
-        OptionLayout(
-          columns: 2,
-          children: [
-            for (final (name, icon) in _priorities)
-              _IconTile(
-                icon: icon,
-                label: name,
-                accentIcon: true,
-                multi: true,
-                selected: d.priorities.contains(name),
-                onTap: () =>
-                    setState(() => d.priorities.contains(name) ? d.priorities.remove(name) : d.priorities.add(name)),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
       ],
     );
   }
 }
 
+/// The design's black "profile" button at the right of the step header.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Tooltip(
+        message: 'Profile & settings',
+        child: Material(
+          color: c.action,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, Routes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox.square(dimension: 34, child: Icon(Icons.person_outline, size: 20, color: c.onAction)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _Title extends StatelessWidget {
-  const _Title(this.text, {this.trailing});
+  const _Title(this.text, {this.trailing, this.primary = false});
 
   final String text;
   final Widget? trailing;
 
+  /// Section heading ("Size & Details") rather than a muted group label.
+  final bool primary;
+
   @override
   Widget build(BuildContext context) {
+    final c = context.c;
     return Padding(
-      padding: const EdgeInsets.only(top: 26, bottom: 12),
+      padding: EdgeInsets.only(top: primary ? 20 : 28, bottom: 12),
       child: Row(
         children: [
-          Expanded(child: Text(text, style: AppText.titleMd)),
+          Expanded(
+            child: Text(
+              text,
+              style: primary
+                  ? AppText.headlineSm.copyWith(color: c.text)
+                  : AppText.bodyLg.copyWith(fontWeight: FontWeight.w500, color: c.textMuted),
+            ),
+          ),
           ?trailing,
         ],
       ),
@@ -255,7 +315,7 @@ class _Title extends StatelessWidget {
   }
 }
 
-/// Fixed-height selectable tile (icon over label) so grid rows line up.
+/// Tonal selectable tile (icon over label): square in 3-column grids, fixed height in 2-column grids.
 class _IconTile extends StatelessWidget {
   const _IconTile({
     required this.icon,
@@ -264,6 +324,7 @@ class _IconTile extends StatelessWidget {
     required this.onTap,
     this.accentIcon = false,
     this.multi = false,
+    this.square = false,
   });
 
   final IconData icon;
@@ -274,51 +335,52 @@ class _IconTile extends StatelessWidget {
   /// Always tint the icon (the "What matters most?" cards).
   final bool accentIcon;
   final bool multi;
+  final bool square;
 
   @override
   Widget build(BuildContext context) {
     final c = context.c;
     final on = c.isDark ? c.gold : c.accent;
+    final radius = BorderRadius.circular(16);
+    final rest = c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7);
+    final body = Stack(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 36, color: selected || accentIcon ? on : c.text),
+                const SizedBox(height: 10),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: AppText.bodyMd.copyWith(
+                    fontSize: 15,
+                    color: selected ? on : c.text,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (multi && selected) Positioned(top: 8, right: 8, child: Icon(Icons.check_circle, size: 16, color: on)),
+      ],
+    );
     return Material(
-      color: selected ? c.accentSoft : (c.isDark ? c.surface : c.surfaceLow),
+      color: selected ? Color.alphaBlend(on.withValues(alpha: 0.06), c.isDark ? c.surface : c.surface) : rest,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: selected ? on : c.border, width: selected ? 1.5 : 1),
+        borderRadius: radius,
+        side: BorderSide(color: selected ? on : (c.isDark ? c.border : c.borderStrong), width: selected ? 2 : 1),
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: SizedBox(
-          height: 96,
-          child: Stack(
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(icon, size: 30, color: selected || accentIcon ? on : c.text),
-                      const SizedBox(height: 10),
-                      Text(
-                        label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: AppText.labelMd.copyWith(
-                          fontSize: 13,
-                          color: selected ? on : c.text,
-                          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (multi && selected) Positioned(top: 6, right: 6, child: Icon(Icons.check_circle, size: 16, color: on)),
-            ],
-          ),
-        ),
+        borderRadius: radius,
+        child: square ? AspectRatio(aspectRatio: 1, child: body) : SizedBox(height: 108, child: body),
       ),
     );
   }
@@ -341,24 +403,27 @@ class _StepperField extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppText.bodySm.copyWith(color: c.textMuted),
+          style: AppText.bodyMd.copyWith(color: c.textMuted),
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: c.isDark ? c.surfaceLow : c.surfaceHigh,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: c.border),
+            color: c.isDark ? c.surfaceLow : c.surfaceHigh.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: c.isDark ? c.border : c.borderStrong),
           ),
           child: Row(
             children: [
               _StepButton(icon: Icons.remove, onTap: onMinus),
               Expanded(
-                child: Text(
-                  value,
-                  textAlign: TextAlign.center,
-                  style: AppText.monoLg.copyWith(fontSize: 16, color: c.text),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    value,
+                    textAlign: TextAlign.center,
+                    style: AppText.bodyLg.copyWith(fontSize: 17, fontWeight: FontWeight.w500, color: c.text),
+                  ),
                 ),
               ),
               _StepButton(icon: Icons.add, onTap: onPlus),
@@ -379,15 +444,23 @@ class _StepButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return Material(
-      color: c.isDark ? c.surfaceHigh : c.surface,
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        onTap: onTap,
+    return DecoratedBox(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        child: SizedBox.square(
-          dimension: 40,
-          child: Icon(icon, size: 20, color: onTap == null ? c.textFaint : (c.isDark ? c.gold : c.accent)),
+        boxShadow: c.isDark
+            ? null
+            : [BoxShadow(color: c.text.withValues(alpha: 0.06), blurRadius: 3, offset: const Offset(0, 1))],
+      ),
+      child: Material(
+        color: c.isDark ? c.surfaceHigh : c.bg,
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox.square(
+            dimension: 44,
+            child: Icon(icon, size: 22, color: onTap == null ? c.textFaint : (c.isDark ? c.gold : c.accent)),
+          ),
         ),
       ),
     );

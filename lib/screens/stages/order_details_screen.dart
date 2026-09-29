@@ -105,7 +105,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ],
               ),
               const SizedBox(height: 4),
-              Text('Client: ${job.customer}', style: AppText.bodyMd.copyWith(color: c.textMuted)),
+              Text('Client: ${job.customer}', style: AppText.bodyLg.copyWith(color: c.textMuted)),
               const SizedBox(height: 20),
               _Countdown(due: job.dueDate),
               const SizedBox(height: 16),
@@ -130,24 +130,25 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+            padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
             decoration: BoxDecoration(
-              color: c.isDark ? c.surfaceHigh : c.surfaceLow,
-              border: Border(bottom: BorderSide(color: c.border)),
+              color: c.isDark ? c.surfaceHighest.withValues(alpha: 0.3) : c.surfaceLow,
+              border: Border(bottom: BorderSide(color: c.border.withValues(alpha: 0.5))),
             ),
             child: Row(
               children: [
-                Icon(Icons.forum_outlined, size: 16, color: c.textMuted),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text('WORKSHOP NOTES', style: AppText.monoCaps.copyWith(color: c.textMuted)),
+                const Expanded(
+                  child: _CardHeader(icon: Icons.forum_outlined, title: 'Workshop Notes'),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(4)),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: c.isDark ? c.surfaceHighest : c.surfaceHigh,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                   child: Text(
                     '${notes.length} Update${notes.length == 1 ? '' : 's'}',
-                    style: AppText.monoSm.copyWith(color: c.isDark ? c.gold : c.accent, fontSize: 10),
+                    style: AppText.monoSm.copyWith(color: c.text.withValues(alpha: 0.75), fontSize: 10),
                   ),
                 ),
               ],
@@ -166,40 +167,57 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   ),
           ),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: c.border)),
+              color: c.isDark ? c.bg.withValues(alpha: 0.5) : c.surfaceLow,
+              border: Border(top: BorderSide(color: c.border.withValues(alpha: 0.5))),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _note,
-                    textCapitalization: TextCapitalization.sentences,
-                    textInputAction: TextInputAction.send,
-                    onSubmitted: (_) => _send(job),
-                    style: AppText.monoMd.copyWith(color: c.text),
-                    decoration: const InputDecoration(hintText: 'Add a note...'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Material(
-                  color: c.action,
-                  borderRadius: BorderRadius.circular(6),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(6),
-                    onTap: () => _send(job),
-                    child: SizedBox(
-                      width: 46,
-                      height: 46,
-                      child: Tooltip(
-                        message: 'Send note',
-                        child: Icon(Icons.send, size: 18, color: c.onAction),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: c.surface,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: c.isDark ? c.surfaceHighest : c.border),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _note,
+                      textCapitalization: TextCapitalization.sentences,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (_) => _send(job),
+                      style: AppText.monoMd.copyWith(color: c.text),
+                      decoration: InputDecoration(
+                        hintText: 'Add a note...',
+                        hintStyle: AppText.monoMd.copyWith(color: c.textFaint),
+                        filled: false,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Material(
+                    color: c.action,
+                    borderRadius: BorderRadius.circular(6),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(6),
+                      onTap: () => _send(job),
+                      child: SizedBox(
+                        width: 38,
+                        height: 38,
+                        child: Tooltip(
+                          message: 'Send note',
+                          child: Icon(Icons.send, size: 16, color: c.onAction),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -224,7 +242,81 @@ class _PriorityPill extends StatelessWidget {
       Priority.high => ('High', c.gold),
       Priority.standard => ('Standard', c.textFaint),
     };
-    return StatusChip('Priority: $label', color: color, dot: true);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _Pulse(
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text('Priority: $label', style: AppText.monoCaps.copyWith(color: color, fontSize: 12, letterSpacing: 0.9)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Slow opacity pulse for "live" indicators.
+class _Pulse extends StatefulWidget {
+  const _Pulse({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_Pulse> createState() => _PulseState();
+}
+
+class _PulseState extends State<_Pulse> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))
+    ..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(opacity: Tween<double>(begin: 0.4, end: 1).animate(_ctrl), child: widget.child);
+  }
+}
+
+/// Mixed-case mono card header with a leading icon ("Technical Specs").
+class _CardHeader extends StatelessWidget {
+  const _CardHeader({required this.icon, required this.title});
+
+  final IconData icon;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: c.textMuted),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppText.monoCaps.copyWith(color: c.textMuted, fontSize: 14, letterSpacing: 1.1),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -245,7 +337,13 @@ class _Countdown extends StatelessWidget {
       children: [
         Text(value, style: big.copyWith(color: highlight ? accent : c.text)),
         const SizedBox(height: 2),
-        Text(label.toUpperCase(), style: AppText.monoCaps.copyWith(color: highlight ? accent : c.textFaint)),
+        Text(
+          label,
+          style: AppText.monoLg.copyWith(
+            color: highlight ? accent.withValues(alpha: 0.7) : c.textMuted,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ],
     );
     Widget colon() => Padding(
@@ -292,13 +390,7 @@ class _Countdown extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.timer_outlined, size: 18, color: c.textMuted),
-                    const SizedBox(width: 8),
-                    Text('PRODUCTION DEADLINE', style: AppText.monoCaps.copyWith(color: c.textMuted, fontSize: 12)),
-                  ],
-                ),
+                const _CardHeader(icon: Icons.timer_outlined, title: 'Production Deadline'),
                 const SizedBox(height: 12),
                 counter,
                 const SizedBox(height: 12),
@@ -326,7 +418,7 @@ class _AssetCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            height: 220,
+            height: 240,
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -360,7 +452,7 @@ class _AssetCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Material(
-                  color: c.surfaceHigh,
+                  color: c.isDark ? c.surfaceHighest : c.surfaceHigh,
                   shape: const CircleBorder(),
                   child: InkWell(
                     customBorder: const CircleBorder(),
@@ -391,20 +483,13 @@ class _TechSpecs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.c;
     final w = job.weightGrams;
     return DhCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Icon(Icons.precision_manufacturing_outlined, size: 16, color: c.textMuted),
-              const SizedBox(width: 8),
-              Text('TECHNICAL SPECS', style: AppText.monoCaps.copyWith(color: c.textMuted, fontSize: 12)),
-            ],
-          ),
-          const SizedBox(height: 8),
+          const _CardHeader(icon: Icons.precision_manufacturing_outlined, title: 'Technical Specs'),
+          const SizedBox(height: 10),
           _SpecRow('Alloy', job.metal),
           _SpecRow('Center Stone', job.centerStone),
           _SpecRow('Setting Type', job.settingStyle),
@@ -428,17 +513,19 @@ class _SpecRow extends StatelessWidget {
     final c = context.c;
     final fg = highlight ? (c.isDark ? c.gold : c.accent) : c.text;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: last
           ? null
           : BoxDecoration(
-              border: Border(bottom: BorderSide(color: c.border)),
+              border: Border(
+                bottom: BorderSide(color: c.border.withValues(alpha: c.isDark ? 0.6 : 1)),
+              ),
             ),
       child: Row(
         children: [
           Expanded(
             flex: 2,
-            child: Text(label, style: AppText.bodyMd.copyWith(color: c.textMuted)),
+            child: Text(label, style: AppText.bodyLg.copyWith(color: c.textMuted)),
           ),
           const SizedBox(width: 10),
           Flexible(
@@ -452,11 +539,7 @@ class _SpecRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   border: highlight ? Border.all(color: fg.withValues(alpha: 0.3)) : null,
                 ),
-                child: Text(
-                  value,
-                  textAlign: TextAlign.right,
-                  style: AppText.monoMd.copyWith(color: fg),
-                ),
+                child: Text(value, style: AppText.monoLg.copyWith(color: fg)),
               ),
             ),
           ),
@@ -503,7 +586,7 @@ class _NoteEntry extends StatelessWidget {
                   ? Icons.sync_alt
                   : Icons.engineering,
               size: 16,
-              color: m.isMe ? accent : c.info,
+              color: m.isMe ? accent : (c.isDark ? c.text.withValues(alpha: 0.75) : c.info),
             ),
           );
     return Row(
@@ -531,7 +614,7 @@ class _NoteEntry extends StatelessWidget {
               const SizedBox(height: 4),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: m.isMe ? accent.withValues(alpha: 0.08) : c.surfaceHigh,
                   border: m.isMe ? Border.all(color: accent.withValues(alpha: 0.25)) : null,
@@ -548,7 +631,7 @@ class _NoteEntry extends StatelessWidget {
                       Text(m.title!, style: AppText.labelMd.copyWith(color: c.text)),
                       const SizedBox(height: 2),
                     ],
-                    Text(m.text, style: AppText.bodyMd.copyWith(color: system ? c.textMuted : c.text)),
+                    Text(m.text, style: AppText.bodyLg.copyWith(color: system ? c.textMuted : c.text)),
                   ],
                 ),
               ),

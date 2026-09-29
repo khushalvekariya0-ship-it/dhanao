@@ -178,7 +178,7 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> with SingleTick
     final image = d.referenceImages.isEmpty ? null : d.referenceImages.first;
     final fileName = image == null ? 'IMG_8842.RAW' : image.split(RegExp(r'[\\/]')).last.toUpperCase();
     return WizardScaffold(
-      title: 'New Job',
+      title: 'NEW JOB',
       step: 4,
       totalSteps: 4,
       stepLabel: 'Final Review',
@@ -193,16 +193,17 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> with SingleTick
         Stack(
           children: [
             DhCard(
-              padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 24),
+              color: c.isDark ? c.surface.withValues(alpha: 0.7) : c.surface,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SectionLabel('Reference Image', mono: true),
-                  const SizedBox(height: 10),
+                  const _MonoLabel('Reference Image'),
+                  const SizedBox(height: 8),
                   _ReferenceImage(file: image, name: fileName, extra: math.max(0, d.referenceImages.length - 1)),
                   const SizedBox(height: 24),
-                  const SectionLabel('Material Specifications', mono: true),
-                  const SizedBox(height: 10),
+                  const _MonoLabel('Material Specifications'),
+                  const SizedBox(height: 8),
                   _MaterialRow(
                     colors: _swatches[d.quickBaseMetal] ?? _swatches['Y.GOLD']!,
                     title: '${d.quickPurity} $_metalName',
@@ -221,9 +222,9 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> with SingleTick
                     'Delivery Target',
                     d.deliveryDate == null ? 'Standard · 4-6 wks' : Fmt.dateLong(d.deliveryDate!),
                   ),
-                  const SizedBox(height: 18),
-                  const SectionLabel('Design Notes (Audio)', mono: true),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 24),
+                  const _MonoLabel('Design Notes (Audio)'),
+                  const SizedBox(height: 8),
                   if (d.hasVoiceNote)
                     _AudioPlayerRow(progress: _audio, total: d.voiceNoteLength, onToggle: _toggleAudio)
                   else
@@ -238,13 +239,22 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> with SingleTick
         PrimaryButton(
           _busy ? 'Processing…' : 'Confirm & Create Job',
           icon: _busy ? Icons.sync : Icons.precision_manufacturing_outlined,
+          color: c.isDark ? null : c.gold,
+          foreground: c.isDark ? null : c.onAccent,
           onPressed: _busy ? null : _confirm,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
         TextButton(
           onPressed: _busy ? null : _cancel,
-          style: TextButton.styleFrom(minimumSize: const Size(double.infinity, 48), foregroundColor: c.textMuted),
-          child: Text('Cancel', style: AppText.titleMd.copyWith(fontSize: 15)),
+          style: TextButton.styleFrom(
+            minimumSize: const Size(double.infinity, 48),
+            foregroundColor: c.isDark ? c.text : c.textMuted,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+              side: c.isDark ? BorderSide.none : BorderSide(color: c.borderStrong.withValues(alpha: 0.5)),
+            ),
+          ),
+          child: Text('Cancel', style: AppText.titleMd.copyWith(fontSize: 16, fontWeight: FontWeight.w500)),
         ),
       ],
     );
@@ -297,7 +307,9 @@ class _ReferenceImage extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.center,
-                  colors: [c.surfaceHighest.withValues(alpha: 0.8), c.surfaceHighest.withValues(alpha: 0)],
+                  colors: c.isDark
+                      ? [c.surfaceHighest.withValues(alpha: 0.8), c.surfaceHighest.withValues(alpha: 0)]
+                      : [c.text.withValues(alpha: 0.6), c.text.withValues(alpha: 0)],
                 ),
               ),
             ),
@@ -367,33 +379,48 @@ class _MaterialRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.c;
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: c.isDark ? c.surfaceHigh.withValues(alpha: 0.6) : c.surfaceLow,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: c.border),
+        color: c.isDark ? c.surfaceHigh.withValues(alpha: 0.5) : c.surfaceLow,
+        borderRadius: BorderRadius.circular(4),
+        border: c.isDark ? null : Border.all(color: c.border),
       ),
       child: Row(
         children: [
           Container(
-            width: 42,
-            height: 42,
+            width: 40,
+            height: 40,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: colors),
               boxShadow: [
-                BoxShadow(color: colors.last.withValues(alpha: 0.35), blurRadius: 8, offset: const Offset(0, 2)),
+                BoxShadow(color: colors.last.withValues(alpha: 0.35), blurRadius: 6, offset: const Offset(0, 2)),
               ],
             ),
+            // Specular highlight on the upper half, as in the design's swatch.
+            alignment: Alignment.topCenter,
+            child: FractionallySizedBox(
+              heightFactor: 0.5,
+              widthFactor: 1,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [colors.first.withValues(alpha: 0.6), colors.first.withValues(alpha: 0)],
+                  ),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppText.monoLg.copyWith(fontSize: 15, color: c.text)),
-                const SizedBox(height: 2),
-                Text(subtitle.toUpperCase(), style: AppText.monoCaps.copyWith(color: c.textMuted)),
+                Text(title, style: AppText.monoLg.copyWith(color: c.text)),
+                Text(subtitle, style: AppText.monoCaps.copyWith(fontSize: 12, color: c.textMuted)),
               ],
             ),
           ),
@@ -421,11 +448,11 @@ class _AudioPlayerRow extends StatelessWidget {
         final v = progress.value;
         final playing = progress.isAnimating;
         return Container(
-          padding: const EdgeInsets.fromLTRB(10, 10, 14, 12),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
           decoration: BoxDecoration(
             color: c.isDark ? c.bg : c.surfaceLow,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: c.border),
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: c.isDark ? c.border.withValues(alpha: 0.5) : c.border),
           ),
           child: Column(
             children: [
@@ -433,13 +460,18 @@ class _AudioPlayerRow extends StatelessWidget {
                 children: [
                   Material(
                     color: c.gold,
-                    shape: const CircleBorder(),
+                    elevation: 2,
+                    shadowColor: c.gold.withValues(alpha: 0.4),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: InkWell(
-                      customBorder: const CircleBorder(),
+                      customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       onTap: onToggle,
                       child: SizedBox.square(
-                        dimension: 44,
-                        child: Icon(playing ? Icons.pause : Icons.play_arrow, color: c.onAction),
+                        dimension: 40,
+                        child: Icon(
+                          playing ? Icons.pause : Icons.play_arrow,
+                          color: c.isDark ? c.onAction : c.onAccent,
+                        ),
                       ),
                     ),
                   ),
@@ -481,13 +513,25 @@ class _AudioPlayerRow extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              ThinProgress(value: v, color: c.success, height: 3),
+              // Playback position, only once the note has been started.
+              if (v > 0) ...[const SizedBox(height: 10), ThinProgress(value: v, color: c.success, height: 3)],
             ],
           ),
         );
       },
     );
+  }
+}
+
+/// The design's mono field label (title case, muted).
+class _MonoLabel extends StatelessWidget {
+  const _MonoLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text, style: AppText.monoCaps.copyWith(fontSize: 12, color: context.c.textMuted));
   }
 }
 

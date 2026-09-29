@@ -217,9 +217,13 @@ class KeyValueRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(label, style: AppText.bodyMd.copyWith(color: c.textMuted, fontWeight: bold ? FontWeight.w600 : null))),
+          Flexible(
+            flex: 2,
+            child: Text(label, style: AppText.bodyMd.copyWith(color: c.textMuted, fontWeight: bold ? FontWeight.w600 : null)),
+          ),
           const SizedBox(width: 12),
-          Flexible(child: Text(value, textAlign: TextAlign.right, style: vs)),
+          // Expanded so right-aligned values sit flush with the right edge.
+          Expanded(flex: 3, child: Text(value, textAlign: TextAlign.right, style: vs)),
         ],
       ),
     );

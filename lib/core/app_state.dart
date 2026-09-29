@@ -138,8 +138,9 @@ class AppState extends ChangeNotifier {
 
   String nextJobId() => 'DH-2026-${(++_seq).toString().padLeft(5, '0')}';
 
-  /// Turns the current [draft] into a real job at the Inquiry stage.
-  Job createJobFromDraft({String? id, String? title}) {
+  /// Turns the current [draft] into a real job at the Inquiry stage. With [fullOrder] the draft is
+  /// kept on the job as its specification (shown on Job Detail).
+  Job createJobFromDraft({String? id, String? title, bool fullOrder = false}) {
     final d = draft;
     final job = Job(
       id: id ?? nextJobId(),
@@ -157,6 +158,7 @@ class AppState extends ChangeNotifier {
       ringSize: d.productCategory.contains('Ring') ? '${d.sizeSystem} ${d.ringSize}' : null,
       quantity: d.quantity,
       notes: d.notes.isEmpty ? null : d.notes,
+      order: fullOrder ? d : null,
       stageEnteredAt: DateTime.now(),
       history: [StageEvent(stage: JobStage.inquiry, at: DateTime.now(), by: userName)],
       thread: [
@@ -169,8 +171,9 @@ class AppState extends ChangeNotifier {
         ),
       ],
       files: [
-        for (final p in d.referenceImages)
-          ProjectFile(name: p.split(RegExp(r'[\\/]')).last, kind: FileKind.image, localPath: p),
+        for (final p in d.referenceImages) _localImage(p),
+        if (d.stonePhoto != null) _localImage(d.stonePhoto!),
+        if (d.stoneCertificatePhoto != null) _localImage(d.stoneCertificatePhoto!),
       ],
     );
     jobs.insert(0, job);
@@ -179,6 +182,9 @@ class AppState extends ChangeNotifier {
     return job;
   }
 }
+
+ProjectFile _localImage(String path) =>
+    ProjectFile(name: path.split(RegExp(r'[\\/]')).last, kind: FileKind.image, localPath: path);
 
 /// Short global accessor.
 AppState get app => AppState.instance;

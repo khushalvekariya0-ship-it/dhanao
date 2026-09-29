@@ -120,27 +120,22 @@ class _PricingApprovalScreenState extends State<PricingApprovalScreen> {
                   icon: Icons.route_outlined,
                   onPressed: () => Navigator.pushNamed(context, Routes.tracker, arguments: job.id),
                 )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PrimaryButton(
-                      'Approve Design & Price',
-                      icon: Icons.check_circle_outline,
-                      onPressed: () => _approve(job),
-                    ),
-                    const SizedBox(height: 8),
-                    SecondaryButton('Request Changes', icon: Icons.edit_note, onPressed: () => _requestChanges(job)),
-                  ],
-                ),
+              : null,
           body: ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
             children: [
               _Header(job: job, approved: _approved),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               _quoteCard(),
-              const SizedBox(height: 16),
-              _CheckpointCard(job: job, approved: _approved, total: _total),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
+              _CheckpointCard(
+                job: job,
+                approved: _approved,
+                total: _total,
+                onApprove: () => _approve(job),
+                onRequestChanges: () => _requestChanges(job),
+              ),
+              const SizedBox(height: 24),
               _ProductionStatus(approved: _approved),
             ],
           ),
@@ -152,40 +147,42 @@ class _PricingApprovalScreenState extends State<PricingApprovalScreen> {
   Widget _quoteCard() {
     final c = context.c;
     final total = _total;
-    return DhCard(
+    return _Panel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              const Expanded(child: Text('Itemized Quote', style: AppText.headlineSm)),
+              Expanded(
+                child: Text('Itemized Quote', style: AppText.headlineMd.copyWith(color: c.text)),
+              ),
               if (_approved)
                 Icon(Icons.lock_outline, size: 18, color: c.textFaint)
               else
                 Text('Tap a line to edit', style: AppText.bodySm.copyWith(color: c.textFaint)),
             ],
           ),
-          const SizedBox(height: 8),
-          for (var i = 0; i < _lines.length; i++) ...[
-            if (i > 0) const Divider(),
-            _QuoteRow(line: _lines[i], onTap: () => _editLine(_lines[i])),
-          ],
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+          for (var i = 0; i < _lines.length; i++)
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: c.borderStrong.withValues(alpha: 0.3))),
+              ),
+              child: _QuoteRow(line: _lines[i], onTap: () => _editLine(_lines[i])),
+            ),
+          const SizedBox(height: 24),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(color: c.action, borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: c.action, borderRadius: BorderRadius.circular(4)),
             child: Row(
               children: [
-                Text('Total', style: AppText.headlineSm.copyWith(color: c.onAction)),
+                Text('Total', style: AppText.headlineLg.copyWith(color: c.onAction)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: FittedBox(
                     alignment: Alignment.centerRight,
                     fit: BoxFit.scaleDown,
-                    child: Text(
-                      Fmt.money(total),
-                      style: AppText.monoLg.copyWith(fontSize: 26, fontWeight: FontWeight.w700, color: c.onAction),
-                    ),
+                    child: Text(Fmt.money(total), style: AppText.display.copyWith(color: c.onAction)),
                   ),
                 ),
               ],
@@ -219,10 +216,10 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('QUOTE REVIEW', style: AppText.labelSm.copyWith(color: c.accent, letterSpacing: 1.8)),
-        const SizedBox(height: 6),
-        const Text('Final Approval', style: AppText.headlineLg),
-        const SizedBox(height: 10),
+        Text('QUOTE REVIEW', style: AppText.labelMd.copyWith(color: c.isDark ? c.gold : c.text, letterSpacing: 2.4)),
+        const SizedBox(height: 8),
+        Text('Final Approval', style: AppText.display.copyWith(color: c.text)),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 12,
           runSpacing: 8,
@@ -231,9 +228,12 @@ class _Header extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.verified_outlined, size: 18, color: c.accent),
-                const SizedBox(width: 6),
-                Text('Job #${job.id}', style: AppText.monoLg.copyWith(color: c.textMuted)),
+                Icon(Icons.verified_outlined, size: 22, color: c.accent),
+                const SizedBox(width: 8),
+                Text(
+                  'Job #${job.id}',
+                  style: AppText.headlineSm.copyWith(color: c.textMuted, fontWeight: FontWeight.w500),
+                ),
               ],
             ),
             approved
@@ -266,28 +266,28 @@ class _QuoteRow extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(6),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Row(
           children: [
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: c.navActive, borderRadius: BorderRadius.circular(8)),
-              child: Icon(line.icon, size: 20, color: c.onNavActive.withValues(alpha: 0.85)),
+              decoration: BoxDecoration(color: c.navActive, borderRadius: BorderRadius.circular(4)),
+              child: Icon(line.icon, size: 22, color: c.isDark ? c.onNavActive : c.textFaint),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(line.category, style: AppText.titleMd),
+                  Text(line.category, style: AppText.headlineSm.copyWith(color: c.text)),
                   const SizedBox(height: 2),
                   Text(line.description, style: AppText.bodySm.copyWith(color: c.textMuted)),
                 ],
               ),
             ),
             const SizedBox(width: 12),
-            Text(Fmt.money(line.amount), style: AppText.monoLg.copyWith(fontWeight: FontWeight.w700)),
+            Text(Fmt.money(line.amount), style: AppText.headlineSm.copyWith(color: c.text)),
           ],
         ),
       ),
@@ -296,36 +296,42 @@ class _QuoteRow extends StatelessWidget {
 }
 
 class _CheckpointCard extends StatelessWidget {
-  const _CheckpointCard({required this.job, required this.approved, required this.total});
+  const _CheckpointCard({
+    required this.job,
+    required this.approved,
+    required this.total,
+    required this.onApprove,
+    required this.onRequestChanges,
+  });
 
   final Job job;
   final bool approved;
   final double total;
+  final VoidCallback onApprove;
+  final VoidCallback onRequestChanges;
 
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return DhCard(
-      padding: const EdgeInsets.all(20),
+    final tile = approved ? c.success : c.accent;
+    return _Panel(
+      shadow: true,
+      padding: const EdgeInsets.all(24),
       child: Column(
         children: [
           Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: approved ? c.success : c.accent,
-              borderRadius: BorderRadius.circular(18),
-              boxShadow: [BoxShadow(color: (approved ? c.success : c.accent).withValues(alpha: 0.3), blurRadius: 16)],
-            ),
-            child: Icon(approved ? Icons.verified : Icons.gavel, size: 36, color: approved ? c.surface : c.onAccent),
+            width: 96,
+            height: 96,
+            decoration: BoxDecoration(color: tile, borderRadius: BorderRadius.circular(12)),
+            child: Icon(approved ? Icons.verified : Icons.gavel, size: 40, color: approved ? c.surface : c.onAccent),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Text(
             approved ? 'Approved for Manufacturing' : 'Commercial Checkpoint',
             textAlign: TextAlign.center,
-            style: AppText.headlineSm,
+            style: AppText.headlineMd.copyWith(color: c.text),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             approved
                 ? 'Design and price locked at ${Fmt.money(total)}. ${job.id} is released to manufacturing.'
@@ -333,8 +339,86 @@ class _CheckpointCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppText.bodyMd.copyWith(color: c.textMuted),
           ),
+          if (!approved) ...[
+            const SizedBox(height: 28),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: c.isDark
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.18),
+                          blurRadius: 14,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+              ),
+              child: FilledButton(
+                onPressed: onApprove,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  textStyle: AppText.labelMd.copyWith(fontSize: 15),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.check_circle_outline, size: 22),
+                    SizedBox(width: 8),
+                    Flexible(child: Text('Approve Design & Price', overflow: TextOverflow.ellipsis)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: onRequestChanges,
+              icon: const Icon(Icons.edit_note, size: 20),
+              label: const Text('Request Changes'),
+              style: TextButton.styleFrom(
+                foregroundColor: c.textMuted,
+                minimumSize: const Size(0, 44),
+                textStyle: AppText.labelMd.copyWith(fontSize: 14),
+              ),
+            ),
+          ],
         ],
       ),
+    );
+  }
+}
+
+/// "surface-container" card used by every section.
+class _Panel extends StatelessWidget {
+  const _Panel({required this.child, this.padding = const EdgeInsets.all(20), this.shadow = false});
+
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  /// Stronger (shadow-md) elevation.
+  final bool shadow;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: c.isDark ? c.surface : c.surfaceHigh,
+        borderRadius: BorderRadius.circular(8),
+        border: c.isDark ? Border.all(color: c.border) : null,
+        boxShadow: c.isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: shadow ? 0.08 : 0.05),
+                  blurRadius: shadow ? 8 : 2,
+                  offset: Offset(0, shadow ? 3 : 1),
+                ),
+              ],
+      ),
+      child: child,
     );
   }
 }
@@ -347,18 +431,20 @@ class _ProductionStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return DhCard(
-      color: c.isDark ? c.surface : c.surfaceLow,
-      padding: const EdgeInsets.all(20),
+    return _Panel(
+      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SectionLabel('Production Status'),
-          const SizedBox(height: 14),
+          Text(
+            'PRODUCTION STATUS',
+            style: AppText.labelMd.copyWith(color: c.isDark ? c.gold : c.text, fontSize: 13, letterSpacing: 1.2),
+          ),
+          const SizedBox(height: 16),
           const _StatusStep('Design Review', PipelineState.done),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           _StatusStep('Awaiting Approval', approved ? PipelineState.done : PipelineState.current),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           _StatusStep(
             'Approved for Manufacturing',
             approved ? PipelineState.current : PipelineState.pending,
@@ -385,13 +471,18 @@ class _StatusStep extends StatelessWidget {
     TextStyle style;
     switch (state) {
       case PipelineState.done:
-        dot = Container(
+        dot = SizedBox(
           width: 18,
           height: 18,
-          decoration: BoxDecoration(color: c.textFaint, shape: BoxShape.circle),
-          child: Icon(Icons.check, size: 12, color: c.surface),
+          child: Center(
+            child: Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(color: c.textFaint.withValues(alpha: 0.5), shape: BoxShape.circle),
+            ),
+          ),
         );
-        style = AppText.bodyMd.copyWith(color: c.textMuted);
+        style = AppText.bodyLg.copyWith(color: c.text.withValues(alpha: 0.5));
       case PipelineState.current:
         dot = SizedBox(
           width: 18,
@@ -408,7 +499,7 @@ class _StatusStep extends StatelessWidget {
             ),
           ),
         );
-        style = AppText.titleMd.copyWith(color: accent);
+        style = AppText.headlineSm.copyWith(color: accent);
       case PipelineState.pending:
         dot = SizedBox(
           width: 18,
@@ -419,12 +510,12 @@ class _StatusStep extends StatelessWidget {
               height: 12,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: c.borderStrong, width: 1.5),
+                border: Border.all(color: c.textFaint.withValues(alpha: 0.5)),
               ),
             ),
           ),
         );
-        style = AppText.bodyMd.copyWith(color: c.textFaint);
+        style = AppText.bodyLg.copyWith(color: c.text.withValues(alpha: 0.5));
     }
     return Row(
       children: [

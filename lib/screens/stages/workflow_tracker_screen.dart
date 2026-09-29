@@ -256,17 +256,12 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
                 isLast: i == _steps.length - 1,
               )
             else if (i == current)
-              PipelineTile(
+              _ActiveStep(
                 title: _steps[i].label,
-                mono: true,
-                state: PipelineState.current,
+                activity: _steps[i].activity,
+                stage: job.stage,
                 isLast: i == _steps.length - 1,
-                trailing: StatusChip('In Progress', color: c.accent),
-                child: _CurrentStepBox(
-                  activity: _steps[i].activity,
-                  stage: job.stage,
-                  onComplete: () => _markComplete(job),
-                ),
+                onComplete: () => _markComplete(job),
               )
             else
               Opacity(
@@ -314,39 +309,108 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
 
 // ---- Pieces ----------------------------------------------------------------
 
-class _CurrentStepBox extends StatelessWidget {
-  const _CurrentStepBox({required this.activity, required this.stage, required this.onComplete});
+/// The in-progress pipeline step: glowing dot on the rail and a tinted box
+/// holding the title, "In Progress" tag, activity and the Mark Complete action.
+class _ActiveStep extends StatelessWidget {
+  const _ActiveStep({
+    required this.title,
+    required this.activity,
+    required this.stage,
+    required this.isLast,
+    required this.onComplete,
+  });
 
+  final String title;
   final String activity;
   final JobStage stage;
+  final bool isLast;
   final VoidCallback onComplete;
 
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: c.accent.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: c.accent.withValues(alpha: 0.25)),
-      ),
-      child: Column(
+    final accent = c.accent;
+    return IntrinsicHeight(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(activity, style: AppText.bodySm.copyWith(color: c.textMuted)),
-          const SizedBox(height: 6),
-          Text('STAGE: ${stage.label.toUpperCase()}', style: AppText.monoCaps.copyWith(color: c.textFaint)),
-          const SizedBox(height: 10),
-          OutlinedButton.icon(
-            onPressed: onComplete,
-            icon: const Icon(Icons.touch_app_outlined, size: 18),
-            label: Text('MARK COMPLETE', style: AppText.monoCaps.copyWith(fontSize: 13)),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: c.accent,
-              backgroundColor: c.isDark ? c.bg : c.surface,
-              minimumSize: const Size(0, 44),
-              side: BorderSide(color: c.accent.withValues(alpha: 0.4)),
+          SizedBox(
+            width: 24,
+            child: Column(
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: accent,
+                    shape: BoxShape.circle,
+                    boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.45), blurRadius: 14)],
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(color: c.isDark ? c.bg : c.surface, shape: BoxShape.circle),
+                    ),
+                  ),
+                ),
+                if (!isLast)
+                  Expanded(
+                    child: Container(width: 2, color: c.border, margin: const EdgeInsets.symmetric(vertical: 4)),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: accent.withValues(alpha: 0.2)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(title, style: AppText.monoLg.copyWith(color: accent)),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: accent.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                          child: Text('In Progress', style: AppText.monoCaps.copyWith(color: accent, fontSize: 12)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(activity, style: AppText.bodyMd.copyWith(color: c.textMuted)),
+                    const SizedBox(height: 4),
+                    Text('STAGE: ${stage.label.toUpperCase()}', style: AppText.monoCaps.copyWith(color: c.textFaint)),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: onComplete,
+                      icon: const Icon(Icons.touch_app_outlined, size: 16),
+                      label: Text('Mark Complete', style: AppText.monoCaps.copyWith(fontSize: 13)),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: accent,
+                        backgroundColor: c.isDark ? c.bg : c.surface,
+                        minimumSize: const Size(0, 42),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        side: BorderSide(color: accent.withValues(alpha: 0.3)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

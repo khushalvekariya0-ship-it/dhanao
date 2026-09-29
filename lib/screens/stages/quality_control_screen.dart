@@ -207,27 +207,27 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.verified_user_outlined, size: 20, color: c.accent),
-                  const SizedBox(width: 8),
+                  Icon(Icons.verified_user_outlined, size: 24, color: c.isDark ? c.gold : c.text),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'STAGE 4: FINAL INSPECTION',
-                      style: AppText.labelSm.copyWith(color: c.textMuted, letterSpacing: 1.2),
+                      style: AppText.labelMd.copyWith(color: c.textMuted, letterSpacing: 1.2),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Text('QC Protocol: ${job.id}', style: AppText.headlineLg),
-              const SizedBox(height: 4),
-              Text('${job.title}. Specialist: E. Carter.', style: AppText.bodyMd.copyWith(color: c.textMuted)),
-              const SizedBox(height: 14),
-              _StatusBadge(label: statusLabel, color: statusColor, done: _passed),
+              const SizedBox(height: 16),
+              Text('QC Protocol: ${job.id}', style: AppText.display.copyWith(color: c.text)),
+              const SizedBox(height: 8),
+              Text('${job.title}. Specialist: E. Carter.', style: AppText.bodyLg.copyWith(color: c.textMuted)),
               const SizedBox(height: 20),
+              _StatusBadge(label: statusLabel, color: statusColor, done: _passed),
+              const SizedBox(height: 28),
               _checklist(items),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               _evidenceCard(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               _referenceCard(job),
             ],
           ),
@@ -239,26 +239,28 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
   Widget _checklist(List<_QcItem> items) {
     final c = context.c;
     final n = _checked.length;
-    return DhCard(
+    return _Panel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              const Expanded(child: Text('Verification Parameters', style: AppText.headlineSm)),
+              Expanded(
+                child: Text('Verification Parameters', style: AppText.headlineMd.copyWith(color: c.text)),
+              ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(color: c.surfaceHighest, borderRadius: BorderRadius.circular(12)),
-                child: Text('$n/${items.length} Completed', style: AppText.monoSm.copyWith(color: c.textMuted)),
+                child: Text('$n/${items.length} Completed', style: AppText.monoMd.copyWith(color: c.textMuted)),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           ThinProgress(value: n / items.length, color: _passed ? c.success : null),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           for (var i = 0; i < items.length; i++) ...[
-            if (i > 0) const SizedBox(height: 6),
+            if (i > 0) const SizedBox(height: 8),
             _CheckItem(item: items[i], checked: _checked.contains(i), locked: _passed, onTap: () => _toggle(i)),
           ],
         ],
@@ -268,38 +270,40 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
 
   Widget _evidenceCard() {
     final c = context.c;
-    final pending = math.max(0, _recommendedPhotos - _evidence.length);
-    return DhCard(
+    // The bench photo already on file counts toward the recommended set.
+    final pending = math.max(0, _recommendedPhotos - 1 - _evidence.length);
+    return _Panel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              const Expanded(child: Text('Inspection Evidence', style: AppText.headlineSm)),
+              Expanded(
+                child: Text('Inspection Evidence', style: AppText.headlineSm.copyWith(color: c.text)),
+              ),
               IconButton(
                 tooltip: 'Take photo',
-                icon: Icon(Icons.photo_camera_outlined, color: c.textMuted),
+                icon: Icon(Icons.photo_camera_outlined, size: 22, color: c.textMuted),
                 onPressed: _addPhoto,
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          UploadBox(
-            title: 'Click to upload or drag and drop',
-            subtitle: 'SVG, PNG, JPG or GIF (max. 10MB)',
-            icon: Icons.cloud_upload_outlined,
-            height: 132,
-            onTap: _addPhoto,
-          ),
-          if (_evidence.isNotEmpty || pending > 0) ...[
-            const SizedBox(height: 12),
+          const SizedBox(height: 12),
+          _DropZone(onTap: _addPhoto),
+          ...[
+            const SizedBox(height: 20),
             GridView.count(
-              crossAxisCount: 3,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
+                _RefImage(
+                  asset: _references[1],
+                  label: 'BENCH',
+                  onTap: () => _openViewer(context, _references, initial: 1),
+                ),
                 for (var i = 0; i < _evidence.length; i++)
                   _EvidenceThumb(
                     path: _evidence[i],
@@ -308,7 +312,7 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
                   ),
                 if (pending > 0)
                   Material(
-                    color: c.surfaceHigh,
+                    color: c.isDark ? c.surfaceHigh : c.surfaceHighest,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                       side: BorderSide(color: c.borderStrong),
@@ -320,7 +324,7 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
                         child: Text(
                           '+$pending PENDING',
                           textAlign: TextAlign.center,
-                          style: AppText.labelSm.copyWith(color: c.textMuted),
+                          style: AppText.labelSm.copyWith(color: c.textMuted, fontSize: 12),
                         ),
                       ),
                     ),
@@ -335,8 +339,16 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
 
   Widget _referenceCard(Job job) {
     final c = context.c;
-    return DhCard(
-      color: c.isDark ? c.surface : c.surfaceLow,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: c.isDark ? c.surface : c.surfaceLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: c.isDark ? c.border : c.borderStrong.withValues(alpha: 0.3)),
+        boxShadow: c.isDark
+            ? null
+            : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, 1))],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -344,32 +356,25 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
             children: [
               Icon(Icons.history_edu, size: 20, color: c.accent),
               const SizedBox(width: 8),
-              const Expanded(child: Text('Reference CAD Data', style: AppText.headlineSm)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
               Expanded(
-                child: _RefImage(
-                  asset: _references[0],
-                  label: 'CAD v3.2',
-                  onTap: () => _openViewer(context, _references),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _RefImage(
-                  asset: _references[1],
-                  label: 'BENCH',
-                  onTap: () => _openViewer(context, _references, initial: 1),
-                ),
+                child: Text('Reference CAD Data', style: AppText.headlineSm.copyWith(color: c.text)),
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 192,
+            child: _RefImage(
+              asset: _references[0],
+              label: 'CAD v3.2',
+              square: false,
+              onTap: () => _openViewer(context, _references),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const _RefRow('Tolerance', '±0.05mm'),
           const SizedBox(height: 8),
-          const KeyValueRow('Tolerance', '±0.05mm', divider: true),
-          KeyValueRow('Alloy', _alloySpec(job.metal)),
+          _RefRow('Alloy', _alloySpec(job.metal)),
         ],
       ),
     );
@@ -392,23 +397,26 @@ class _StatusBadge extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
           color: done ? color.withValues(alpha: 0.12) : c.surfaceHigh,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: done ? color.withValues(alpha: 0.4) : c.border),
+          borderRadius: BorderRadius.circular(8),
+          border: done ? Border.all(color: color.withValues(alpha: 0.4)) : null,
+          boxShadow: c.isDark || done
+              ? null
+              : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, 1))],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 10,
-              height: 10,
+              width: 12,
+              height: 12,
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 14),
             Flexible(
-              child: Text(label, style: AppText.titleMd.copyWith(color: done ? color : c.text)),
+              child: Text(label, style: AppText.headlineSm.copyWith(color: done ? color : c.text)),
             ),
             if (done) ...[const SizedBox(width: 6), Icon(Icons.done_all, size: 18, color: color)],
           ],
@@ -436,7 +444,7 @@ class _CheckItem extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(4, 10, 12, 10),
+          padding: const EdgeInsets.fromLTRB(4, 12, 12, 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -453,9 +461,9 @@ class _CheckItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.title, style: AppText.titleMd),
-                      const SizedBox(height: 2),
-                      Text(item.detail, style: AppText.bodySm.copyWith(color: c.textMuted)),
+                      Text(item.title, style: AppText.headlineSm.copyWith(color: c.text)),
+                      const SizedBox(height: 4),
+                      Text(item.detail, style: AppText.bodyMd.copyWith(color: c.textMuted)),
                     ],
                   ),
                 ),
@@ -512,41 +520,146 @@ class _EvidenceThumb extends StatelessWidget {
 }
 
 class _RefImage extends StatelessWidget {
-  const _RefImage({required this.asset, required this.label, required this.onTap});
+  const _RefImage({required this.asset, required this.label, required this.onTap, this.square = true});
 
   final String asset;
   final String label;
+  final VoidCallback onTap;
+  final bool square;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final image = ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(asset, fit: BoxFit.cover),
+          Positioned(
+            left: 6,
+            bottom: 6,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: c.surface.withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(label, style: AppText.monoSm.copyWith(color: c.textMuted, fontSize: 10)),
+            ),
+          ),
+          Material(
+            type: MaterialType.transparency,
+            child: InkWell(onTap: onTap),
+          ),
+        ],
+      ),
+    );
+    return square ? AspectRatio(aspectRatio: 1, child: image) : image;
+  }
+}
+
+/// "surface-container" card with a soft shadow.
+class _Panel extends StatelessWidget {
+  const _Panel({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: c.isDark ? c.surface : c.surfaceHigh,
+        borderRadius: BorderRadius.circular(16),
+        border: c.isDark ? Border.all(color: c.border) : null,
+        boxShadow: c.isDark
+            ? null
+            : [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 3))],
+      ),
+      child: child,
+    );
+  }
+}
+
+/// Dashed evidence drop zone (the fill sits outside DashedBorder, which paints
+/// behind its child).
+class _DropZone extends StatelessWidget {
+  const _DropZone({required this.onTap});
+
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return AspectRatio(
-      aspectRatio: 1,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(asset, fit: BoxFit.cover),
-            Positioned(
-              left: 6,
-              bottom: 6,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: c.surface.withValues(alpha: 0.9),
-                  borderRadius: BorderRadius.circular(4),
+    return DashedBorder(
+      radius: 8,
+      strokeWidth: 2,
+      color: c.borderStrong,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 28),
+            child: Column(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(color: c.surfaceHighest, borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.cloud_upload_outlined, size: 24, color: c.isDark ? c.gold : c.text),
                 ),
-                child: Text(label, style: AppText.monoSm.copyWith(color: c.textMuted, fontSize: 10)),
-              ),
+                const SizedBox(height: 16),
+                Text(
+                  'Click to upload or drag and drop',
+                  textAlign: TextAlign.center,
+                  style: AppText.labelMd.copyWith(color: c.text, fontSize: 14),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'SVG, PNG, JPG or GIF (max. 10MB)',
+                  textAlign: TextAlign.center,
+                  style: AppText.bodySm.copyWith(color: c.textMuted),
+                ),
+              ],
             ),
-            Material(
-              type: MaterialType.transparency,
-              child: InkWell(onTap: onTap),
-            ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+/// "Tolerance ........ ±0.05mm" row with a right-aligned mono value.
+class _RefRow extends StatelessWidget {
+  const _RefRow(this.label, this.value);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Container(
+      padding: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: c.borderStrong.withValues(alpha: c.isDark ? 0.4 : 0.2)),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(label, style: AppText.bodySm.copyWith(color: c.textMuted)),
+          ),
+          Text(
+            value,
+            style: AppText.monoLg.copyWith(color: c.text, fontWeight: FontWeight.w400),
+          ),
+        ],
       ),
     );
   }

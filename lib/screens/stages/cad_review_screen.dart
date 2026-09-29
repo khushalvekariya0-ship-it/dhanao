@@ -582,27 +582,17 @@ class _CadReviewScreenState extends State<CadReviewScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionLabel('Timeline History'),
-        const SizedBox(height: 14),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text('HISTORY', style: AppText.labelMd.copyWith(color: c.textMuted, letterSpacing: 1.2)),
+        ),
+        const SizedBox(height: 16),
         for (var i = 0; i < _history.length; i++)
-          PipelineTile(
-            title: _history[i].when,
-            mono: true,
-            state: i == 0 ? PipelineState.current : PipelineState.done,
+          _HistoryTile(
+            entry: _history[i],
+            latest: i == 0,
             isLast: i == _history.length - 1,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: i == 0 ? c.surfaceHigh : (c.isDark ? c.surface : c.surfaceLow),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
-                ),
-              ),
-              child: Text(_history[i].text, style: AppText.bodySm.copyWith(color: c.text)),
-            ),
+            boxed: i == 0 || i < _history.length - 1,
           ),
       ],
     );
@@ -852,8 +842,9 @@ class _DesignerNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.c;
     final bg = c.isDark ? c.surfaceHigh : c.navActive;
-    final fg = c.isDark ? c.text : c.onNavActive;
-    final body = AppText.bodyMd.copyWith(color: fg.withValues(alpha: 0.88));
+    // Muted "on-primary-container" text on the navy card.
+    final fg = c.isDark ? c.text : c.onNavActive.withValues(alpha: 0.62);
+    final body = AppText.bodyMd.copyWith(color: c.isDark ? c.textMuted : fg);
     final partner = app.partnerByName('Elena Rostova');
     Widget bullet(String t) => Padding(
       padding: const EdgeInsets.only(top: 6),
@@ -898,7 +889,7 @@ class _DesignerNote extends StatelessWidget {
                           Text('Elena Rostova', style: AppText.labelMd.copyWith(color: fg, fontSize: 14)),
                           Text(
                             partner?.role ?? 'Lead CAD Designer',
-                            style: AppText.bodySm.copyWith(color: fg.withValues(alpha: 0.7)),
+                            style: AppText.labelSm.copyWith(color: fg.withValues(alpha: c.isDark ? 0.7 : 0.5)),
                           ),
                         ],
                       ),
@@ -913,7 +904,7 @@ class _DesignerNote extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   'Please review the proportions carefully before we cast.',
-                  style: AppText.labelMd.copyWith(color: fg, fontSize: 13),
+                  style: AppText.labelMd.copyWith(color: c.isDark ? c.text : fg, fontSize: 13),
                 ),
               ],
             ),
@@ -921,6 +912,90 @@ class _DesignerNote extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// History entry: small dot on a hairline, sans date and a speech-box body.
+class _HistoryTile extends StatelessWidget {
+  const _HistoryTile({required this.entry, required this.latest, required this.isLast, required this.boxed});
+
+  final _HistoryEntry entry;
+  final bool latest;
+  final bool isLast;
+
+  /// Older entries drop the box and fade out.
+  final bool boxed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final rail = c.borderStrong.withValues(alpha: c.isDark ? 0.6 : 0.3);
+    final tile = IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 24,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 8,
+                  top: latest ? 6 : 0,
+                  bottom: isLast ? null : 0,
+                  height: isLast ? 8 : null,
+                  child: Container(width: 1, color: rail),
+                ),
+                Positioned(
+                  left: 1,
+                  top: 1,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(color: c.bg, shape: BoxShape.circle),
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(color: latest ? c.accent : c.borderStrong, shape: BoxShape.circle),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(entry.when, style: AppText.labelSm.copyWith(color: c.textMuted, fontSize: 12)),
+                  const SizedBox(height: 4),
+                  if (boxed)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: latest ? c.surfaceHigh : (c.isDark ? c.surface : c.surfaceLow),
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(8),
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: Text(entry.text, style: AppText.bodySm.copyWith(color: c.text)),
+                    )
+                  else
+                    Text(entry.text, style: AppText.bodySm.copyWith(color: c.text)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return boxed ? tile : Opacity(opacity: 0.6, child: tile);
   }
 }
 

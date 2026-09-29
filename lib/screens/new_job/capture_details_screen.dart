@@ -69,7 +69,7 @@ class _CaptureDetailsScreenState extends State<CaptureDetailsScreen> with Single
     final images = d.referenceImages;
     return BlueprintBackdrop(
       child: WizardScaffold(
-        title: 'New Job',
+        title: 'NEW JOB',
         step: 2,
         totalSteps: 4,
         stepLabel: 'Media Capture',

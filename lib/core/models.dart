@@ -218,6 +218,7 @@ class Job {
     this.atRisk = false,
     this.quantity = 1,
     this.notes,
+    this.order,
     List<ThreadMessage>? thread,
     List<ProjectFile>? files,
     List<StageEvent>? history,
@@ -249,6 +250,10 @@ class Job {
   bool atRisk;
   int quantity;
   String? notes;
+
+  /// Full specification captured by the Full Job Order wizard (null for quick jobs,
+  /// inquiries and seed data).
+  final JobDraft? order;
 
   final List<ThreadMessage> thread;
   final List<ProjectFile> files;
@@ -428,6 +433,7 @@ class JobDraft {
   String stoneCut = 'Ex';
   String certificate = 'GIA';
   String? stonePhoto;
+  String? stoneCertificatePhoto;
   String stoneNotes = '';
   final List<MeleeParcel> melee = [MeleeParcel()];
 

@@ -64,16 +64,17 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
       step: 3,
       totalSteps: 4,
       stepLabel: 'Delivery',
-      badge: 'Draft',
+      actions: const [_ProfileButton()],
       ctaLabel: 'Define Quality Requirements',
       onCta: _continue,
+      padding: EdgeInsets.zero,
       children: [
+        // Full-bleed job context strip.
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
-            color: c.surfaceLow,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: c.border),
+            color: c.isDark ? c.surface : c.surfaceLow,
+            border: Border(bottom: BorderSide(color: c.border)),
           ),
           child: Row(
             children: [
@@ -84,112 +85,122 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
                   'JOB TYPE: ${d.jobType.toUpperCase()}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppText.labelMd.copyWith(letterSpacing: 0.8, color: c.textMuted),
+                  style: AppText.labelMd.copyWith(fontWeight: FontWeight.w700, letterSpacing: 0.8, color: c.textMuted),
                 ),
               ),
               const SizedBox(width: 8),
-              Text('QTY ${d.quantity}', style: AppText.monoCaps.copyWith(color: c.textFaint)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(4)),
+                child: Text(
+                  'Draft',
+                  style: AppText.labelSm.copyWith(fontWeight: FontWeight.w700, color: c.isDark ? c.gold : c.text),
+                ),
+              ),
             ],
           ),
         ),
-        const SizedBox(height: 24),
-        Text('Requested Delivery Date', style: AppText.headlineSm),
-        const SizedBox(height: 2),
-        Text('When do you need the final parts on-site?', style: AppText.bodySm.copyWith(color: c.textMuted)),
-        const SizedBox(height: 12),
-        DateField(
-          value: requested,
-          hint: 'Select Date',
-          firstDate: requested != null && requested.isBefore(now) ? requested : now,
-          onChanged: (v) => setState(() => d.requestedDelivery = v),
-        ),
-        if (requested != null) ...[
-          const SizedBox(height: 6),
-          Text('${_daysBetween(now, requested)} days from today', style: AppText.monoSm.copyWith(color: c.textFaint)),
-        ],
-        const SizedBox(height: 16),
-        DhCard(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          child: ToggleRow(
-            title: 'Hard Deadline',
-            subtitle: 'Cannot accept delivery after requested date.',
-            value: d.hardDeadline,
-            onChanged: (v) => setState(() => d.hardDeadline = v),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Opacity(
-          opacity: single ? 0.55 : 1,
-          child: IgnorePointer(
-            ignoring: single,
-            child: DhCard(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              child: ToggleRow(
-                title: 'Partial Delivery Allowed',
-                subtitle: single ? 'Single-unit order — ships complete.' : 'Ship batches as they are ready.',
-                value: !single && d.partialDelivery,
-                onChanged: (v) => setState(() => d.partialDelivery = v),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 28),
-        Text('Priority Level', style: AppText.headlineSm),
-        const SizedBox(height: 12),
-        IntrinsicHeight(
-          child: Row(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: _PriorityTile(
-                  icon: Icons.local_shipping_outlined,
-                  label: 'Standard',
-                  caption: '4–6 WKS',
-                  color: c.isDark ? c.gold : c.accent,
-                  soft: c.accentSoft,
-                  selected: d.priority == Priority.standard,
-                  onTap: () => _setPriority(Priority.standard),
+              Text('Requested Delivery Date', style: AppText.headlineSm),
+              const SizedBox(height: 2),
+              Text('When do you need the final parts on-site?', style: AppText.bodySm.copyWith(color: c.textMuted)),
+              const SizedBox(height: 16),
+              _DateButton(value: requested, onChanged: (v) => setState(() => d.requestedDelivery = v)),
+              if (requested != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  '${_daysBetween(now, requested)} days from today',
+                  style: AppText.monoSm.copyWith(color: c.textFaint),
+                ),
+              ],
+              const SizedBox(height: 24),
+              _ToggleCard(
+                title: 'Hard Deadline',
+                subtitle: 'Cannot accept delivery after requested date.',
+                value: d.hardDeadline,
+                onChanged: (v) => setState(() => d.hardDeadline = v),
+              ),
+              const SizedBox(height: 12),
+              Opacity(
+                opacity: single ? 0.55 : 1,
+                child: IgnorePointer(
+                  ignoring: single,
+                  child: _ToggleCard(
+                    title: 'Partial Delivery Allowed',
+                    subtitle: single ? 'Single-unit order — ships complete.' : 'Ship batches as they are ready.',
+                    value: !single && d.partialDelivery,
+                    onChanged: (v) => setState(() => d.partialDelivery = v),
+                  ),
                 ),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _PriorityTile(
-                  icon: Icons.rocket_launch_outlined,
-                  label: 'Rush',
-                  caption: '2–3 WKS',
-                  color: c.warning,
-                  soft: c.warningSoft,
-                  selected: d.priority == Priority.rush,
-                  onTap: () => _setPriority(Priority.rush),
+              const SizedBox(height: 32),
+              Text('Priority Level', style: AppText.headlineSm),
+              const SizedBox(height: 16),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: _PriorityTile(
+                        icon: Icons.local_shipping_outlined,
+                        label: 'Standard',
+                        caption: '4–6 WKS',
+                        color: c.isDark ? c.gold : c.text,
+                        soft: c.accentSoft,
+                        selected: d.priority == Priority.standard,
+                        onTap: () => _setPriority(Priority.standard),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _PriorityTile(
+                        icon: Icons.rocket_launch_outlined,
+                        label: 'Rush',
+                        caption: '2–3 WKS',
+                        color: c.isDark ? c.warning : c.accent,
+                        soft: c.isDark ? c.warningSoft : c.accentSoft,
+                        selected: d.priority == Priority.rush,
+                        onTap: () => _setPriority(Priority.rush),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _PriorityTile(
+                        icon: Icons.warning_amber_rounded,
+                        label: 'Critical',
+                        caption: '< 2 WKS',
+                        color: c.danger,
+                        soft: c.dangerSoft,
+                        selected: d.priority == Priority.critical,
+                        onTap: () => _setPriority(Priority.critical),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _PriorityTile(
-                  icon: Icons.warning_amber_rounded,
-                  label: 'Critical',
-                  caption: '< 2 WKS',
-                  color: c.danger,
-                  soft: c.dangerSoft,
-                  selected: d.priority == Priority.critical,
-                  onTap: () => _setPriority(Priority.critical),
-                ),
-              ),
+              if (daysLeft != null && daysLeft < 14) ...[const SizedBox(height: 16), _warning(c, daysLeft)],
             ],
           ),
         ),
-        const SizedBox(height: 28),
         _timelinePreview(c, requested, completion, daysLeft),
-        if (daysLeft != null && daysLeft < 14) ...[const SizedBox(height: 16), _warning(c, daysLeft)],
       ],
     );
   }
 
+  /// Full-bleed recessed "Timeline Preview" section.
   Widget _timelinePreview(DhColors c, DateTime? requested, DateTime? completion, int? daysLeft) {
     final accent = c.isDark ? c.gold : c.accent;
-    return DhCard(
-      color: c.isDark ? c.surface : c.surfaceLow,
-      padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+    final value = AppText.bodyLg.copyWith(fontWeight: FontWeight.w600, color: c.text);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 28),
+      decoration: BoxDecoration(
+        color: c.isDark ? c.surfaceLow : c.surfaceLow,
+        border: Border(top: BorderSide(color: c.border)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -200,7 +211,7 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
               Text('Timeline Preview', style: AppText.headlineSm),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
           _Node(
             dot: Container(
               width: 14,
@@ -214,12 +225,11 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('REQUESTED DELIVERY', style: AppText.labelSm.copyWith(color: c.textMuted)),
-                const SizedBox(height: 2),
                 Text(
-                  requested == null ? 'Select date' : _fullDate(requested),
-                  style: requested == null ? AppText.titleMd : AppText.monoLg.copyWith(color: c.text),
+                  'REQUESTED DELIVERY',
+                  style: AppText.bodySm.copyWith(fontWeight: FontWeight.w500, letterSpacing: 1, color: c.textMuted),
                 ),
+                Text(requested == null ? 'Select date' : _fullDate(requested), style: value),
               ],
             ),
           ),
@@ -228,11 +238,11 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
               children: [
                 const _BufferRow(icon: Icons.local_shipping_outlined, label: 'Dispatch Buffer', days: 2),
                 if (_certified) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   const _BufferRow(icon: Icons.verified_outlined, label: 'Certification Buffer', days: 3),
                 ],
                 if (d.hardDeadline) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   const _BufferRow(icon: Icons.event_busy_outlined, label: 'Hard Deadline Safety', days: 2),
                 ],
               ],
@@ -243,16 +253,16 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
             dot: Container(
               width: 14,
               height: 14,
-              decoration: BoxDecoration(color: c.text, shape: BoxShape.circle),
+              decoration: BoxDecoration(color: c.isDark ? c.gold : c.text, shape: BoxShape.circle),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
                   decoration: BoxDecoration(
                     color: c.isDark ? c.goldSoft : c.accentSoft,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,14 +273,15 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
                           children: [
                             Text(
                               'RECOMMENDED COMPLETION',
-                              style: AppText.labelSm.copyWith(color: c.isDark ? c.gold : c.text),
+                              style: AppText.bodySm.copyWith(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                                color: c.isDark ? c.gold : c.text,
+                              ),
                             ),
-                            const SizedBox(height: 4),
                             Text(
                               completion == null ? 'Pending' : _fullDate(completion),
-                              style: completion == null
-                                  ? AppText.titleMd
-                                  : AppText.monoLg.copyWith(color: c.text, fontWeight: FontWeight.w700),
+                              style: value.copyWith(fontWeight: FontWeight.w700),
                             ),
                             if (daysLeft != null)
                               Text(
@@ -280,14 +291,20 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
                           ],
                         ),
                       ),
-                      Icon(Icons.flag_outlined, color: c.isDark ? c.gold : c.text),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Icon(Icons.flag_outlined, color: c.isDark ? c.gold : c.text),
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  'Target production completion to meet requested delivery date.',
-                  style: AppText.bodySm.copyWith(color: c.textFaint),
+                Padding(
+                  padding: const EdgeInsets.only(right: 40),
+                  child: Text(
+                    'Target production completion to meet requested delivery date.',
+                    style: AppText.labelSm.copyWith(fontWeight: FontWeight.w500, color: c.textMuted),
+                  ),
                 ),
               ],
             ),
@@ -348,6 +365,161 @@ class _DeliveryRequirementsScreenState extends State<DeliveryRequirementsScreen>
   }
 }
 
+/// Resting fill of the design's tonal cards (surface-container).
+Color _fill(DhColors c) => c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7);
+
+List<BoxShadow>? _shadow(DhColors c, {bool raised = false}) => c.isDark
+    ? null
+    : [
+        BoxShadow(
+          color: c.text.withValues(alpha: raised ? 0.12 : 0.06),
+          blurRadius: raised ? 8 : 3,
+          offset: Offset(0, raised ? 3 : 1),
+        ),
+      ];
+
+/// The design's black "profile" button at the right of the step header.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Tooltip(
+        message: 'Profile & settings',
+        child: Material(
+          color: c.action,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, Routes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox.square(dimension: 34, child: Icon(Icons.person_outline, size: 20, color: c.onAction)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Large tonal "Select Date" button that opens a date picker.
+class _DateButton extends StatelessWidget {
+  const _DateButton({required this.value, required this.onChanged});
+
+  final DateTime? value;
+  final ValueChanged<DateTime> onChanged;
+
+  Future<void> _pick(BuildContext context) async {
+    final now = DateTime.now();
+    final v = value;
+    // showDatePicker asserts first <= initial <= last; widen the range for old/far values.
+    var first = v != null && v.isBefore(now) ? v : now;
+    var last = now.add(const Duration(days: 730));
+    final initial = v ?? now.add(const Duration(days: 30));
+    if (initial.isBefore(first)) first = initial;
+    if (initial.isAfter(last)) last = initial;
+    final picked = await showDatePicker(context: context, initialDate: initial, firstDate: first, lastDate: last);
+    if (picked != null) onChanged(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final v = value;
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), boxShadow: _shadow(c)),
+      child: Material(
+        color: _fill(c),
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: () => _pick(context),
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            height: 56,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_month_outlined, color: c.isDark ? c.gold : c.text),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      v == null ? 'Select Date' : _fullDate(v),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.bodyLg.copyWith(fontWeight: FontWeight.w500, color: c.text),
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, color: c.textMuted),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tonal card with title/subtitle and a primary-coloured switch.
+class _ToggleCard extends StatelessWidget {
+  const _ToggleCard({required this.title, required this.subtitle, required this.value, required this.onChanged});
+
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), boxShadow: _shadow(c)),
+      child: Material(
+        color: _fill(c),
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: () => onChanged(!value),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppText.bodyLg.copyWith(fontWeight: FontWeight.w500, color: c.text),
+                      ),
+                      Text(subtitle, style: AppText.bodySm.copyWith(color: c.textMuted)),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: value,
+                  onChanged: onChanged,
+                  trackColor: WidgetStateProperty.resolveWith(
+                    (s) => s.contains(WidgetState.selected) ? c.action : c.borderStrong,
+                  ),
+                  trackOutlineColor: WidgetStateProperty.resolveWith(
+                    (s) => s.contains(WidgetState.selected) ? c.action : c.borderStrong,
+                  ),
+                  thumbColor: WidgetStateProperty.resolveWith(
+                    (s) => s.contains(WidgetState.selected) ? c.onAction : (c.isDark ? c.textFaint : c.surface),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _PriorityTile extends StatelessWidget {
   const _PriorityTile({
     required this.icon,
@@ -370,31 +542,37 @@ class _PriorityTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return Material(
-      color: selected ? soft : (c.isDark ? c.surface : c.surfaceLow),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: selected ? color : c.border, width: selected ? 1.5 : 1),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: _shadow(c, raised: selected),
       ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 24, color: selected ? color : c.textMuted),
-              const SizedBox(height: 8),
-              Text(label, style: AppText.labelMd.copyWith(fontSize: 13, color: c.text)),
-              const SizedBox(height: 2),
-              Text(
-                caption,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppText.monoSm.copyWith(fontSize: 10, color: c.textFaint),
-              ),
-            ],
+      child: Material(
+        color: selected ? soft : _fill(c),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: c.isDark && selected ? BorderSide(color: color.withValues(alpha: 0.6)) : BorderSide.none,
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 24, color: selected ? color : c.textMuted),
+                const SizedBox(height: 8),
+                Text(label, style: AppText.labelMd.copyWith(fontSize: 13, color: selected ? c.text : c.textMuted)),
+                const SizedBox(height: 2),
+                Text(
+                  caption,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppText.monoSm.copyWith(fontSize: 10, color: c.textFaint),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -424,7 +602,11 @@ class _Node extends StatelessWidget {
                 if (dot != null) Padding(padding: const EdgeInsets.only(top: 3), child: dot),
                 if (!isLast)
                   Expanded(
-                    child: Container(width: 2, margin: const EdgeInsets.symmetric(vertical: 4), color: c.border),
+                    child: Container(
+                      width: 2,
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      color: c.borderStrong.withValues(alpha: 0.4),
+                    ),
                   ),
               ],
             ),
@@ -432,7 +614,7 @@ class _Node extends StatelessWidget {
           const SizedBox(width: 14),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 18),
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 24),
               child: child,
             ),
           ),
@@ -459,7 +641,10 @@ class _BufferRow extends StatelessWidget {
         Expanded(
           child: Text(label, style: AppText.bodySm.copyWith(color: c.textMuted)),
         ),
-        Text('− $days Days', style: AppText.monoMd.copyWith(color: c.text)),
+        Text(
+          '- $days Days',
+          style: AppText.bodySm.copyWith(fontWeight: FontWeight.w500, color: c.text),
+        ),
       ],
     );
   }

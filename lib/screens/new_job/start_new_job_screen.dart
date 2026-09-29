@@ -54,7 +54,7 @@ class _StartNewJobScreenState extends State<StartNewJobScreen> {
     return BlueprintBackdrop(
       corner: true,
       child: WizardScaffold(
-        title: 'New Job',
+        title: 'NEW JOB',
         step: 1,
         totalSteps: 4,
         stepLabel: 'Job Type',
@@ -72,12 +72,11 @@ class _StartNewJobScreenState extends State<StartNewJobScreen> {
           const SizedBox(height: 24),
           for (var i = 0; i < _jobTypes.length; i++) ...[
             if (i > 0) const SizedBox(height: 12),
-            IconOptionCard(
-              horizontal: true,
+            _TypeCard(
               icon: _jobTypes[i].icon,
               title: _jobTypes[i].title,
               subtitle: _jobTypes[i].subtitle,
-              iconColor: _tint(c, i),
+              tint: _tint(c, i),
               selected: d.jobType == _jobTypes[i].title,
               onTap: () => setState(() => d.jobType = _jobTypes[i].title),
             ),
@@ -127,16 +126,100 @@ class _FlowCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.c;
     final on = c.isDark ? c.gold : c.accent;
-    return IconOptionCard(
-      horizontal: true,
+    return _TypeCard(
       icon: icon,
       title: title,
       subtitle: subtitle,
+      mono: false,
+      tint: on,
       selected: selected,
       onTap: onTap,
       trailing: Icon(
         selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
         color: selected ? on : c.textFaint,
+      ),
+    );
+  }
+}
+
+/// Horizontal option card from the design: icon tile, title, one-line mono subtitle and a chevron.
+/// Tinted icon tiles in dark; neutral grey tiles with ink icons in light.
+class _TypeCard extends StatelessWidget {
+  const _TypeCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.tint,
+    required this.selected,
+    required this.onTap,
+    this.mono = true,
+    this.trailing,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color tint;
+  final bool selected;
+  final VoidCallback onTap;
+  final bool mono;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final on = c.isDark ? c.gold : c.accent;
+    final iconColor = c.isDark ? tint : (selected ? on : c.text);
+    return Material(
+      color: selected ? c.accentSoft : c.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(
+          color: selected ? on : (c.isDark ? c.border : c.borderStrong.withValues(alpha: 0.6)),
+          width: selected ? 1.5 : 1,
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 16, 20),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: c.isDark ? tint.withValues(alpha: 0.12) : c.surfaceLow,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: c.isDark ? tint.withValues(alpha: 0.3) : c.surfaceLow),
+                ),
+                child: Icon(icon, color: iconColor, size: 24),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppText.titleMd.copyWith(fontSize: 17, height: 24 / 17, color: c.text),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      maxLines: mono ? 1 : 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: (mono ? AppText.monoMd : AppText.bodySm).copyWith(color: c.textMuted),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              trailing ?? Icon(Icons.chevron_right, color: c.textFaint),
+            ],
+          ),
+        ),
       ),
     );
   }

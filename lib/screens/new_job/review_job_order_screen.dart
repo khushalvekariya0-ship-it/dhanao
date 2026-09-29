@@ -42,7 +42,7 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
   }
 
   void _send() {
-    final job = app.createJobFromDraft();
+    final job = app.createJobFromDraft(fullOrder: true);
     app.resetDraft();
     Navigator.pushNamedAndRemoveUntil(context, Routes.created, (r) => r.isFirst, arguments: job.id);
   }
@@ -56,7 +56,7 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
     final sections = [
       (
         Icons.design_services_outlined,
-        c.accent,
+        c.text,
         'Product & Design',
         Routes.designSpecs,
         '${d.productCategory} · ${d.settingStyle} setting',
@@ -79,8 +79,8 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
         ],
       ),
       (
-        Icons.hexagon_outlined,
-        c.gold,
+        Icons.diamond_outlined,
+        c.accent,
         'Materials',
         Routes.metal,
         d.metalLabel,
@@ -99,8 +99,8 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
         ],
       ),
       (
-        Icons.diamond_outlined,
-        c.info,
+        Icons.flare,
+        c.accent,
         'Stones',
         Routes.stones,
         d.stoneLabel,
@@ -127,7 +127,7 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
       ),
       (
         Icons.attach_money,
-        c.success,
+        c.text,
         'Commercial',
         Routes.commercial,
         '${d.pricingBasis} · ${Fmt.money(d.targetUnitPrice)} target',
@@ -144,7 +144,7 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
       ),
       (
         Icons.local_shipping_outlined,
-        c.warning,
+        c.text,
         'Delivery',
         Routes.delivery,
         '${delivery == null ? 'No date' : Fmt.dateLong(delivery)} · ${d.priority.label}',
@@ -170,17 +170,14 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
       ),
     ];
 
+    // The design stacks "Send for Approval" and "Save Draft" at the end of the page (not a sticky bar).
     return WizardScaffold(
       title: 'Step 4: Final Review',
       step: 4,
       totalSteps: 4,
       stepLabel: 'Review',
-      badge: 'Draft',
-      secondaryLabel: 'Save Draft',
-      onSecondary: () => showSnack(context, 'Draft saved — resume anytime from New Job', icon: Icons.save_outlined),
-      ctaLabel: 'Send for Approval',
-      ctaIcon: Icons.send_outlined,
-      onCta: _send,
+      actions: const [_ProfileButton()],
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,14 +186,15 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('#DRAFT', style: AppText.monoLg.copyWith(fontSize: 22, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 2),
+                  Text('#DRAFT', style: AppText.headlineMd.copyWith(fontSize: 24, height: 32 / 24)),
+                  const SizedBox(height: 4),
                   Text('Review Job Order', style: AppText.bodyMd.copyWith(color: c.textMuted)),
                 ],
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               decoration: BoxDecoration(color: c.surfaceHigh, borderRadius: BorderRadius.circular(20)),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -213,9 +211,9 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         _summaryCard(c, delivery),
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         for (final (icon, color, title, route, summary, lines) in sections) ...[
           _Section(
             icon: icon,
@@ -227,10 +225,22 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
             onToggle: () => setState(() => _open.contains(title) ? _open.remove(title) : _open.add(title)),
             onEdit: () => _goTo(route),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
         ],
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
         _approvalCard(c),
+        const SizedBox(height: 40),
+        PrimaryButton('Send for Approval', onPressed: _send),
+        const SizedBox(height: 12),
+        FilledButton(
+          onPressed: () => showSnack(context, 'Draft saved — resume anytime from New Job', icon: Icons.save_outlined),
+          style: FilledButton.styleFrom(
+            backgroundColor: c.surfaceHigh,
+            foregroundColor: c.text,
+            minimumSize: const Size(double.infinity, 52),
+          ),
+          child: const Text('Save Draft'),
+        ),
       ],
     );
   }
@@ -238,8 +248,15 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
   Widget _summaryCard(DhColors c, DateTime? delivery) {
     final refs = d.referenceImages;
     final units = '${d.quantity} Unit${d.quantity == 1 ? '' : 's'}';
-    return DhCard(
-      color: c.isDark ? c.surface : c.surfaceLow,
+    final value = AppText.bodyMd.copyWith(fontSize: 15, color: c.text);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _fill(c),
+        borderRadius: BorderRadius.circular(8),
+        border: c.isDark ? Border.all(color: c.border) : null,
+        boxShadow: _shadow(c),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -249,10 +266,11 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
               DhImage(
                 file: refs.isEmpty ? null : refs.first,
                 asset: refs.isEmpty ? Img.ringGoldSolitaire2 : null,
-                width: 56,
-                height: 56,
+                width: 48,
+                height: 48,
+                radius: 4,
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,14 +279,13 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
                       d.customer.isEmpty ? 'No customer' : d.customer,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.headlineSm,
+                      style: AppText.headlineSm.copyWith(fontSize: 20, height: 28 / 20),
                     ),
-                    const SizedBox(height: 2),
                     Text(
                       '${d.metalLabel} ${d.productCategory}',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.bodyMd.copyWith(color: c.textMuted),
+                      style: AppText.bodySm.copyWith(color: c.textMuted),
                     ),
                   ],
                 ),
@@ -279,20 +296,26 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: LabelValue('Quantity', units, mono: true)),
-              const SizedBox(width: 12),
+              Expanded(child: LabelValue('Quantity', units, valueStyle: value)),
+              const SizedBox(width: 16),
               Expanded(
-                child: LabelValue('Delivery Date', delivery == null ? 'Not set' : Fmt.dateLong(delivery), mono: true),
+                child: LabelValue(
+                  'Delivery Date',
+                  delivery == null ? 'Not set' : Fmt.dateLong(delivery),
+                  valueStyle: value,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: LabelValue('Max Unit Cost', Fmt.money(d.maxApprovedPrice, cents: true), mono: true)),
-              const SizedBox(width: 12),
-              Expanded(child: LabelValue('Priority', d.priority.label)),
+              Expanded(
+                child: LabelValue('Max Unit Cost', Fmt.money(d.maxApprovedPrice, cents: true), valueStyle: value),
+              ),
+              const SizedBox(width: 16),
+              Expanded(child: LabelValue('Priority', d.priority.label, valueStyle: value)),
             ],
           ),
         ],
@@ -306,7 +329,7 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: c.navActive,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         border: c.isDark ? Border.all(color: c.gold.withValues(alpha: 0.35)) : null,
       ),
       child: Column(
@@ -314,28 +337,28 @@ class _ReviewJobOrderScreenState extends State<ReviewJobOrderScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.rule_folder_outlined, color: fg),
+              Icon(Icons.rule_folder_outlined, color: fg.withValues(alpha: 0.6)),
               const SizedBox(width: 8),
               Expanded(
                 child: Text('Approval Requirements', style: AppText.headlineSm.copyWith(color: fg)),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           for (final step in const ['Design Review', 'Cost Analysis', 'Vendor Allocation'])
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(step, style: AppText.bodyMd.copyWith(color: fg.withValues(alpha: 0.8))),
+                    child: Text(step, style: AppText.bodySm.copyWith(fontSize: 14, color: fg.withValues(alpha: 0.6))),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(4)),
                     child: Text(
                       'PENDING',
-                      style: AppText.monoCaps.copyWith(fontSize: 10, color: c.isDark ? c.gold : c.accent),
+                      style: AppText.labelSm.copyWith(letterSpacing: 1.2, color: c.isDark ? c.gold : c.accent),
                     ),
                   ),
                 ],
@@ -377,24 +400,30 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return DhCard(
-      padding: EdgeInsets.zero,
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: _fill(c),
+        borderRadius: BorderRadius.circular(8),
+        border: c.isDark ? Border.all(color: c.border) : null,
+        boxShadow: _shadow(c),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           InkWell(
             onTap: onToggle,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+              padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
               child: Row(
                 children: [
-                  Icon(icon, size: 22, color: iconColor),
+                  Icon(icon, size: 24, color: iconColor),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(title, style: AppText.titleMd),
+                        Text(title, style: AppText.headlineSm),
                         const SizedBox(height: 2),
                         Text(
                           summary,
@@ -441,6 +470,37 @@ class _Section extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Tonal fill of the design's summary and accordion cards (surface-container).
+Color _fill(DhColors c) => c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7);
+
+List<BoxShadow>? _shadow(DhColors c) =>
+    c.isDark ? null : [BoxShadow(color: c.text.withValues(alpha: 0.06), blurRadius: 3, offset: const Offset(0, 1))];
+
+/// The design's black "profile" button at the right of the step header.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Tooltip(
+        message: 'Profile & settings',
+        child: Material(
+          color: c.action,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, Routes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox.square(dimension: 34, child: Icon(Icons.person_outline, size: 20, color: c.onAction)),
+          ),
+        ),
       ),
     );
   }

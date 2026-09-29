@@ -66,7 +66,7 @@ class _CommercialRequirementsScreenState extends State<CommercialRequirementsScr
       step: 2,
       totalSteps: 4,
       stepLabel: 'Commercials',
-      badge: 'Draft',
+      actions: const [_ProfileButton()],
       ctaLabel: 'Continue to Delivery',
       onCta: () => Navigator.pushNamed(context, Routes.delivery),
       children: [
@@ -134,18 +134,27 @@ class _CommercialRequirementsScreenState extends State<CommercialRequirementsScr
         const SizedBox(height: 24),
         Text('Pricing Basis', style: AppText.headlineSm),
         const SizedBox(height: 12),
-        DhSegmented<String>(
-          options: const ['Fixed Quote', 'Cost Plus'],
-          selected: d.pricingBasis,
-          onChanged: (v) => setState(() => d.pricingBasis = v),
+        Row(
+          children: [
+            for (final (value, label, icon) in _pricingOptions) ...[
+              if (value != _pricingOptions.first.$1) const SizedBox(width: 8),
+              Expanded(
+                child: _PricingTile(
+                  icon: icon,
+                  label: label,
+                  selected: d.pricingBasis == value,
+                  onTap: () => setState(() => d.pricingBasis = value),
+                ),
+              ),
+            ],
+          ],
         ),
         const SizedBox(height: 8),
-        Text(
-          d.pricingBasis == 'Cost Plus'
-              ? 'Billed at actual material and labour cost plus the agreed margin.'
-              : 'Unit price is locked at quote; overruns stay with the manufacturer.',
-          style: AppText.bodySm.copyWith(color: c.textFaint),
-        ),
+        Text(switch (d.pricingBasis) {
+          'Cost Plus' => 'Billed at actual material and labour cost plus the agreed margin.',
+          'Fixed Price' => 'Unit price is fixed up front; overruns stay with the manufacturer.',
+          _ => 'Unit price is locked at quote; overruns stay with the manufacturer.',
+        }, style: AppText.bodySm.copyWith(color: c.textFaint)),
         const SizedBox(height: 24),
         Text('Materials', style: AppText.headlineSm),
         const SizedBox(height: 12),
@@ -755,6 +764,80 @@ class _CostLineDialogState extends State<_CostLineDialog> {
         ),
         FilledButton(onPressed: _submit, child: const Text('Save')),
       ],
+    );
+  }
+}
+
+/// Pricing basis options: (stored value, tile label, icon). 'Fixed Quote' stays the draft default.
+const _pricingOptions = <(String, String, IconData)>[
+  ('Fixed Price', 'Fixed', Icons.sell_outlined),
+  ('Fixed Quote', 'Quote', Icons.request_quote_outlined),
+  ('Cost Plus', 'Cost Plus', Icons.functions),
+];
+
+/// Pricing basis tile: tonal, solid primary when selected.
+class _PricingTile extends StatelessWidget {
+  const _PricingTile({required this.icon, required this.label, required this.selected, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final fg = selected ? c.onAction : c.text;
+    return Material(
+      color: selected ? c.action : (c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: c.isDark && !selected ? BorderSide(color: c.border) : BorderSide.none,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+          child: Column(
+            children: [
+              Icon(icon, size: 24, color: fg),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppText.bodyLg.copyWith(fontWeight: FontWeight.w500, color: fg),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The design's black "profile" button at the right of the step header.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Tooltip(
+        message: 'Profile & settings',
+        child: Material(
+          color: c.action,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, Routes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox.square(dimension: 34, child: Icon(Icons.person_outline, size: 20, color: c.onAction)),
+          ),
+        ),
+      ),
     );
   }
 }

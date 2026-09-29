@@ -46,17 +46,19 @@ class _QualityAcceptanceScreenState extends State<QualityAcceptanceScreen> {
       step: 3,
       totalSteps: 4,
       stepLabel: 'Quality',
+      actions: const [_ProfileButton()],
       ctaLabel: 'Review Job Order',
       onCta: () => Navigator.pushNamed(context, Routes.review),
       children: [
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: c.isDark ? c.surface : c.surfaceLow,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: c.border),
+              border: c.isDark ? Border.all(color: c.border) : null,
+              boxShadow: _shadow(c),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -68,21 +70,24 @@ class _QualityAcceptanceScreenState extends State<QualityAcceptanceScreen> {
                     'JOB TYPE: ${d.jobType} ${d.productCategory}'.toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppText.monoCaps.copyWith(color: c.text),
+                    style: AppText.labelSm.copyWith(color: c.text),
                   ),
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        Text('What does an acceptable finished piece look like?', style: AppText.headlineMd),
-        const SizedBox(height: 6),
+        const SizedBox(height: 24),
+        Text(
+          'What does an acceptable finished piece look like?',
+          style: AppText.headlineMd.copyWith(fontSize: 24, height: 32 / 24),
+        ),
+        const SizedBox(height: 8),
         Text(
           'Define the precision standards and acceptance criteria for final delivery.',
           style: AppText.bodyMd.copyWith(color: c.textMuted),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         for (final (icon, title, checks) in _groups) ...[
           _CheckGroup(
             icon: icon,
@@ -97,27 +102,30 @@ class _QualityAcceptanceScreenState extends State<QualityAcceptanceScreen> {
                 ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
         ],
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
         Field(
           label: 'Independent Certification',
           hint: d.certificate == 'No Certificate' ? null : 'Center stone certificate requested: ${d.certificate}',
-          child: ChoiceGroup<String>(
-            options: _certifications,
-            selected: d.qualityCertification,
-            columns: 4,
-            dense: true,
-            onChanged: (v) => setState(() => d.qualityCertification = v),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final cert in _certifications)
+                _CertPill(
+                  label: cert,
+                  selected: d.qualityCertification == cert,
+                  onTap: () => setState(() => d.qualityCertification = cert),
+                ),
+            ],
           ),
         ),
         const SizedBox(height: 24),
         Field(
           label: 'Customer-Specific Requirements',
-          child: DhTextField(
+          child: _RequirementsField(
             value: d.customerRequirements,
-            maxLines: 4,
-            hint: 'Enter any bespoke requests, unique polishing instructions, or critical constraints...',
             onChanged: (v) => setState(() => d.customerRequirements = v),
           ),
         ),
@@ -129,9 +137,9 @@ class _QualityAcceptanceScreenState extends State<QualityAcceptanceScreen> {
             spacing: 12,
             children: [
               for (final (name, icon) in _authorities)
-                IconOptionCard(
+                _AuthorityTile(
                   icon: icon,
-                  title: name,
+                  label: name,
                   selected: d.qualityAuthority == name,
                   onTap: () => setState(() => d.qualityAuthority = name),
                 ),
@@ -154,7 +162,7 @@ class _QualityAcceptanceScreenState extends State<QualityAcceptanceScreen> {
   Widget _referenceStrip() {
     final refs = d.referenceImages.take(3).toList();
     return SizedBox(
-      height: 92,
+      height: 64,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -177,13 +185,19 @@ class _CheckGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
-    return DhCard(
-      padding: EdgeInsets.zero,
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: c.isDark ? Border.all(color: c.border) : null,
+        boxShadow: _shadow(c),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             color: c.isDark ? c.surfaceHigh : c.surfaceLow,
             child: Row(
               children: [
@@ -199,7 +213,7 @@ class _CheckGroup extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(4, 4, 12, 6),
+            padding: const EdgeInsets.fromLTRB(6, 6, 12, 6),
             child: Column(children: children),
           ),
         ],
@@ -225,7 +239,13 @@ class _CheckRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Checkbox(value: checked, onChanged: (_) => onTap()),
+          Checkbox(
+            value: checked,
+            onChanged: (_) => onTap(),
+            fillColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.action : c.surface),
+            checkColor: c.onAction,
+            side: BorderSide(color: c.isDark ? c.borderStrong : c.textFaint, width: 1.5),
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 14, bottom: 12),
@@ -234,7 +254,7 @@ class _CheckRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: AppText.bodyMd.copyWith(fontWeight: FontWeight.w600, color: checked ? c.text : c.textMuted),
+                    style: AppText.bodyMd.copyWith(fontSize: 13.5, fontWeight: FontWeight.w600, color: c.text),
                   ),
                   if (extra != null) ...[const SizedBox(height: 10), extra!],
                 ],
@@ -285,23 +305,164 @@ class _RefThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.c;
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 8),
       child: InkWell(
         onTap: () => _preview(context),
         borderRadius: BorderRadius.circular(8),
-        child: SizedBox(
-          width: 68,
-          child: Column(
-            children: [
-              DhImage(asset: asset, file: file, width: 64, height: 64, radius: 8),
-              const SizedBox(height: 6),
-              Text(
-                caption,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppText.monoSm.copyWith(fontSize: 9, color: c.textFaint),
-              ),
-            ],
+        child: Tooltip(
+          message: caption,
+          child: DecoratedBox(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), boxShadow: _shadow(c)),
+            child: DhImage(asset: asset, file: file, width: 64, height: 64, radius: 6),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+List<BoxShadow>? _shadow(DhColors c) =>
+    c.isDark ? null : [BoxShadow(color: c.text.withValues(alpha: 0.07), blurRadius: 3, offset: const Offset(0, 1))];
+
+/// The design's black "profile" button at the right of the step header.
+class _ProfileButton extends StatelessWidget {
+  const _ProfileButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Tooltip(
+        message: 'Profile & settings',
+        child: Material(
+          color: c.action,
+          borderRadius: BorderRadius.circular(12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, Routes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox.square(dimension: 34, child: Icon(Icons.person_outline, size: 20, color: c.onAction)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Rounded certification pill: solid accent when selected.
+class _CertPill extends StatelessWidget {
+  const _CertPill({required this.label, required this.selected, required this.onTap});
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), boxShadow: _shadow(c)),
+      child: Material(
+        color: selected ? c.accent : c.surfaceHighest,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
+            child: Text(label, style: AppText.labelMd.copyWith(fontSize: 13, color: selected ? c.onAccent : c.text)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Final-authority option: tonal tile, solid accent when selected.
+class _AuthorityTile extends StatelessWidget {
+  const _AuthorityTile({required this.icon, required this.label, required this.selected, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final fg = selected ? c.onAccent : c.text;
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), boxShadow: _shadow(c)),
+      child: Material(
+        color: selected ? c.accent : c.surfaceHighest,
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+            child: Column(
+              children: [
+                Icon(icon, size: 24, color: fg),
+                const SizedBox(height: 8),
+                Text(label, style: AppText.labelMd.copyWith(fontSize: 13, color: fg)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Borderless white text area with a soft shadow.
+class _RequirementsField extends StatefulWidget {
+  const _RequirementsField({required this.value, required this.onChanged});
+
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  State<_RequirementsField> createState() => _RequirementsFieldState();
+}
+
+class _RequirementsFieldState extends State<_RequirementsField> {
+  late final TextEditingController _ctrl = TextEditingController(text: widget.value);
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final none = OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none);
+    return DecoratedBox(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), boxShadow: _shadow(c)),
+      child: TextField(
+        controller: _ctrl,
+        onChanged: widget.onChanged,
+        maxLines: 4,
+        style: AppText.bodyMd.copyWith(color: c.text),
+        decoration: InputDecoration(
+          hintText: 'Enter any bespoke requests, unique polishing instructions, or critical constraints...',
+          hintMaxLines: 4,
+          hintStyle: AppText.bodyMd.copyWith(color: c.textMuted.withValues(alpha: 0.6)),
+          filled: true,
+          fillColor: c.surface,
+          contentPadding: const EdgeInsets.all(16),
+          border: none,
+          enabledBorder: c.isDark
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: c.border),
+                )
+              : none,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: c.accent, width: 1.5),
           ),
         ),
       ),

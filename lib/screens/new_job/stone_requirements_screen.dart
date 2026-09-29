@@ -35,7 +35,6 @@ class _StoneRequirementsScreenState extends State<StoneRequirementsScreen> {
   late bool _notesOpen = d.stoneNotes.isNotEmpty;
   late bool _meleeSupplied = d.melee.isNotEmpty && d.melee.every((p) => p.supplied);
   final Set<MeleeParcel> _parcelNotesOpen = {};
-  String? _certificatePhoto;
 
   /// Bumped after the parcel sheet saves so inline note fields re-read their value.
   int _rev = 0;
@@ -80,7 +79,7 @@ class _StoneRequirementsScreenState extends State<StoneRequirementsScreen> {
 
   Future<void> _pickCertificate() async {
     final path = await pickImage(context, title: 'Stone Certificate');
-    if (path != null && mounted) setState(() => _certificatePhoto = path);
+    if (path != null && mounted) setState(() => d.stoneCertificatePhoto = path);
   }
 
   void _setMeleeSource(bool supplied) => setState(() {
@@ -143,7 +142,7 @@ class _StoneRequirementsScreenState extends State<StoneRequirementsScreen> {
       ctaLabel: 'Continue to Commercials',
       onCta: () => Navigator.pushNamed(context, Routes.commercial),
       children: [
-        Text('Center Stone', style: AppText.headlineSm),
+        Text('Center Stone', style: AppText.bodyLg.copyWith(fontSize: 17, fontWeight: FontWeight.w500)),
         const SizedBox(height: 12),
         IntrinsicHeight(
           child: Row(
@@ -196,9 +195,9 @@ class _StoneRequirementsScreenState extends State<StoneRequirementsScreen> {
                 title: 'Add Certificate',
                 icon: Icons.description_outlined,
                 height: 128,
-                imagePath: _certificatePhoto,
+                imagePath: d.stoneCertificatePhoto,
                 onTap: _pickCertificate,
-                onClear: () => setState(() => _certificatePhoto = null),
+                onClear: () => setState(() => d.stoneCertificatePhoto = null),
               ),
             ),
           ],

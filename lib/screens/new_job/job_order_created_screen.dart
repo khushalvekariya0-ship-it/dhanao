@@ -109,10 +109,16 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
                   children: [
                     _nextStepCard(c, job),
                     const SizedBox(height: 28),
-                    const SectionLabel('Production Lifecycle'),
-                    const SizedBox(height: 14),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(
+                        'PRODUCTION LIFECYCLE',
+                        style: AppText.labelMd.copyWith(letterSpacing: 1.2, color: c.textMuted),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     for (var i = 0; i < _lifecycle.length; i++)
-                      PipelineTile(
+                      _LifecycleRow(
                         title: _lifecycle[i],
                         subtitle: i == 1 && phase <= 1
                             ? (job.assignee == null ? 'Awaiting Assignment' : 'Assigned to ${job.assignee}')
@@ -120,6 +126,7 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
                         state: i < phase
                             ? PipelineState.done
                             : (i == phase ? PipelineState.current : PipelineState.pending),
+                        lineDone: i < phase,
                         isLast: i == _lifecycle.length - 1,
                       ),
                     const SizedBox(height: 28),
@@ -135,7 +142,7 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
                       style: TextButton.styleFrom(foregroundColor: c.text, minimumSize: const Size(0, 48)),
                       child: Text(
                         'RETURN TO DASHBOARD',
-                        style: AppText.labelMd.copyWith(fontSize: 13, letterSpacing: 1.0),
+                        style: AppText.labelMd.copyWith(fontSize: 13, letterSpacing: 1.4),
                       ),
                     ),
                   ],
@@ -150,11 +157,14 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
 
   Widget _header(DhColors c, Job job) {
     final accent = c.isDark ? c.gold : c.accent;
+    // Badge ink: primary (near-black) in light, gold in dark.
+    final ink = c.isDark ? c.gold : c.text;
+    final badge = BorderRadius.circular(14);
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 28, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 32, 16, 24),
       decoration: BoxDecoration(
         color: c.surfaceLow,
-        border: Border(bottom: BorderSide(color: c.border)),
+        border: c.isDark ? Border(bottom: BorderSide(color: c.border)) : null,
       ),
       child: Column(
         children: [
@@ -172,11 +182,11 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
                     child: Transform.scale(
                       scale: 1 + _ping.value * 0.45,
                       child: Container(
-                        width: 68,
-                        height: 68,
+                        width: 64,
+                        height: 64,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: accent, width: 2),
+                          borderRadius: badge,
+                          border: Border.all(color: ink, width: 2),
                         ),
                       ),
                     ),
@@ -187,14 +197,14 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
                   child: ScaleTransition(
                     scale: _scale,
                     child: Container(
-                      width: 68,
-                      height: 68,
+                      width: 64,
+                      height: 64,
                       decoration: BoxDecoration(
                         color: c.accentSoft,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: accent.withValues(alpha: 0.5)),
+                        borderRadius: badge,
+                        border: Border.all(color: ink, width: 2),
                       ),
-                      child: Icon(Icons.check_circle, size: 36, color: accent),
+                      child: Icon(Icons.check_circle_outline, size: 34, color: ink),
                     ),
                   ),
                 ),
@@ -206,17 +216,21 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
             opacity: _fade,
             child: Column(
               children: [
-                Text('Job Order Created', textAlign: TextAlign.center, style: AppText.headlineMd),
-                const SizedBox(height: 6),
+                Text(
+                  'Job Order Created',
+                  textAlign: TextAlign.center,
+                  style: AppText.headlineMd.copyWith(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 4),
                 SelectableText(
                   job.id,
                   textAlign: TextAlign.center,
-                  style: AppText.monoLg.copyWith(fontSize: 18, color: c.textMuted, letterSpacing: 1),
+                  style: AppText.monoLg.copyWith(fontSize: 15, fontWeight: FontWeight.w400, color: c.textMuted),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                  decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(12)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -226,7 +240,7 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
                         decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
                       ),
                       const SizedBox(width: 8),
-                      Text('APPROVED • READY', style: AppText.labelMd.copyWith(letterSpacing: 1.0, color: accent)),
+                      Text('APPROVED • READY', style: AppText.labelMd.copyWith(letterSpacing: 1.4, color: accent)),
                     ],
                   ),
                 ),
@@ -241,54 +255,95 @@ class _JobOrderCreatedScreenState extends State<JobOrderCreatedScreen> with Tick
   Widget _nextStepCard(DhColors c, Job job) {
     final assignee = job.assignee;
     final partner = assignee == null ? null : app.partnerByName(assignee);
-    return DhCard(
-      color: c.isDark ? c.surface : c.surfaceLow,
-      accentTop: c.isDark,
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: c.isDark ? c.surface : c.surfaceHigh.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(8),
+        border: c.isDark ? Border.all(color: c.border) : null,
+        boxShadow: c.isDark
+            ? null
+            : [BoxShadow(color: c.text.withValues(alpha: 0.06), blurRadius: 3, offset: const Offset(0, 1))],
+      ),
+      child: Stack(
         children: [
-          Row(
-            children: [
-              Icon(Icons.play_circle_outline, size: 20, color: c.isDark ? c.gold : c.accent),
-              const SizedBox(width: 8),
-              Text('Next Step', style: AppText.headlineSm),
-            ],
+          // Decorative corner block from the design.
+          Positioned(
+            top: -32,
+            right: -32,
+            child: Container(
+              width: 128,
+              height: 128,
+              decoration: BoxDecoration(
+                color: (c.isDark ? c.gold : c.text).withValues(alpha: 0.05),
+                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12)),
+              ),
+            ),
           ),
-          const SizedBox(height: 14),
-          Text('CAD Development', style: AppText.titleMd),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              if (assignee == null) ...[
-                Icon(Icons.person_off_outlined, size: 16, color: c.warning),
-                const SizedBox(width: 4),
-                Text('Unassigned', style: AppText.bodySm.copyWith(color: c.warning)),
-              ] else ...[
-                DhAvatar(asset: partner?.avatar, name: assignee, size: 22),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    assignee,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.bodySm.copyWith(color: c.text, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
-              const Spacer(),
-              Icon(Icons.event_outlined, size: 16, color: c.textMuted),
-              const SizedBox(width: 4),
-              Text('Due ${Fmt.date(_cadDue(job))}', style: AppText.monoSm.copyWith(color: c.textMuted)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (assignee == null)
-            PrimaryButton('ASSIGN CAD DESIGNER', icon: Icons.person_add_outlined, onPressed: () => _assign(job))
-          else
-            SecondaryButton('Change Designer', icon: Icons.swap_horiz, onPressed: () => _assign(job)),
+          Padding(padding: const EdgeInsets.all(20), child: _nextStepBody(c, job, assignee, partner)),
         ],
       ),
+    );
+  }
+
+  Widget _nextStepBody(DhColors c, Job job, String? assignee, Partner? partner) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.play_circle_outline, size: 20, color: c.isDark ? c.gold : c.accent),
+            const SizedBox(width: 8),
+            Text('Next Step', style: AppText.headlineSm.copyWith(fontSize: 20, height: 28 / 20)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'CAD Development',
+          style: AppText.bodyLg.copyWith(fontWeight: FontWeight.w600, color: c.text),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            if (assignee == null) ...[
+              Icon(Icons.person_off_outlined, size: 16, color: c.textMuted),
+              const SizedBox(width: 4),
+              Text('Unassigned', style: AppText.bodySm.copyWith(color: c.textMuted)),
+            ] else ...[
+              DhAvatar(asset: partner?.avatar, name: assignee, size: 22),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  assignee,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppText.bodySm.copyWith(color: c.text, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+            const Spacer(),
+            Icon(Icons.event_outlined, size: 16, color: c.textMuted),
+            const SizedBox(width: 4),
+            Text(
+              'Due ${Fmt.date(_cadDue(job))}',
+              style: AppText.monoSm.copyWith(fontSize: 12, fontWeight: FontWeight.w400, color: c.textMuted),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        if (assignee == null)
+          FilledButton.icon(
+            onPressed: () => _assign(job),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size(double.infinity, 48),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            ),
+            icon: const Icon(Icons.person_add_outlined, size: 18),
+            label: Text('ASSIGN CAD DESIGNER', style: AppText.labelMd.copyWith(fontSize: 13, letterSpacing: 1.2)),
+          )
+        else
+          SecondaryButton('Change Designer', icon: Icons.swap_horiz, onPressed: () => _assign(job)),
+      ],
     );
   }
 }
@@ -364,6 +419,112 @@ class _DesignerSheet extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// One step of the production lifecycle: filled check (done), ringed dot (current) or hollow circle (upcoming).
+class _LifecycleRow extends StatelessWidget {
+  const _LifecycleRow({
+    required this.title,
+    required this.state,
+    required this.lineDone,
+    required this.isLast,
+    this.subtitle,
+  });
+
+  final String title;
+  final String? subtitle;
+  final PipelineState state;
+
+  /// Whether the connector below this step is part of the completed path.
+  final bool lineDone;
+  final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    final primary = c.isDark ? c.gold : c.text;
+    final accent = c.isDark ? c.gold : c.accent;
+    final Widget dot = switch (state) {
+      PipelineState.done => Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(color: primary, shape: BoxShape.circle),
+        child: Icon(Icons.check, size: 13, color: c.isDark ? c.onAction : c.surface),
+      ),
+      PipelineState.current => Container(
+        width: 20,
+        height: 20,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: c.surfaceHigh,
+          shape: BoxShape.circle,
+          border: Border.all(color: accent),
+        ),
+        child: Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
+        ),
+      ),
+      PipelineState.pending => Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: c.surfaceHigh,
+          shape: BoxShape.circle,
+          border: Border.all(color: c.borderStrong),
+        ),
+      ),
+    };
+    final titleStyle = switch (state) {
+      PipelineState.done => AppText.bodyMd.copyWith(
+        fontSize: 15,
+        color: c.text,
+        decoration: TextDecoration.lineThrough,
+        decorationColor: c.text.withValues(alpha: 0.3),
+      ),
+      PipelineState.current => AppText.bodyMd.copyWith(fontSize: 15, fontWeight: FontWeight.w600, color: accent),
+      PipelineState.pending => AppText.bodyMd.copyWith(fontSize: 15, color: c.textMuted),
+    };
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 40,
+            child: Column(
+              children: [
+                Padding(padding: const EdgeInsets.only(top: 1), child: dot),
+                if (!isLast)
+                  Expanded(
+                    child: Container(width: 2, color: lineDone ? primary : c.borderStrong.withValues(alpha: 0.4)),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: isLast ? 0 : 56),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: isLast ? 0 : 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: titleStyle),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(subtitle!, style: AppText.bodySm.copyWith(color: c.textMuted)),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
