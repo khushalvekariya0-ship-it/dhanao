@@ -7,9 +7,9 @@ import '../../core/assets.dart';
 import '../../core/format.dart';
 import '../../core/models.dart';
 import '../../core/routes.dart';
-import '../../core/stage_info.dart';
 import '../../core/theme.dart';
 import '../../widgets/widgets.dart';
+import '../jobs/stage_sheet.dart';
 
 /// Order workflow tracker: hero render, key specs and the six-step
 /// manufacturing pipeline with "Mark Complete" on the active step.
@@ -241,11 +241,11 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
     );
   }
 
-  /// Opens the Process Detail page for pipeline step [i]. The active step opens the job's
+  /// Opens the stage sheet for pipeline step [i]. The active step opens the job's
   /// current stage (e.g. Assembly within "Stone Setting").
   void _openStep(Job job, int i) {
     final stage = _stepOf(job.stage) == i ? job.stage : _steps[i].stage;
-    Navigator.pushNamed(context, Routes.stage, arguments: StageRef(job.id, stage));
+    openStage(context, job, stage);
   }
 
   Widget _pipeline(Job job) {

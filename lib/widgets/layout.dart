@@ -83,23 +83,33 @@ class WizardScaffold extends StatelessWidget {
                 preferredSize: const Size.fromHeight(34),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                  child: Column(children: [
-                    Row(children: [
-                      Text('STEP $step/$totalSteps', style: AppText.monoCaps.copyWith(color: c.isDark ? c.gold : c.textMuted)),
-                      const Spacer(),
-                      if (stepLabel != null)
-                        Text(stepLabel!.toUpperCase(), style: AppText.monoCaps.copyWith(color: c.isDark ? c.gold : c.accent)),
-                    ]),
-                    const SizedBox(height: 8),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: LinearProgressIndicator(
-                        value: step! / totalSteps!,
-                        minHeight: 4,
-                        color: c.isDark ? c.gold : c.accent,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'STEP $step/$totalSteps',
+                            style: AppText.monoCaps.copyWith(color: c.isDark ? c.gold : c.textMuted),
+                          ),
+                          const Spacer(),
+                          if (stepLabel != null)
+                            Text(
+                              stepLabel!.toUpperCase(),
+                              style: AppText.monoCaps.copyWith(color: c.isDark ? c.gold : c.accent),
+                            ),
+                        ],
                       ),
-                    ),
-                  ]),
+                      const SizedBox(height: 8),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: LinearProgressIndicator(
+                          value: step! / totalSteps!,
+                          minHeight: 4,
+                          color: c.isDark ? c.gold : c.accent,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),
@@ -109,35 +119,49 @@ class WizardScaffold extends StatelessWidget {
           : SafeArea(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                decoration: BoxDecoration(color: c.bg, border: Border(top: BorderSide(color: c.border))),
-                child: Row(children: [
-                  if (secondaryLabel != null) ...[
-                    Expanded(
-                      flex: 2,
-                      child: OutlinedButton(
-                        onPressed: onSecondary,
-                        style: OutlinedButton.styleFrom(minimumSize: const Size(0, 52)),
-                        child: Text(secondaryLabel!),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  if (ctaLabel != null)
-                    Expanded(
-                      flex: 3,
-                      child: FilledButton(
-                        onPressed: onCta,
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size(0, 52),
-                          foregroundColor: c.isDark ? null : const Color(0xFFF2CA50),
+                decoration: BoxDecoration(
+                  color: c.bg,
+                  border: Border(top: BorderSide(color: c.border)),
+                ),
+                child: Row(
+                  children: [
+                    if (secondaryLabel != null) ...[
+                      Expanded(
+                        flex: 2,
+                        child: OutlinedButton(
+                          onPressed: onSecondary,
+                          style: OutlinedButton.styleFrom(minimumSize: const Size(0, 52)),
+                          child: Text(secondaryLabel!),
                         ),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          Flexible(child: Text(ctaLabel!.toUpperCase(), overflow: TextOverflow.ellipsis, style: AppText.titleMd.copyWith(fontSize: 14, letterSpacing: 0.6))),
-                          if (ctaIcon != null) ...[const SizedBox(width: 8), Icon(ctaIcon, size: 20)],
-                        ]),
                       ),
-                    ),
-                ]),
+                      const SizedBox(width: 12),
+                    ],
+                    if (ctaLabel != null)
+                      Expanded(
+                        flex: 3,
+                        child: FilledButton(
+                          onPressed: onCta,
+                          style: FilledButton.styleFrom(
+                            minimumSize: const Size(0, 52),
+                            foregroundColor: c.isDark ? null : const Color(0xFFF2CA50),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  ctaLabel!.toUpperCase(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppText.titleMd.copyWith(fontSize: 14, letterSpacing: 0.6),
+                                ),
+                              ),
+                              if (ctaIcon != null) ...[const SizedBox(width: 8), Icon(ctaIcon, size: 20)],
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
     );
@@ -187,7 +211,10 @@ class DetailScaffold extends StatelessWidget {
           : SafeArea(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                decoration: BoxDecoration(color: c.bg, border: Border(top: BorderSide(color: c.border))),
+                decoration: BoxDecoration(
+                  color: c.bg,
+                  border: Border(top: BorderSide(color: c.border)),
+                ),
                 child: bottom,
               ),
             ),
@@ -253,7 +280,13 @@ class StageTimeline extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.45), blurRadius: 10)],
         ),
-        child: Container(decoration: BoxDecoration(color: accent.withValues(alpha: 0.2), shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.6)))),
+        child: Container(
+          decoration: BoxDecoration(
+            color: accent.withValues(alpha: 0.2),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white.withValues(alpha: 0.6)),
+          ),
+        ),
       );
     } else {
       dot = Container(
@@ -269,17 +302,19 @@ class StageTimeline extends StatelessWidget {
         fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
       ),
     );
-    return Row(children: [
-      dot,
-      const SizedBox(width: 6),
-      isCurrent
-          ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(color: c.surfaceHigh, borderRadius: BorderRadius.circular(12)),
-              child: label,
-            )
-          : label,
-    ]);
+    return Row(
+      children: [
+        dot,
+        const SizedBox(width: 6),
+        isCurrent
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(color: c.surfaceHigh, borderRadius: BorderRadius.circular(12)),
+                child: label,
+              )
+            : label,
+      ],
+    );
   }
 }
 
@@ -317,7 +352,10 @@ class PipelineTile extends StatelessWidget {
         dot = Container(
           width: 24,
           height: 24,
-          decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: active, width: 1.5)),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: active, width: 1.5),
+          ),
           child: Icon(Icons.check, size: 14, color: active),
         );
       case PipelineState.current:
@@ -329,13 +367,23 @@ class PipelineTile extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [BoxShadow(color: active.withValues(alpha: 0.5), blurRadius: 10)],
           ),
-          child: Center(child: Container(width: 8, height: 8, decoration: BoxDecoration(color: c.isDark ? c.onAction : Colors.white, shape: BoxShape.circle))),
+          child: Center(
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(color: c.isDark ? c.onAction : Colors.white, shape: BoxShape.circle),
+            ),
+          ),
         );
       case PipelineState.pending:
         dot = Container(
           width: 24,
           height: 24,
-          decoration: BoxDecoration(color: c.surfaceHigh, shape: BoxShape.circle, border: Border.all(color: c.border)),
+          decoration: BoxDecoration(
+            color: c.surfaceHigh,
+            shape: BoxShape.circle,
+            border: Border.all(color: c.border),
+          ),
         );
     }
     final titleStyle = (mono ? AppText.monoLg : AppText.titleMd).copyWith(
@@ -347,10 +395,15 @@ class PipelineTile extends StatelessWidget {
         children: [
           SizedBox(
             width: 24,
-            child: Column(children: [
-              dot,
-              if (!isLast) Expanded(child: Container(width: 2, color: lineColor, margin: const EdgeInsets.symmetric(vertical: 4))),
-            ]),
+            child: Column(
+              children: [
+                dot,
+                if (!isLast)
+                  Expanded(
+                    child: Container(width: 2, color: lineColor, margin: const EdgeInsets.symmetric(vertical: 4)),
+                  ),
+              ],
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -359,10 +412,12 @@ class PipelineTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Expanded(child: Text(title, style: titleStyle)),
-                    ?trailing,
-                  ]),
+                  Row(
+                    children: [
+                      Expanded(child: Text(title, style: titleStyle)),
+                      ?trailing,
+                    ],
+                  ),
                   if (subtitle != null) ...[
                     const SizedBox(height: 2),
                     Text(subtitle!, style: (mono ? AppText.monoMd : AppText.bodySm).copyWith(color: c.textFaint)),

@@ -105,6 +105,26 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Assigns who will hold [stage] (and optionally by when). Assigning the current stage
+  /// also updates the job's assignee.
+  void assignStage(Job job, JobStage stage, String who, {DateTime? expected}) {
+    (job.stageData[stage] ??= {}).addAll({
+      'Assigned To': who,
+      if (expected != null) 'Expected': Fmt.dateLong(expected),
+    });
+    if (stage == job.stage) job.assignee = who;
+    job.thread.add(
+      ThreadMessage(
+        author: 'System',
+        kind: MessageKind.system,
+        title: 'Assigned: ${stage.label}',
+        text: '$who will handle ${stage.label}${expected == null ? '' : ' by ${Fmt.dateLong(expected)}'}.',
+        time: DateTime.now(),
+      ),
+    );
+    notifyListeners();
+  }
+
   /// Completes the job's current stage: records who/notes, attaches an optional
   /// photo, then moves to the next stage.
   JobStage? completeStage(Job job, {String? by, String? note, String? photoPath}) {

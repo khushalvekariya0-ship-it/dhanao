@@ -36,14 +36,16 @@ class DhCard extends StatelessWidget {
     final c = context.c;
     Widget body = Padding(padding: padding, child: child);
     if (tag != null) {
-      body = Stack(children: [
-        body,
-        Positioned(
-          top: 8,
-          right: 10,
-          child: Text(tag!, style: AppText.monoSm.copyWith(color: c.textFaint)),
-        ),
-      ]);
+      body = Stack(
+        children: [
+          body,
+          Positioned(
+            top: 8,
+            right: 10,
+            child: Text(tag!, style: AppText.monoSm.copyWith(color: c.textFaint)),
+          ),
+        ],
+      );
     }
     return Container(
       margin: margin,
@@ -115,7 +117,10 @@ class SectionHeader extends StatelessWidget {
         if (action != null)
           TextButton(
             onPressed: onAction,
-            style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8), minimumSize: const Size(0, 32)),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: const Size(0, 32),
+            ),
             child: Text(action!),
           ),
       ],
@@ -125,7 +130,15 @@ class SectionHeader extends StatelessWidget {
 
 /// Rectangular status tag: 1px border + 10% tint of [color].
 class StatusChip extends StatelessWidget {
-  const StatusChip(this.label, {super.key, required this.color, this.icon, this.dot = false, this.filled = false, this.mono = true});
+  const StatusChip(
+    this.label, {
+    super.key,
+    required this.color,
+    this.icon,
+    this.dot = false,
+    this.filled = false,
+    this.mono = true,
+  });
 
   final String label;
   final Color color;
@@ -154,7 +167,11 @@ class StatusChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (dot) ...[
-            Container(width: 6, height: 6, decoration: BoxDecoration(color: fg, shape: BoxShape.circle)),
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(color: fg, shape: BoxShape.circle),
+            ),
             const SizedBox(width: 6),
           ],
           if (icon != null) ...[Icon(icon, size: 12, color: fg), const SizedBox(width: 4)],
@@ -182,10 +199,15 @@ class LabelValue extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(mainAxisSize: MainAxisSize.min, children: [
-          if (icon != null) ...[Icon(icon, size: 14, color: c.textFaint), const SizedBox(width: 6)],
-          Flexible(child: Text(label.toUpperCase(), style: AppText.labelSm.copyWith(color: c.textFaint))),
-        ]),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[Icon(icon, size: 14, color: c.textFaint), const SizedBox(width: 6)],
+            Flexible(
+              child: Text(label.toUpperCase(), style: AppText.labelSm.copyWith(color: c.textFaint)),
+            ),
+          ],
+        ),
         const SizedBox(height: 4),
         Text(value, style: valueStyle ?? (mono ? AppText.monoLg : AppText.titleMd)),
       ],
@@ -195,7 +217,15 @@ class LabelValue extends StatelessWidget {
 
 /// Horizontal "Label ........ value" row with an optional divider.
 class KeyValueRow extends StatelessWidget {
-  const KeyValueRow(this.label, this.value, {super.key, this.mono = true, this.bold = false, this.valueColor, this.divider = false});
+  const KeyValueRow(
+    this.label,
+    this.value, {
+    super.key,
+    this.mono = true,
+    this.bold = false,
+    this.valueColor,
+    this.divider = false,
+  });
 
   final String label;
   final String value;
@@ -213,17 +243,27 @@ class KeyValueRow extends StatelessWidget {
     );
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: divider ? BoxDecoration(border: Border(bottom: BorderSide(color: c.border))) : null,
+      decoration: divider
+          ? BoxDecoration(
+              border: Border(bottom: BorderSide(color: c.border)),
+            )
+          : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
             flex: 2,
-            child: Text(label, style: AppText.bodyMd.copyWith(color: c.textMuted, fontWeight: bold ? FontWeight.w600 : null)),
+            child: Text(
+              label,
+              style: AppText.bodyMd.copyWith(color: c.textMuted, fontWeight: bold ? FontWeight.w600 : null),
+            ),
           ),
           const SizedBox(width: 12),
           // Expanded so right-aligned values sit flush with the right edge.
-          Expanded(flex: 3, child: Text(value, textAlign: TextAlign.right, style: vs)),
+          Expanded(
+            flex: 3,
+            child: Text(value, textAlign: TextAlign.right, style: vs),
+          ),
         ],
       ),
     );
@@ -254,17 +294,27 @@ class MetricTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [
-                if (color != null) ...[
-                  Container(width: 6, height: 6, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-                  const SizedBox(width: 6),
+              Row(
+                children: [
+                  if (color != null) ...[
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(width: 6),
+                  ],
+                  if (icon != null) ...[Icon(icon, size: 14, color: c.textFaint), const SizedBox(width: 6)],
+                  Expanded(
+                    child: Text(
+                      label.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.labelSm.copyWith(color: c.textMuted),
+                    ),
+                  ),
                 ],
-                if (icon != null) ...[Icon(icon, size: 14, color: c.textFaint), const SizedBox(width: 6)],
-                Expanded(
-                  child: Text(label.toUpperCase(),
-                      maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.labelSm.copyWith(color: c.textMuted)),
-                ),
-              ]),
+              ),
               const SizedBox(height: 10),
               Text(value, style: AppText.headlineLg.copyWith(fontFamily: AppText.sans)),
             ],
@@ -298,7 +348,9 @@ class DhAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.c;
     if (asset != null) {
-      return ClipOval(child: Image.asset(asset!, width: size, height: size, fit: BoxFit.cover));
+      return ClipOval(
+        child: Image.asset(asset!, width: size, height: size, fit: BoxFit.cover),
+      );
     }
     final bg = dark ? (c.isDark ? c.gold : const Color(0xFF131B2E)) : c.surfaceHighest;
     final fg = dark ? (c.isDark ? c.onAction : Colors.white) : c.textMuted;
@@ -307,7 +359,10 @@ class DhAvatar extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-      child: Text(_initials, style: AppText.labelMd.copyWith(color: fg, fontSize: size * 0.34)),
+      child: Text(
+        _initials,
+        style: AppText.labelMd.copyWith(color: fg, fontSize: size * 0.34),
+      ),
     );
   }
 }
@@ -388,7 +443,16 @@ class ThinProgress extends StatelessWidget {
 
 /// Full-width primary action (black in light theme, gold in dark theme).
 class PrimaryButton extends StatelessWidget {
-  const PrimaryButton(this.label, {super.key, this.onPressed, this.icon, this.trailingIcon, this.expanded = true, this.color, this.foreground});
+  const PrimaryButton(
+    this.label, {
+    super.key,
+    this.onPressed,
+    this.icon,
+    this.trailingIcon,
+    this.expanded = true,
+    this.color,
+    this.foreground,
+  });
 
   final String label;
   final VoidCallback? onPressed;
@@ -472,7 +536,11 @@ class EmptyState extends StatelessWidget {
         children: [
           Icon(icon, size: 40, color: c.textFaint.withValues(alpha: 0.6)),
           const SizedBox(height: 12),
-          Text(message, textAlign: TextAlign.center, style: AppText.bodyMd.copyWith(color: c.textFaint)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: AppText.bodyMd.copyWith(color: c.textFaint),
+          ),
           if (action != null) ...[const SizedBox(height: 16), action!],
         ],
       ),
@@ -484,13 +552,17 @@ class EmptyState extends StatelessWidget {
 void showSnack(BuildContext context, String message, {IconData? icon}) {
   final messenger = ScaffoldMessenger.of(context);
   messenger.hideCurrentSnackBar();
-  messenger.showSnackBar(SnackBar(
-    content: Row(children: [
-      if (icon != null) ...[Icon(icon, size: 18, color: context.c.gold), const SizedBox(width: 10)],
-      Expanded(child: Text(message)),
-    ]),
-    duration: const Duration(seconds: 2),
-  ));
+  messenger.showSnackBar(
+    SnackBar(
+      content: Row(
+        children: [
+          if (icon != null) ...[Icon(icon, size: 18, color: context.c.gold), const SizedBox(width: 10)],
+          Expanded(child: Text(message)),
+        ],
+      ),
+      duration: const Duration(seconds: 2),
+    ),
+  );
 }
 
 /// Yes/No confirmation dialog. Returns true when confirmed.
@@ -509,7 +581,10 @@ Future<bool> confirmDialog(
       title: Text(title),
       content: Text(message),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(cancel, style: TextStyle(color: c.textMuted))),
+        TextButton(
+          onPressed: () => Navigator.pop(ctx, false),
+          child: Text(cancel, style: TextStyle(color: c.textMuted)),
+        ),
         FilledButton(
           onPressed: () => Navigator.pop(ctx, true),
           style: destructive ? FilledButton.styleFrom(backgroundColor: c.danger, foregroundColor: Colors.white) : null,

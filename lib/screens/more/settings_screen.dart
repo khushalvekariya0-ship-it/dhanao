@@ -22,18 +22,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           DhCard(
-            child: Row(children: [
-              const DhAvatar(asset: Img.avatarRavi, size: 56),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(app.userName, style: AppText.headlineSm),
-                  Text(app.userRole, style: AppText.bodyMd.copyWith(color: c.textMuted)),
-                  const SizedBox(height: 6),
-                  Text('AuraForge India', style: AppText.monoSm.copyWith(color: c.textFaint)),
-                ]),
-              ),
-            ]),
+            child: Row(
+              children: [
+                const DhAvatar(asset: Img.avatarRavi, size: 56),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(app.userName, style: AppText.headlineSm),
+                      Text(app.userRole, style: AppText.bodyMd.copyWith(color: c.textMuted)),
+                      const SizedBox(height: 6),
+                      Text('AuraForge India', style: AppText.monoSm.copyWith(color: c.textFaint)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 24),
           const SectionLabel('Appearance'),
@@ -71,12 +76,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 8),
           DhCard(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Column(children: [
-              const KeyValueRow('App', 'DhanaOS', divider: true),
-              const KeyValueRow('Version', '1.0.0 (1)', divider: true),
-              KeyValueRow('Active jobs', '${app.activeJobs.length}', divider: true),
-              KeyValueRow('Partners', '${app.partners.length}'),
-            ]),
+            child: Column(
+              children: [
+                const KeyValueRow('App', 'DhanaOS', divider: true),
+                const KeyValueRow('Version', '1.0.0 (1)', divider: true),
+                KeyValueRow('Active jobs', '${app.activeJobs.length}', divider: true),
+                KeyValueRow('Partners', '${app.partners.length}'),
+              ],
+            ),
           ),
         ],
       ),

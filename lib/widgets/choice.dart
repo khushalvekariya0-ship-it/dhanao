@@ -104,15 +104,17 @@ class OptionLayout extends StatelessWidget {
     final rows = <Widget>[];
     for (var i = 0; i < children.length; i += columns!) {
       final slice = children.sublist(i, (i + columns!).clamp(0, children.length));
-      rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var j = 0; j < columns!; j++) ...[
-            if (j > 0) SizedBox(width: spacing),
-            Expanded(child: j < slice.length ? slice[j] : const SizedBox()),
+      rows.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var j = 0; j < columns!; j++) ...[
+              if (j > 0) SizedBox(width: spacing),
+              Expanded(child: j < slice.length ? slice[j] : const SizedBox()),
+            ],
           ],
-        ],
-      ));
+        ),
+      );
       if (i + columns! < children.length) rows.add(SizedBox(height: spacing));
     }
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: rows);
@@ -207,12 +209,18 @@ class IconOptionCard extends StatelessWidget {
       crossAxisAlignment: horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(title, textAlign: horizontal ? TextAlign.start : TextAlign.center, style: AppText.titleMd.copyWith(fontSize: 15)),
+        Text(
+          title,
+          textAlign: horizontal ? TextAlign.start : TextAlign.center,
+          style: AppText.titleMd.copyWith(fontSize: 15),
+        ),
         if (subtitle != null) ...[
           const SizedBox(height: 2),
-          Text(subtitle!,
-              textAlign: horizontal ? TextAlign.start : TextAlign.center,
-              style: AppText.bodySm.copyWith(color: c.textMuted)),
+          Text(
+            subtitle!,
+            textAlign: horizontal ? TextAlign.start : TextAlign.center,
+            style: AppText.bodySm.copyWith(color: c.textMuted),
+          ),
         ],
       ],
     );
@@ -220,7 +228,10 @@ class IconOptionCard extends StatelessWidget {
       color: selected ? c.accentSoft : (c.isDark ? c.surface : c.surfaceLow),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: selected ? c.accent : (c.isDark ? c.border : Colors.transparent), width: selected ? 1.5 : 1),
+        side: BorderSide(
+          color: selected ? c.accent : (c.isDark ? c.border : Colors.transparent),
+          width: selected ? 1.5 : 1,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -228,26 +239,31 @@ class IconOptionCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: horizontal
-              ? Row(children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: ic.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: ic.withValues(alpha: 0.3)),
+              ? Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: ic.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: ic.withValues(alpha: 0.3)),
+                      ),
+                      child: Icon(icon, color: ic, size: 22),
                     ),
-                    child: Icon(icon, color: ic, size: 22),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(child: text),
-                  trailing ?? Icon(Icons.chevron_right, color: c.textFaint),
-                ])
-              : Column(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(icon, color: ic, size: 28),
-                  const SizedBox(height: 10),
-                  text,
-                ]),
+                    const SizedBox(width: 14),
+                    Expanded(child: text),
+                    trailing ?? Icon(Icons.chevron_right, color: c.textFaint),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(icon, color: ic, size: 28),
+                    const SizedBox(height: 10),
+                    text,
+                  ],
+                ),
         ),
       ),
     );
@@ -282,7 +298,13 @@ class DhSegmented<T> extends StatelessWidget {
                     color: o == selected ? (c.isDark ? c.surfaceHighest : c.surface) : Colors.transparent,
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: o == selected && !c.isDark
-                        ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 4, offset: const Offset(0, 1))]
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 4,
+                              offset: const Offset(0, 1),
+                            ),
+                          ]
                         : null,
                   ),
                   child: Text(
@@ -304,7 +326,14 @@ class DhSegmented<T> extends StatelessWidget {
 
 /// A row with title/subtitle and a trailing switch.
 class ToggleRow extends StatelessWidget {
-  const ToggleRow({super.key, required this.title, required this.value, required this.onChanged, this.subtitle, this.icon});
+  const ToggleRow({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+    this.subtitle,
+    this.icon,
+  });
 
   final String title;
   final String? subtitle;
@@ -357,10 +386,14 @@ class Field extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(children: [
-          Expanded(child: Text(label.toUpperCase(), style: AppText.labelSm.copyWith(color: c.textMuted))),
-          if (code != null) Text(code!, style: AppText.monoSm.copyWith(color: c.textFaint)),
-        ]),
+        Row(
+          children: [
+            Expanded(
+              child: Text(label.toUpperCase(), style: AppText.labelSm.copyWith(color: c.textMuted)),
+            ),
+            if (code != null) Text(code!, style: AppText.monoSm.copyWith(color: c.textFaint)),
+          ],
+        ),
         const SizedBox(height: 8),
         child,
         if (hint != null) ...[

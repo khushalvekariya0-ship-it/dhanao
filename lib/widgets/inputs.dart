@@ -9,7 +9,15 @@ import 'common.dart';
 
 /// Paints a dashed rounded-rect border around its child.
 class DashedBorder extends StatelessWidget {
-  const DashedBorder({super.key, required this.child, this.color, this.radius = 8, this.dash = 6, this.gap = 4, this.strokeWidth = 1.2});
+  const DashedBorder({
+    super.key,
+    required this.child,
+    this.color,
+    this.radius = 8,
+    this.dash = 6,
+    this.gap = 4,
+    this.strokeWidth = 1.2,
+  });
 
   final Widget child;
   final Color? color;
@@ -105,20 +113,28 @@ class UploadBox extends StatelessWidget {
             height: height,
             width: double.infinity,
             child: hasImage
-                ? Stack(fit: StackFit.expand, children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: DhImage(file: imagePath, asset: imageAsset, radius: 6),
-                    ),
-                    Positioned(
-                      right: 10,
-                      top: 10,
-                      child: Row(children: [
-                        _pill(context, Icons.swap_horiz, 'Replace', onTap),
-                        if (onClear != null) ...[const SizedBox(width: 6), _pill(context, Icons.close, null, onClear!)],
-                      ]),
-                    ),
-                  ])
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: DhImage(file: imagePath, asset: imageAsset, radius: 6),
+                      ),
+                      Positioned(
+                        right: 10,
+                        top: 10,
+                        child: Row(
+                          children: [
+                            _pill(context, Icons.swap_horiz, 'Replace', onTap),
+                            if (onClear != null) ...[
+                              const SizedBox(width: 6),
+                              _pill(context, Icons.close, null, onClear!),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -129,13 +145,21 @@ class UploadBox extends StatelessWidget {
                           color: filledIcon ? (c.isDark ? c.gold : const Color(0xFF6366F1)) : Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(icon, size: 28, color: filledIcon ? (c.isDark ? c.onAction : Colors.white) : c.textMuted),
+                        child: Icon(
+                          icon,
+                          size: 28,
+                          color: filledIcon ? (c.isDark ? c.onAction : Colors.white) : c.textMuted,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Text(title, textAlign: TextAlign.center, style: AppText.titleMd.copyWith(fontSize: 15)),
                       if (subtitle != null) ...[
                         const SizedBox(height: 4),
-                        Text(subtitle!, textAlign: TextAlign.center, style: AppText.bodySm.copyWith(color: c.textFaint)),
+                        Text(
+                          subtitle!,
+                          textAlign: TextAlign.center,
+                          style: AppText.bodySm.copyWith(color: c.textFaint),
+                        ),
                       ],
                     ],
                   ),
@@ -154,13 +178,16 @@ class UploadBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(icon, size: 14, color: Colors.white),
-            if (label != null) ...[
-              const SizedBox(width: 4),
-              Text(label, style: AppText.labelMd.copyWith(color: Colors.white)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 14, color: Colors.white),
+              if (label != null) ...[
+                const SizedBox(width: 4),
+                Text(label, style: AppText.labelMd.copyWith(color: Colors.white)),
+              ],
             ],
-          ]),
+          ),
         ),
       ),
     );
@@ -212,7 +239,14 @@ Future<String?> pickImage(BuildContext context, {String title = 'Add Photo'}) as
 
 /// Tappable read-only field that opens a date picker.
 class DateField extends StatelessWidget {
-  const DateField({super.key, required this.value, required this.onChanged, this.hint = 'Select Date', this.firstDate, this.lastDate});
+  const DateField({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.hint = 'Select Date',
+    this.firstDate,
+    this.lastDate,
+  });
 
   final DateTime? value;
   final ValueChanged<DateTime> onChanged;
@@ -225,7 +259,10 @@ class DateField extends StatelessWidget {
     final c = context.c;
     return Material(
       color: c.isDark ? c.surfaceLow : c.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6), side: BorderSide(color: c.border)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+        side: BorderSide(color: c.border),
+      ),
       child: InkWell(
         borderRadius: BorderRadius.circular(6),
         onTap: () async {
@@ -241,17 +278,21 @@ class DateField extends StatelessWidget {
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          child: Row(children: [
-            Icon(Icons.calendar_today_outlined, size: 18, color: c.textFaint),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                value == null ? hint : Fmt.dateLong(value!),
-                style: (value == null ? AppText.bodyMd : AppText.monoMd).copyWith(color: value == null ? c.textFaint : c.text),
+          child: Row(
+            children: [
+              Icon(Icons.calendar_today_outlined, size: 18, color: c.textFaint),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  value == null ? hint : Fmt.dateLong(value!),
+                  style: (value == null ? AppText.bodyMd : AppText.monoMd).copyWith(
+                    color: value == null ? c.textFaint : c.text,
+                  ),
+                ),
               ),
-            ),
-            Icon(Icons.expand_more, color: c.textFaint),
-          ]),
+              Icon(Icons.expand_more, color: c.textFaint),
+            ],
+          ),
         ),
       ),
     );

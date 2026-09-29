@@ -52,16 +52,24 @@ class HomeShell extends StatelessWidget {
                 onPressed: () => Scaffold.of(ctx).openDrawer(),
               ),
             ),
-            title: Row(children: [
-              ClipRRect(borderRadius: BorderRadius.circular(6), child: Image.asset(Img.logo, width: 28, height: 28)),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('DhanaOS', style: AppText.titleMd),
-                  Text(_titles[tab].toUpperCase(), style: AppText.monoSm.copyWith(color: c.textFaint, fontSize: 10)),
-                ]),
-              ),
-            ]),
+            title: Row(
+              children: [
+                ClipRRect(borderRadius: BorderRadius.circular(6), child: Image.asset(Img.logo, width: 28, height: 28)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('DhanaOS', style: AppText.titleMd),
+                      Text(
+                        _titles[tab].toUpperCase(),
+                        style: AppText.monoSm.copyWith(color: c.textFaint, fontSize: 10),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             actions: [
               IconButton(
                 tooltip: 'Search',
@@ -95,15 +103,33 @@ class HomeShell extends StatelessWidget {
                   label: const Text('New Job'),
                 ),
           bottomNavigationBar: Container(
-            decoration: BoxDecoration(border: Border(top: BorderSide(color: c.border))),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: c.border)),
+            ),
             child: NavigationBar(
               selectedIndex: tab,
               onDestinationSelected: (i) => homeTab.value = i,
               destinations: const [
-                NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: 'DASH'),
-                NavigationDestination(icon: Icon(Icons.account_tree_outlined), selectedIcon: Icon(Icons.account_tree), label: 'FLOW'),
-                NavigationDestination(icon: Icon(Icons.inventory_2_outlined), selectedIcon: Icon(Icons.inventory_2), label: 'STOCK'),
-                NavigationDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long), label: 'ORDERS'),
+                NavigationDestination(
+                  icon: Icon(Icons.dashboard_outlined),
+                  selectedIcon: Icon(Icons.dashboard),
+                  label: 'DASH',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.account_tree_outlined),
+                  selectedIcon: Icon(Icons.account_tree),
+                  label: 'FLOW',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.inventory_2_outlined),
+                  selectedIcon: Icon(Icons.inventory_2),
+                  label: 'STOCK',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.receipt_long_outlined),
+                  selectedIcon: Icon(Icons.receipt_long),
+                  label: 'ORDERS',
+                ),
               ],
             ),
           ),
@@ -135,7 +161,10 @@ class HomeShell extends StatelessWidget {
                 for (final a in app.actions)
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.priority_high, color: a.kind == ActionKind.delay || a.kind == ActionKind.missing ? c.danger : c.accent),
+                    leading: Icon(
+                      Icons.priority_high,
+                      color: a.kind == ActionKind.delay || a.kind == ActionKind.missing ? c.danger : c.accent,
+                    ),
                     title: Text(a.title, style: AppText.bodyMd.copyWith(fontWeight: FontWeight.w600)),
                     subtitle: Text(a.subtitle),
                     onTap: () {
@@ -193,11 +222,13 @@ class _AppDrawer extends StatelessWidget {
             onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              child: Row(children: [
-                Icon(icon, size: 22, color: active ? c.onNavActive : c.textMuted),
-                const SizedBox(width: 14),
-                Text(label, style: AppText.titleMd.copyWith(fontSize: 15, color: active ? c.onNavActive : c.text)),
-              ]),
+              child: Row(
+                children: [
+                  Icon(icon, size: 22, color: active ? c.onNavActive : c.textMuted),
+                  const SizedBox(width: 14),
+                  Text(label, style: AppText.titleMd.copyWith(fontSize: 15, color: active ? c.onNavActive : c.text)),
+                ],
+              ),
             ),
           ),
         ),
@@ -212,15 +243,35 @@ class _AppDrawer extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
-              child: Row(children: [
-                ClipRRect(borderRadius: BorderRadius.circular(6), child: Image.asset(Img.logo, width: 36, height: 36)),
-                const SizedBox(width: 12),
-                Text('DhanaOS', style: AppText.headlineSm),
-              ]),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(Img.logo, width: 36, height: 36),
+                  ),
+                  const SizedBox(width: 12),
+                  Text('DhanaOS', style: AppText.headlineSm),
+                ],
+              ),
             ),
-            item(Icons.dashboard_outlined, 'Dashboard', () => goTab(HomeTabs.dashboard), active: tab == HomeTabs.dashboard),
-            item(Icons.account_tree_outlined, 'Production', () => goTab(HomeTabs.production), active: tab == HomeTabs.production),
-            item(Icons.precision_manufacturing_outlined, 'Jobs', () => goTab(HomeTabs.orders), active: tab == HomeTabs.orders),
+            item(
+              Icons.dashboard_outlined,
+              'Dashboard',
+              () => goTab(HomeTabs.dashboard),
+              active: tab == HomeTabs.dashboard,
+            ),
+            item(
+              Icons.account_tree_outlined,
+              'Production',
+              () => goTab(HomeTabs.production),
+              active: tab == HomeTabs.production,
+            ),
+            item(
+              Icons.precision_manufacturing_outlined,
+              'Jobs',
+              () => goTab(HomeTabs.orders),
+              active: tab == HomeTabs.orders,
+            ),
             item(Icons.inventory_2_outlined, 'Inventory', () => goTab(HomeTabs.stock), active: tab == HomeTabs.stock),
             item(Icons.hub_outlined, 'Partners', () => push(Routes.partners)),
             item(Icons.folder_shared_outlined, 'Files', () => push(Routes.files)),
@@ -232,25 +283,34 @@ class _AppDrawer extends StatelessWidget {
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(8), border: Border.all(color: c.border)),
-              child: Row(children: [
-                const DhAvatar(asset: Img.avatarRavi, size: 40),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(app.userName, style: AppText.titleMd),
-                    Text(app.userRole, style: AppText.bodySm.copyWith(color: c.textMuted)),
-                  ]),
-                ),
-                ValueListenableBuilder<ThemeMode>(
-                  valueListenable: app.themeMode,
-                  builder: (_, mode, _) => IconButton(
-                    tooltip: 'Toggle theme',
-                    icon: Icon(mode == ThemeMode.dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
-                    onPressed: () => app.themeMode.value = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
+              decoration: BoxDecoration(
+                color: c.surface,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: c.border),
+              ),
+              child: Row(
+                children: [
+                  const DhAvatar(asset: Img.avatarRavi, size: 40),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(app.userName, style: AppText.titleMd),
+                        Text(app.userRole, style: AppText.bodySm.copyWith(color: c.textMuted)),
+                      ],
+                    ),
                   ),
-                ),
-              ]),
+                  ValueListenableBuilder<ThemeMode>(
+                    valueListenable: app.themeMode,
+                    builder: (_, mode, _) => IconButton(
+                      tooltip: 'Toggle theme',
+                      icon: Icon(mode == ThemeMode.dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+                      onPressed: () => app.themeMode.value = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -266,13 +326,20 @@ class JobSearchDelegate extends SearchDelegate<void> {
   @override
   ThemeData appBarTheme(BuildContext context) {
     final t = Theme.of(context);
-    return t.copyWith(inputDecorationTheme: t.inputDecorationTheme.copyWith(filled: false, border: InputBorder.none, enabledBorder: InputBorder.none, focusedBorder: InputBorder.none));
+    return t.copyWith(
+      inputDecorationTheme: t.inputDecorationTheme.copyWith(
+        filled: false,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+      ),
+    );
   }
 
   @override
   List<Widget>? buildActions(BuildContext context) => [
-        if (query.isNotEmpty) IconButton(icon: const Icon(Icons.close), onPressed: () => query = ''),
-      ];
+    if (query.isNotEmpty) IconButton(icon: const Icon(Icons.close), onPressed: () => query = ''),
+  ];
 
   @override
   Widget? buildLeading(BuildContext context) =>

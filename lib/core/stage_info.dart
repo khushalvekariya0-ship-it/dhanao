@@ -1,13 +1,5 @@
 import 'models.dart';
 
-/// Route argument for the Process Detail screen.
-class StageRef {
-  const StageRef(this.jobId, this.stage);
-
-  final String jobId;
-  final JobStage stage;
-}
-
 /// Static description of what happens in each pipeline stage.
 class StageInfo {
   const StageInfo({required this.summary, required this.owner, required this.checklist, required this.workspace});

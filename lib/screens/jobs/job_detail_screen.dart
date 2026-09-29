@@ -9,7 +9,7 @@ import '../../core/models.dart';
 import '../../core/routes.dart';
 import '../../core/theme.dart';
 import '../../widgets/widgets.dart';
-import 'stage_detail_screen.dart';
+import 'stage_sheet.dart';
 
 /// Job detail hub (design: job_detail_dh_1048): overview, digital thread, files.
 class JobDetailScreen extends StatefulWidget {
