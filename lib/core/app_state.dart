@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'format.dart';
 import 'mock_data.dart';
 import 'models.dart';
 
@@ -51,8 +52,7 @@ class AppState extends ChangeNotifier {
 
   /// Active jobs due within [days] days, most urgent first.
   List<Job> priorityJobs({int days = 2}) {
-    final l = activeJobs.where((j) => j.daysUntilDue <= days).toList()
-      ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+    final l = activeJobs.where((j) => j.daysUntilDue <= days).toList()..sort((a, b) => a.dueDate.compareTo(b.dueDate));
     return l;
   }
 
@@ -71,14 +71,19 @@ class AppState extends ChangeNotifier {
     job.stage = stage;
     job.stageEnteredAt = DateTime.now();
     job.history.add(StageEvent(stage: stage, at: DateTime.now(), by: by ?? userName, note: note));
-    job.thread.add(ThreadMessage(
-      author: 'System',
-      kind: MessageKind.stage,
-      title: 'Stage Changed: ${stage.label}',
-      text: note ?? '${by ?? userName} moved the job to ${stage.label}.',
-      time: DateTime.now(),
-    ));
-    activity.insert(0, ActivityItem(text: '${stage.label} started', jobId: job.id, time: DateTime.now(), by: by ?? userName));
+    job.thread.add(
+      ThreadMessage(
+        author: 'System',
+        kind: MessageKind.stage,
+        title: 'Stage Changed: ${stage.label}',
+        text: note ?? '${by ?? userName} moved the job to ${stage.label}.',
+        time: DateTime.now(),
+      ),
+    );
+    activity.insert(
+      0,
+      ActivityItem(text: '${stage.label} started', jobId: job.id, time: DateTime.now(), by: by ?? userName),
+    );
     notifyListeners();
   }
 
@@ -87,6 +92,31 @@ class AppState extends ChangeNotifier {
     final n = job.stage.next;
     if (n != null) setStage(job, n, by: by, note: note);
     return n;
+  }
+
+  /// Saves details of what happened in [stage] (merged into earlier records).
+  void recordStage(Job job, JobStage stage, Map<String, String> data) {
+    final clean = {
+      for (final e in data.entries)
+        if (e.value.trim().isNotEmpty) e.key: e.value.trim(),
+    };
+    if (clean.isEmpty) return;
+    (job.stageData[stage] ??= {}).addAll(clean);
+    notifyListeners();
+  }
+
+  /// Completes the job's current stage: records who/notes, attaches an optional
+  /// photo, then moves to the next stage.
+  JobStage? completeStage(Job job, {String? by, String? note, String? photoPath}) {
+    final stage = job.stage;
+    final who = (by == null || by.trim().isEmpty) ? userName : by.trim();
+    recordStage(job, stage, {
+      'Completed By': who,
+      'Completion Note': ?note,
+      if (photoPath != null) 'Photo': photoPath.split(RegExp(r'[\\/]')).last,
+    });
+    if (photoPath != null) addFile(job, _localImage(photoPath));
+    return advance(job, by: who, note: (note == null || note.trim().isEmpty) ? null : note.trim());
   }
 
   void postMessage(Job job, String text) {
@@ -101,13 +131,15 @@ class AppState extends ChangeNotifier {
 
   void addFile(Job job, ProjectFile file) {
     job.files.insert(0, file);
-    job.thread.add(ThreadMessage(
-      author: userName,
-      kind: MessageKind.file,
-      title: 'File uploaded',
-      text: file.name,
-      time: DateTime.now(),
-    ));
+    job.thread.add(
+      ThreadMessage(
+        author: userName,
+        kind: MessageKind.file,
+        title: 'File uploaded',
+        text: file.name,
+        time: DateTime.now(),
+      ),
+    );
     notifyListeners();
   }
 
@@ -144,7 +176,7 @@ class AppState extends ChangeNotifier {
     final d = draft;
     final job = Job(
       id: id ?? nextJobId(),
-      title: title ?? '${d.metalLabel} ${d.productCategory}',
+      title: title ?? (d.title.trim().isNotEmpty ? d.title.trim() : '${d.metalLabel} ${d.productCategory}'),
       productType: d.productCategory,
       customer: d.customer,
       stage: JobStage.inquiry,
@@ -176,6 +208,22 @@ class AppState extends ChangeNotifier {
         if (d.stoneCertificatePhoto != null) _localImage(d.stoneCertificatePhoto!),
       ],
     );
+    job.stageData[JobStage.inquiry] = {
+      'Order Type': fullOrder ? 'Full Job Order' : d.jobType,
+      'Job Type': d.jobType,
+      'Customer': d.customer,
+      'Product': d.productCategory,
+      'Metal': d.metalLabel,
+      if (job.centerStone != '—') 'Center Stone': job.centerStone,
+      if (job.ringSize != null) 'Ring Size': job.ringSize!,
+      'Quantity': '${d.quantity}',
+      'Target Value': Fmt.money(job.value),
+      'Requested Delivery': Fmt.dateLong(job.dueDate),
+      if (d.referenceImages.isNotEmpty) 'Reference Images': '${d.referenceImages.length}',
+      if (d.hasVoiceNote) 'Voice Note': 'Recorded',
+      if (d.notes.isNotEmpty) 'Notes': d.notes,
+      'Created By': userName,
+    };
     jobs.insert(0, job);
     activity.insert(0, ActivityItem(text: 'Job order created', jobId: job.id, time: DateTime.now(), by: userName));
     notifyListeners();

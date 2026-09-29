@@ -144,8 +144,7 @@ class DhColors extends ThemeExtension<DhColors> {
   DhColors copyWith() => this;
 
   @override
-  DhColors lerp(ThemeExtension<DhColors>? other, double t) =>
-      (other is DhColors && t > 0.5) ? other : this;
+  DhColors lerp(ThemeExtension<DhColors>? other, double t) => (other is DhColors && t > 0.5) ? other : this;
 }
 
 /// Type scale from the design systems. Colors are intentionally omitted so
@@ -157,9 +156,19 @@ class AppText {
   static const String mono = 'JetBrainsMono';
 
   static const display = TextStyle(
-      fontFamily: sans, fontSize: 32, height: 40 / 32, fontWeight: FontWeight.w700, letterSpacing: -0.6);
+    fontFamily: sans,
+    fontSize: 32,
+    height: 40 / 32,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.6,
+  );
   static const headlineLg = TextStyle(
-      fontFamily: sans, fontSize: 26, height: 32 / 26, fontWeight: FontWeight.w600, letterSpacing: -0.3);
+    fontFamily: sans,
+    fontSize: 26,
+    height: 32 / 26,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -0.3,
+  );
   static const headlineMd = TextStyle(fontFamily: sans, fontSize: 22, height: 28 / 22, fontWeight: FontWeight.w600);
   static const headlineSm = TextStyle(fontFamily: sans, fontSize: 18, height: 24 / 18, fontWeight: FontWeight.w600);
   static const titleMd = TextStyle(fontFamily: sans, fontSize: 16, height: 22 / 16, fontWeight: FontWeight.w600);
@@ -167,21 +176,41 @@ class AppText {
   static const bodyMd = TextStyle(fontFamily: sans, fontSize: 14, height: 20 / 14, fontWeight: FontWeight.w400);
   static const bodySm = TextStyle(fontFamily: sans, fontSize: 13, height: 18 / 13, fontWeight: FontWeight.w400);
   static const labelMd = TextStyle(
-      fontFamily: sans, fontSize: 12, height: 16 / 12, fontWeight: FontWeight.w600, letterSpacing: 0.24);
+    fontFamily: sans,
+    fontSize: 12,
+    height: 16 / 12,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.24,
+  );
 
   /// Uppercase section labels ("technical blueprint" look). Pass UPPERCASE text.
   static const labelSm = TextStyle(
-      fontFamily: sans, fontSize: 11, height: 14 / 11, fontWeight: FontWeight.w600, letterSpacing: 0.8);
+    fontFamily: sans,
+    fontSize: 11,
+    height: 14 / 11,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.8,
+  );
 
   /// SKUs, IDs, weights, timestamps.
   static const monoMd = TextStyle(fontFamily: mono, fontSize: 13, height: 20 / 13, fontWeight: FontWeight.w400);
   static const monoLg = TextStyle(
-      fontFamily: mono, fontSize: 14, height: 20 / 14, fontWeight: FontWeight.w500, letterSpacing: 0.28);
+    fontFamily: mono,
+    fontSize: 14,
+    height: 20 / 14,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.28,
+  );
   static const monoSm = TextStyle(fontFamily: mono, fontSize: 11, height: 16 / 11, fontWeight: FontWeight.w500);
 
   /// Uppercase mono labels with wide tracking (dark theme "label-caps").
   static const monoCaps = TextStyle(
-      fontFamily: mono, fontSize: 11, height: 16 / 11, fontWeight: FontWeight.w700, letterSpacing: 1.0);
+    fontFamily: mono,
+    fontSize: 11,
+    height: 16 / 11,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1.0,
+  );
 }
 
 class AppTheme {
@@ -264,7 +293,10 @@ class AppTheme {
         color: c.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: radius8, side: BorderSide(color: c.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: radius8,
+          side: BorderSide(color: c.border),
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -276,10 +308,22 @@ class AppTheme {
         floatingLabelStyle: AppText.labelMd.copyWith(color: c.accent),
         prefixIconColor: c.textFaint,
         suffixIconColor: c.textFaint,
-        border: OutlineInputBorder(borderRadius: radius6, borderSide: BorderSide(color: c.border)),
-        enabledBorder: OutlineInputBorder(borderRadius: radius6, borderSide: BorderSide(color: c.border)),
-        focusedBorder: OutlineInputBorder(borderRadius: radius6, borderSide: BorderSide(color: c.accent, width: 1.5)),
-        errorBorder: OutlineInputBorder(borderRadius: radius6, borderSide: BorderSide(color: c.danger)),
+        border: OutlineInputBorder(
+          borderRadius: radius6,
+          borderSide: BorderSide(color: c.border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: radius6,
+          borderSide: BorderSide(color: c.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: radius6,
+          borderSide: BorderSide(color: c.accent, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: radius6,
+          borderSide: BorderSide(color: c.danger),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -338,10 +382,7 @@ class AppTheme {
           ),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
-          (s) => IconThemeData(
-            size: 22,
-            color: s.contains(WidgetState.selected) ? c.onNavActive : c.textFaint,
-          ),
+          (s) => IconThemeData(size: 22, color: s.contains(WidgetState.selected) ? c.onNavActive : c.textFaint),
         ),
       ),
       drawerTheme: DrawerThemeData(
@@ -373,16 +414,20 @@ class AppTheme {
       popupMenuTheme: PopupMenuThemeData(
         color: c.surface,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: radius8, side: BorderSide(color: c.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: radius8,
+          side: BorderSide(color: c.border),
+        ),
         textStyle: AppText.bodyMd.copyWith(color: c.text),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected) ? c.onAccent : c.textFaint),
+        thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.onAccent : c.textFaint),
         trackColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected) ? c.accent : c.surfaceHighest),
+          (s) => s.contains(WidgetState.selected) ? c.accent : c.surfaceHighest,
+        ),
         trackOutlineColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected) ? c.accent : c.borderStrong),
+          (s) => s.contains(WidgetState.selected) ? c.accent : c.borderStrong,
+        ),
       ),
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.accent : null),

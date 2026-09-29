@@ -55,6 +55,9 @@ class _NewInquiryScreenState extends State<NewInquiryScreen> with SingleTickerPr
   String _size = 'Size 6.0';
   String _profile = 'Comfort Fit';
 
+  /// Name of the piece; becomes the job title when set.
+  String _pieceName = '';
+
   String? _refFile;
   bool _refRemoved = false;
   String? _sketch;
@@ -195,7 +198,8 @@ class _NewInquiryScreenState extends State<NewInquiryScreen> with SingleTickerPr
     d.referenceImages
       ..clear()
       ..addAll([?_refFile, ?_sketch]);
-    final job = app.createJobFromDraft(title: '$_metal Custom Ring');
+    final name = _pieceName.trim();
+    final job = app.createJobFromDraft(title: name.isNotEmpty ? name : '$_metal Custom Ring');
     if (d.stoneType == 'None') job.centerStone = '—';
     if (_refFile == null && !_refRemoved) {
       job.image = Img.ringEmeraldCutDark;
@@ -410,6 +414,10 @@ class _NewInquiryScreenState extends State<NewInquiryScreen> with SingleTickerPr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const _IconLabel(Icons.label_outline, 'Piece Name'),
+          const SizedBox(height: 12),
+          _WellTextField(value: _pieceName, hint: 'e.g. Gold Signet Ring', onChanged: (v) => _pieceName = v),
+          const SizedBox(height: 28),
           const _IconLabel(Icons.hardware_outlined, 'Metal Type'),
           const SizedBox(height: 12),
           Wrap(

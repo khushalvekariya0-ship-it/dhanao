@@ -62,6 +62,21 @@ class _CertificationScreenState extends State<CertificationScreen> {
 
   bool get _ready => !_required || _status >= 4;
 
+  String _certFileName(Job job) => 'certificate_${_labShort.toLowerCase()}_${job.id}.jpg';
+
+  /// Current form values, saved on the job's Certification stage record.
+  Map<String, String> _details(Job job) => {
+    'Certification Required': _required ? 'Yes' : 'No',
+    if (_required) ...{
+      'Laboratory': _lab,
+      if (_dateSent != null) 'Date Sent': Fmt.dateLong(_dateSent!),
+      'Certificate Number': _certNo.text.trim(),
+      if (_certFile != null) 'Certificate File': _certFileName(job),
+      'Status': _steps[_status],
+    } else
+      'Status': 'Not required',
+  };
+
   // ---- Actions ------------------------------------------------------------
 
   void _setStatus(Job job, int i) {
@@ -71,6 +86,7 @@ class _CertificationScreenState extends State<CertificationScreen> {
       _status = i;
       _audit.insert(0, _AuditEntry('Status Updated: $label', app.userName, Fmt.dateTime(DateTime.now())));
     });
+    app.recordStage(job, JobStage.certification, _details(job));
     app.addEvent(job, title: 'Certification: $label', text: 'Certification status updated to $label ($_labShort).');
     showSnack(context, 'Status updated: $label', icon: Icons.timeline);
   }
@@ -95,17 +111,10 @@ class _CertificationScreenState extends State<CertificationScreen> {
     final summary = parts.join(' • ');
     final file = _certFile;
     if (_required && file != null && !_certFileSaved) {
-      app.addFile(
-        job,
-        ProjectFile(
-          name: 'certificate_${_labShort.toLowerCase()}_${job.id}.jpg',
-          kind: FileKind.image,
-          localPath: file,
-          jobId: job.id,
-        ),
-      );
+      app.addFile(job, ProjectFile(name: _certFileName(job), kind: FileKind.image, localPath: file, jobId: job.id));
       _certFileSaved = true;
     }
+    app.recordStage(job, JobStage.certification, _details(job));
     app.addEvent(job, title: 'Certification details saved', text: summary);
     setState(
       () => _audit.insert(0, _AuditEntry('Details Saved: $summary', app.userName, Fmt.dateTime(DateTime.now()))),
@@ -117,6 +126,10 @@ class _CertificationScreenState extends State<CertificationScreen> {
     final note = _required
         ? 'Certification ${_steps[_status].toLowerCase()} ($_labShort). Released to dispatch.'
         : 'No certification required. Released to dispatch.';
+    app.recordStage(job, JobStage.certification, {
+      ..._details(job),
+      'Released To Dispatch': Fmt.dateTime(DateTime.now()),
+    });
     app.setStage(job, JobStage.dispatch, note: note);
     setState(() => _audit.insert(0, _AuditEntry('Moved to Dispatch', app.userName, Fmt.dateTime(DateTime.now()))));
     showSnack(context, '${job.id} moved to Dispatch', icon: Icons.local_shipping_outlined);

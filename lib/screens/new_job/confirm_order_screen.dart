@@ -202,6 +202,10 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> with SingleTick
                   const SizedBox(height: 8),
                   _ReferenceImage(file: image, name: fileName, extra: math.max(0, d.referenceImages.length - 1)),
                   const SizedBox(height: 24),
+                  const _MonoLabel('Piece Name'),
+                  const SizedBox(height: 8),
+                  DhTextField(value: d.title, hint: 'e.g. Gold Signet Ring', onChanged: (v) => d.title = v),
+                  const SizedBox(height: 24),
                   const _MonoLabel('Material Specifications'),
                   const SizedBox(height: 8),
                   _MaterialRow(

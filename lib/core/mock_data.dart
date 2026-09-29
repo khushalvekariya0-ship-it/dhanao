@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'assets.dart';
+import 'format.dart';
 import 'models.dart';
 
 /// Seed data taken from the Stitch designs so every screen has realistic
@@ -13,371 +14,684 @@ class MockData {
     return DateTime(n.year, n.month, n.day + days, hour, minute);
   }
 
-  static List<Job> jobs() => [
-        Job(
-          id: 'DH-1048',
-          title: 'Solitaire Crown Ring',
-          productType: 'Engagement Ring',
-          customer: 'Scottsdale Diamond Co.',
-          stage: JobStage.casting,
-          dueDate: _d(6),
-          value: 4850,
-          priority: Priority.high,
-          image: Img.cadRingMonitor,
-          metal: '18K Yellow Gold',
-          centerStone: '2.4ct Lab Diamond',
-          settingStyle: '6-Prong Crown',
-          weightGrams: 14.2,
-          ringSize: 'US 6.5',
-          assignee: 'Patel Casting Works',
-          stageEnteredAt: _d(0, 9, 30),
-          atRisk: true,
-          notes: 'Attention to sharp internal corners. Ensure complete burnout before casting to prevent porosity.',
-          thread: [
-            ThreadMessage(
-              author: 'Sarah J.',
-              kind: MessageKind.file,
-              title: 'CAD revision uploaded',
-              text: 'Sarah J. updated the main 3D file.',
-              time: _d(0, 10, 42),
-              avatar: Img.avatarSarah,
-            ),
-            ThreadMessage(
-              author: 'Patel Works',
-              text: "We've received the wax. Starting the casting process now. Looks clean.",
-              time: _d(0, 11, 15),
-              avatar: Img.avatarPatel,
-            ),
-            ThreadMessage(
-              author: 'System',
-              kind: MessageKind.stage,
-              title: 'Stage Changed: Casting',
-              text: 'System updated status automatically.',
-              time: _d(0, 11, 16),
-            ),
-            ThreadMessage(
-              author: 'Ravi S.',
-              isMe: true,
-              text: 'Excellent. Please upload a photo once it cools, before clipping the sprues.',
-              time: _d(0, 11, 30),
-            ),
-          ],
-          files: [
-            ProjectFile(name: 'ref_ring_01.jpg', kind: FileKind.image, asset: Img.ringGoldSolitaire, jobId: 'DH-1048', sizeLabel: '1.2 MB', uploadedBy: 'Scottsdale Dia.'),
-            ProjectFile(name: 'cad_mesh_v2.png', kind: FileKind.cad, asset: Img.cadMeshGreen, jobId: 'DH-1048', sizeLabel: '4.8 MB', uploadedBy: 'Sarah J.'),
-            ProjectFile(name: 'specs_final.pdf', kind: FileKind.pdf, jobId: 'DH-1048', sizeLabel: '320 KB'),
-            ProjectFile(name: 'pricing_sheet.xlsx', kind: FileKind.sheet, jobId: 'DH-1048', sizeLabel: '88 KB'),
-          ],
-          history: [
-            StageEvent(stage: JobStage.inquiry, at: _d(-14), by: 'Scottsdale Dia.'),
-            StageEvent(stage: JobStage.cad, at: _d(-12), by: 'Sarah J.'),
-            StageEvent(stage: JobStage.approval, at: _d(-9), by: 'Ravi S.'),
-            StageEvent(stage: JobStage.pricing, at: _d(-8), by: 'Ravi S.'),
-            StageEvent(stage: JobStage.finalApproval, at: _d(-7), by: 'Scottsdale Dia.'),
-            StageEvent(stage: JobStage.wax, at: _d(-3), by: 'PR-02'),
-            StageEvent(stage: JobStage.casting, at: _d(0, 9, 30), by: 'Patel Works'),
-          ],
-        ),
-        Job(
-          id: 'DH-1033',
-          title: 'Platinum Solitaire Engagement Ring',
-          productType: 'Engagement Ring',
-          customer: 'Aurum Jewelers',
-          stage: JobStage.polishing,
-          dueDate: _d(0),
-          value: 6200,
-          priority: Priority.critical,
-          image: Img.ringEmeraldCutWhite,
-          metal: 'Platinum 950',
-          centerStone: '1.8ct Emerald Cut',
-          settingStyle: '4-Prong Cathedral',
-          weightGrams: 5.1,
-          ringSize: 'US 6',
-          assignee: 'Bench 2',
-          stageEnteredAt: _d(-1),
-        ),
-        Job(
-          id: 'DH-1040',
-          title: 'Custom Sapphire Tennis Bracelet',
-          productType: 'Bracelet',
-          customer: 'Alara Vane',
-          stage: JobStage.setting,
-          dueDate: _d(1),
-          value: 9400,
-          priority: Priority.rush,
-          image: Img.cadPendantSapphire,
-          metal: '18K White Gold',
-          centerStone: '42 × Sapphire 0.10ct',
-          settingStyle: 'Shared Prong',
-          weightGrams: 12.6,
-          assignee: 'Bench 4',
-          stageEnteredAt: _d(-2),
-        ),
-        Job(
-          id: 'DH-2094',
-          title: 'Custom Oval Halo Ring',
-          customer: 'E. Chen',
-          stage: JobStage.finalApproval,
-          dueDate: _d(2),
-          value: 5300,
-          priority: Priority.high,
-          image: Img.ringOvalHalo,
-          metal: '14K White Gold',
-          centerStone: '1.5ct Oval Diamond',
-          settingStyle: 'Halo',
-          ringSize: 'US 7',
-          stageEnteredAt: _d(-1),
-        ),
-        Job(
-          id: 'DH-2098',
-          title: 'Gold Signet Ring Restocking',
-          customer: 'Boutique X',
-          stage: JobStage.finalApproval,
-          dueDate: _d(8),
-          value: 2100,
-          quantity: 5,
-          metal: '18K Yellow Gold',
-          settingStyle: 'Plain',
-          stageEnteredAt: _d(0),
-        ),
-        Job(
-          id: 'DH-2081',
-          title: 'Sapphire Pendant Drop',
-          productType: 'Pendant',
-          customer: 'T. Nguyen',
-          stage: JobStage.wax,
-          dueDate: _d(5),
-          value: 3100,
-          image: Img.cadPendantSapphire,
-          metal: '18K White Gold',
-          centerStone: '2.1ct Pear Sapphire',
-          settingStyle: 'Micro-pave Halo',
-          assignee: 'PR-02 Printer',
-          stageEnteredAt: _d(-2),
-        ),
-        Job(
-          id: 'DH-1052',
-          title: 'Classic Solitaire Setting',
-          customer: 'Scottsdale Diamond Co.',
-          stage: JobStage.approval,
-          dueDate: _d(12),
-          value: 2800,
-          image: Img.ringHaloV2,
-          metal: 'Platinum 950',
-          centerStone: '1.5ct Oval Cut',
-          settingStyle: 'Halo',
-          ringSize: 'US 6.5',
-          assignee: 'Elena Rostova',
-          notes: 'Client requested minor prong adjustment.',
-          stageEnteredAt: _d(-1),
-        ),
-        Job(
-          id: 'DH-1055',
-          title: 'Halo Diamond Studs',
-          productType: 'Earrings',
-          customer: 'ABC Jewelers',
-          stage: JobStage.pricing,
-          dueDate: _d(15),
-          value: 4850,
-          image: Img.ringDiamondProngs,
-          metal: '18K White Gold',
-          centerStone: '2 × 0.75ct Round',
-          settingStyle: 'Halo',
-          notes: 'BOM finalized, awaiting final quote.',
-          stageEnteredAt: _d(-1),
-        ),
-        Job(
-          id: 'DH-1061',
-          title: 'Eternity Band',
-          customer: 'Aurum Jewelers',
-          stage: JobStage.assembly,
-          dueDate: _d(4),
-          value: 3600,
-          metal: 'Platinum 950',
-          centerStone: '24 × 0.05ct Melee',
-          settingStyle: 'Channel',
-          atRisk: true,
-          assignee: 'Bench 1',
-          notes: 'Melee diamonds count mismatch at receiving.',
-          stageEnteredAt: _d(-3),
-        ),
-        Job(
-          id: 'DH-1042',
-          title: 'Emerald Cut Engagement Ring',
-          customer: 'Aurum Jewelers',
-          stage: JobStage.dispatch,
-          dueDate: _d(1),
-          value: 7800,
-          image: Img.ringEmeraldCutWhite,
-          metal: 'Platinum 950',
-          centerStone: '2.0ct Emerald Cut (GIA 44921)',
-          settingStyle: '4-Prong',
-          ringSize: 'US 6.5',
-          stageEnteredAt: _d(0),
-        ),
-        Job(
-          id: 'DH-1050',
-          title: 'Platinum & Sapphire Halo Ring',
-          customer: 'Alara Vane',
-          stage: JobStage.certification,
-          dueDate: _d(7),
-          value: 5900,
-          image: Img.ringPlatinumBench,
-          metal: 'Platinum 950',
-          centerStone: '1.2ct Sapphire',
-          settingStyle: 'Halo',
-          ringSize: 'US 6.5',
-          stageEnteredAt: _d(-2),
-        ),
-        Job(
-          id: 'DH-1058',
-          title: 'Complex Geometric Ring',
-          customer: 'ABC Jewelers',
-          stage: JobStage.wax,
-          dueDate: _d(9),
-          value: 2400,
-          image: Img.waxModelBlue,
-          metal: '18K Yellow Gold',
-          settingStyle: 'Bezel',
-          assignee: 'PR-02 Printer',
-          stageEnteredAt: _d(0),
-        ),
-        Job(
-          id: 'DH-1049',
-          title: 'Bespoke Solitaire Ring',
-          customer: 'E. Chen',
-          stage: JobStage.assembly,
-          dueDate: _d(10),
-          value: 4200,
-          image: Img.ringGoldRender,
-          metal: '18K Yellow Gold',
-          centerStone: '1.2ct Round Brilliant, VVS1, D',
-          settingStyle: '6-Prong',
-          weightGrams: 4.2,
-          assignee: 'Bench 4',
-          stageEnteredAt: _d(0),
-        ),
-        Job(
-          id: 'DH-1065',
-          title: 'Vintage Milgrain Band',
-          customer: 'Boutique X',
-          stage: JobStage.cad,
-          dueDate: _d(20),
-          value: 1900,
-          image: Img.cadWireframeHalo,
-          metal: '14K Rose Gold',
-          settingStyle: 'Milgrain',
-          assignee: 'Mike T.',
-          stageEnteredAt: _d(0),
-        ),
-        Job(
-          id: 'DH-1070',
-          title: 'Pearl Drop Necklace',
-          productType: 'Necklace',
-          customer: 'T. Nguyen',
-          stage: JobStage.inquiry,
-          dueDate: _d(30),
-          value: 1500,
-          metal: '18K Yellow Gold',
-          centerStone: '10mm South Sea Pearl',
-          stageEnteredAt: _d(0),
-        ),
-        Job(
-          id: 'DH-1056',
-          title: 'Signet Ring (Silver)',
-          customer: 'Boutique X',
-          stage: JobStage.delivered,
-          dueDate: _d(-2),
-          value: 650,
-          image: Img.waxModelSignet,
-          metal: '925 Silver',
-          settingStyle: 'Plain',
-          stageEnteredAt: _d(-1),
-        ),
-      ];
+  static List<Job> jobs() {
+    final list = [
+      Job(
+        id: 'DH-1048',
+        title: 'Solitaire Crown Ring',
+        productType: 'Engagement Ring',
+        customer: 'Scottsdale Diamond Co.',
+        stage: JobStage.casting,
+        dueDate: _d(6),
+        value: 4850,
+        priority: Priority.high,
+        image: Img.cadRingMonitor,
+        metal: '18K Yellow Gold',
+        centerStone: '2.4ct Lab Diamond',
+        settingStyle: '6-Prong Crown',
+        weightGrams: 14.2,
+        ringSize: 'US 6.5',
+        assignee: 'Patel Casting Works',
+        stageEnteredAt: _d(0, 9, 30),
+        atRisk: true,
+        notes: 'Attention to sharp internal corners. Ensure complete burnout before casting to prevent porosity.',
+        thread: [
+          ThreadMessage(
+            author: 'Sarah J.',
+            kind: MessageKind.file,
+            title: 'CAD revision uploaded',
+            text: 'Sarah J. updated the main 3D file.',
+            time: _d(0, 10, 42),
+            avatar: Img.avatarSarah,
+          ),
+          ThreadMessage(
+            author: 'Patel Works',
+            text: "We've received the wax. Starting the casting process now. Looks clean.",
+            time: _d(0, 11, 15),
+            avatar: Img.avatarPatel,
+          ),
+          ThreadMessage(
+            author: 'System',
+            kind: MessageKind.stage,
+            title: 'Stage Changed: Casting',
+            text: 'System updated status automatically.',
+            time: _d(0, 11, 16),
+          ),
+          ThreadMessage(
+            author: 'Ravi S.',
+            isMe: true,
+            text: 'Excellent. Please upload a photo once it cools, before clipping the sprues.',
+            time: _d(0, 11, 30),
+          ),
+        ],
+        files: [
+          ProjectFile(
+            name: 'ref_ring_01.jpg',
+            kind: FileKind.image,
+            asset: Img.ringGoldSolitaire,
+            jobId: 'DH-1048',
+            sizeLabel: '1.2 MB',
+            uploadedBy: 'Scottsdale Dia.',
+          ),
+          ProjectFile(
+            name: 'cad_mesh_v2.png',
+            kind: FileKind.cad,
+            asset: Img.cadMeshGreen,
+            jobId: 'DH-1048',
+            sizeLabel: '4.8 MB',
+            uploadedBy: 'Sarah J.',
+          ),
+          ProjectFile(name: 'specs_final.pdf', kind: FileKind.pdf, jobId: 'DH-1048', sizeLabel: '320 KB'),
+          ProjectFile(name: 'pricing_sheet.xlsx', kind: FileKind.sheet, jobId: 'DH-1048', sizeLabel: '88 KB'),
+        ],
+        history: [
+          StageEvent(stage: JobStage.inquiry, at: _d(-14), by: 'Scottsdale Dia.'),
+          StageEvent(stage: JobStage.cad, at: _d(-12), by: 'Sarah J.'),
+          StageEvent(stage: JobStage.approval, at: _d(-9), by: 'Ravi S.'),
+          StageEvent(stage: JobStage.pricing, at: _d(-8), by: 'Ravi S.'),
+          StageEvent(stage: JobStage.finalApproval, at: _d(-7), by: 'Scottsdale Dia.'),
+          StageEvent(stage: JobStage.wax, at: _d(-3), by: 'PR-02'),
+          StageEvent(stage: JobStage.casting, at: _d(0, 9, 30), by: 'Patel Works'),
+        ],
+      ),
+      Job(
+        id: 'DH-1033',
+        title: 'Platinum Solitaire Engagement Ring',
+        productType: 'Engagement Ring',
+        customer: 'Aurum Jewelers',
+        stage: JobStage.polishing,
+        dueDate: _d(0),
+        value: 6200,
+        priority: Priority.critical,
+        image: Img.ringEmeraldCutWhite,
+        metal: 'Platinum 950',
+        centerStone: '1.8ct Emerald Cut',
+        settingStyle: '4-Prong Cathedral',
+        weightGrams: 5.1,
+        ringSize: 'US 6',
+        assignee: 'Bench 2',
+        stageEnteredAt: _d(-1),
+      ),
+      Job(
+        id: 'DH-1040',
+        title: 'Custom Sapphire Tennis Bracelet',
+        productType: 'Bracelet',
+        customer: 'Alara Vane',
+        stage: JobStage.setting,
+        dueDate: _d(1),
+        value: 9400,
+        priority: Priority.rush,
+        image: Img.cadPendantSapphire,
+        metal: '18K White Gold',
+        centerStone: '42 × Sapphire 0.10ct',
+        settingStyle: 'Shared Prong',
+        weightGrams: 12.6,
+        assignee: 'Bench 4',
+        stageEnteredAt: _d(-2),
+      ),
+      Job(
+        id: 'DH-2094',
+        title: 'Custom Oval Halo Ring',
+        customer: 'E. Chen',
+        stage: JobStage.finalApproval,
+        dueDate: _d(2),
+        value: 5300,
+        priority: Priority.high,
+        image: Img.ringOvalHalo,
+        metal: '14K White Gold',
+        centerStone: '1.5ct Oval Diamond',
+        settingStyle: 'Halo',
+        ringSize: 'US 7',
+        stageEnteredAt: _d(-1),
+      ),
+      Job(
+        id: 'DH-2098',
+        title: 'Gold Signet Ring Restocking',
+        customer: 'Boutique X',
+        stage: JobStage.finalApproval,
+        dueDate: _d(8),
+        value: 2100,
+        quantity: 5,
+        metal: '18K Yellow Gold',
+        settingStyle: 'Plain',
+        stageEnteredAt: _d(0),
+      ),
+      Job(
+        id: 'DH-2081',
+        title: 'Sapphire Pendant Drop',
+        productType: 'Pendant',
+        customer: 'T. Nguyen',
+        stage: JobStage.wax,
+        dueDate: _d(5),
+        value: 3100,
+        image: Img.cadPendantSapphire,
+        metal: '18K White Gold',
+        centerStone: '2.1ct Pear Sapphire',
+        settingStyle: 'Micro-pave Halo',
+        assignee: 'PR-02 Printer',
+        stageEnteredAt: _d(-2),
+      ),
+      Job(
+        id: 'DH-1052',
+        title: 'Classic Solitaire Setting',
+        customer: 'Scottsdale Diamond Co.',
+        stage: JobStage.approval,
+        dueDate: _d(12),
+        value: 2800,
+        image: Img.ringHaloV2,
+        metal: 'Platinum 950',
+        centerStone: '1.5ct Oval Cut',
+        settingStyle: 'Halo',
+        ringSize: 'US 6.5',
+        assignee: 'Elena Rostova',
+        notes: 'Client requested minor prong adjustment.',
+        stageEnteredAt: _d(-1),
+      ),
+      Job(
+        id: 'DH-1055',
+        title: 'Halo Diamond Studs',
+        productType: 'Earrings',
+        customer: 'ABC Jewelers',
+        stage: JobStage.pricing,
+        dueDate: _d(15),
+        value: 4850,
+        image: Img.ringDiamondProngs,
+        metal: '18K White Gold',
+        centerStone: '2 × 0.75ct Round',
+        settingStyle: 'Halo',
+        notes: 'BOM finalized, awaiting final quote.',
+        stageEnteredAt: _d(-1),
+      ),
+      Job(
+        id: 'DH-1061',
+        title: 'Eternity Band',
+        customer: 'Aurum Jewelers',
+        stage: JobStage.assembly,
+        dueDate: _d(4),
+        value: 3600,
+        metal: 'Platinum 950',
+        centerStone: '24 × 0.05ct Melee',
+        settingStyle: 'Channel',
+        atRisk: true,
+        assignee: 'Bench 1',
+        notes: 'Melee diamonds count mismatch at receiving.',
+        stageEnteredAt: _d(-3),
+      ),
+      Job(
+        id: 'DH-1042',
+        title: 'Emerald Cut Engagement Ring',
+        customer: 'Aurum Jewelers',
+        stage: JobStage.dispatch,
+        dueDate: _d(1),
+        value: 7800,
+        image: Img.ringEmeraldCutWhite,
+        metal: 'Platinum 950',
+        centerStone: '2.0ct Emerald Cut (GIA 44921)',
+        settingStyle: '4-Prong',
+        ringSize: 'US 6.5',
+        stageEnteredAt: _d(0),
+      ),
+      Job(
+        id: 'DH-1050',
+        title: 'Platinum & Sapphire Halo Ring',
+        customer: 'Alara Vane',
+        stage: JobStage.certification,
+        dueDate: _d(7),
+        value: 5900,
+        image: Img.ringPlatinumBench,
+        metal: 'Platinum 950',
+        centerStone: '1.2ct Sapphire',
+        settingStyle: 'Halo',
+        ringSize: 'US 6.5',
+        stageEnteredAt: _d(-2),
+      ),
+      Job(
+        id: 'DH-1058',
+        title: 'Complex Geometric Ring',
+        customer: 'ABC Jewelers',
+        stage: JobStage.wax,
+        dueDate: _d(9),
+        value: 2400,
+        image: Img.waxModelBlue,
+        metal: '18K Yellow Gold',
+        settingStyle: 'Bezel',
+        assignee: 'PR-02 Printer',
+        stageEnteredAt: _d(0),
+      ),
+      Job(
+        id: 'DH-1049',
+        title: 'Bespoke Solitaire Ring',
+        customer: 'E. Chen',
+        stage: JobStage.assembly,
+        dueDate: _d(10),
+        value: 4200,
+        image: Img.ringGoldRender,
+        metal: '18K Yellow Gold',
+        centerStone: '1.2ct Round Brilliant, VVS1, D',
+        settingStyle: '6-Prong',
+        weightGrams: 4.2,
+        assignee: 'Bench 4',
+        stageEnteredAt: _d(0),
+      ),
+      Job(
+        id: 'DH-1065',
+        title: 'Vintage Milgrain Band',
+        customer: 'Boutique X',
+        stage: JobStage.cad,
+        dueDate: _d(20),
+        value: 1900,
+        image: Img.cadWireframeHalo,
+        metal: '14K Rose Gold',
+        settingStyle: 'Milgrain',
+        assignee: 'Mike T.',
+        stageEnteredAt: _d(0),
+      ),
+      Job(
+        id: 'DH-1070',
+        title: 'Pearl Drop Necklace',
+        productType: 'Necklace',
+        customer: 'T. Nguyen',
+        stage: JobStage.inquiry,
+        dueDate: _d(30),
+        value: 1500,
+        metal: '18K Yellow Gold',
+        centerStone: '10mm South Sea Pearl',
+        stageEnteredAt: _d(0),
+      ),
+      Job(
+        id: 'DH-1056',
+        title: 'Signet Ring (Silver)',
+        customer: 'Boutique X',
+        stage: JobStage.delivered,
+        dueDate: _d(-2),
+        value: 650,
+        image: Img.waxModelSignet,
+        metal: '925 Silver',
+        settingStyle: 'Plain',
+        stageEnteredAt: _d(-1),
+      ),
+    ];
+    for (final j in list) {
+      _seedProcess(j);
+    }
+    return list;
+  }
+
+  static String _actor(Job j, JobStage s) {
+    switch (s) {
+      case JobStage.inquiry:
+      case JobStage.finalApproval:
+      case JobStage.delivered:
+        return j.customer;
+      case JobStage.cad:
+        return j.stage == JobStage.cad && j.assignee != null ? j.assignee! : 'Sarah J.';
+      case JobStage.approval:
+      case JobStage.pricing:
+        return 'Ravi S.';
+      case JobStage.wax:
+        return 'PR-02 Printer';
+      case JobStage.casting:
+        return 'Patel Casting Works';
+      case JobStage.assembly:
+        return 'Bench 4';
+      case JobStage.setting:
+        return 'Marco V.';
+      case JobStage.polishing:
+        return 'Bench 2';
+      case JobStage.qc:
+        return 'E. Carter';
+      case JobStage.certification:
+        return 'IGI Antwerp';
+      case JobStage.dispatch:
+        return 'Brinks Secure Logistics';
+    }
+  }
+
+  /// Gives every seed job a full stage history and per-stage details up to its current stage.
+  static void _seedProcess(Job j) {
+    final entered = j.stageEnteredAt ?? DateTime.now();
+    final k = j.stage.index;
+    if (j.history.isEmpty) {
+      for (var i = 0; i <= k; i++) {
+        final s = JobStage.values[i];
+        final at = i == k ? entered : entered.subtract(Duration(hours: (k - i) * 26 + (i * 7) % 11));
+        j.history.add(StageEvent(stage: s, at: at, by: _actor(j, s)));
+      }
+    }
+    for (var i = 0; i <= k; i++) {
+      final s = JobStage.values[i];
+      j.stageData.putIfAbsent(s, () => _seedData(j, s, done: i < k));
+      if (i < k) j.stageData[s]!.putIfAbsent('Completed By', () => _actor(j, s));
+    }
+  }
+
+  static Map<String, String> _seedData(Job j, JobStage s, {required bool done}) {
+    final n = int.tryParse(j.id.replaceAll(RegExp(r'\D'), '')) ?? 1000;
+    final metal = j.metal.toLowerCase();
+    String money(num v) => Fmt.money(v);
+    switch (s) {
+      case JobStage.inquiry:
+        return {
+          'Customer': j.customer,
+          'Product': j.productType,
+          'Piece': j.title,
+          'Metal': j.metal,
+          if (j.centerStone != '—') 'Center Stone': j.centerStone,
+          if (j.settingStyle != '—') 'Setting Style': j.settingStyle,
+          'Ring Size': ?j.ringSize,
+          'Quantity': '${j.quantity}',
+          'Target Value': money(j.value),
+          'Requested Delivery': Fmt.dateLong(j.dueDate),
+          'Notes': ?j.notes,
+        };
+      case JobStage.cad:
+        return {
+          'Designer': _actor(j, s),
+          'Software': 'Rhino 8 + MatrixGold',
+          if (done) ...{
+            'Final Version': 'v2.0',
+            'Revisions': '1',
+            'Files': 'STL, STEP, renders',
+          } else
+            'Current Version': 'v1.0 (modelling)',
+        };
+      case JobStage.approval:
+        return done
+            ? {'Approved Version': 'v2.0', 'Approved By': 'Ravi S.', 'Decision': 'Design locked'}
+            : {'Awaiting': 'Design review of latest CAD', 'Note': ?j.notes};
+      case JobStage.pricing:
+        if (!done) return {'Status': 'Quote being prepared', 'Note': ?j.notes};
+        final v = j.value;
+        return {
+          'Metal': money(v * 0.43),
+          'Gemstones': money(v * 0.25),
+          'Labor': money(v * 0.16),
+          'Setting': money(v * 0.08),
+          'Certification': money(v - (v * 0.43).round() - (v * 0.25).round() - (v * 0.16).round() - (v * 0.08).round()),
+          'Quote Total': money(v),
+        };
+      case JobStage.finalApproval:
+        return done
+            ? {'Approved By': j.customer, 'Approved Price': money(j.value), 'Released To': 'Manufacturing'}
+            : {'Awaiting': 'Customer approval of quote', 'Quoted Price': money(j.value)};
+      case JobStage.wax:
+        return {
+          'Printer': 'PR-02 (Formlabs 3B)',
+          'Material': 'Castable Wax Resin',
+          'Print Time': '3h 40m',
+          if (done) 'Inspection': 'Passed — sent to caster',
+        };
+      case JobStage.casting:
+        return {
+          'Caster': 'Patel Casting Works',
+          'Alloy': j.metal,
+          'Flask Temp': '650°C',
+          'Metal Temp': metal.contains('platinum') ? '2000°C' : (metal.contains('silver') ? '980°C' : '1020°C'),
+          if (done) 'Result': 'Clean cast, no porosity',
+          if (done && j.weightGrams != null) 'Cast Weight': '${(j.weightGrams! * 1.08).toStringAsFixed(1)} g',
+        };
+      case JobStage.assembly:
+        return {'Bench': 'Bench 4', 'Work': 'Sprue removal, clean-up, pre-polish', if (done) 'Status': 'Assembled'};
+      case JobStage.setting:
+        return {
+          'Setter': 'Marco V.',
+          if (j.centerStone != '—') 'Stone': j.centerStone,
+          if (j.settingStyle != '—') 'Setting Style': j.settingStyle,
+          if (done) 'Security Check': 'Passed',
+        };
+      case JobStage.polishing:
+        return {
+          'Polisher': 'Bench 2',
+          'Finish': 'High polish exterior, matte interior',
+          if (done) 'Ultrasonic Clean': 'Done',
+        };
+      case JobStage.qc:
+        return {
+          'Specialist': 'E. Carter',
+          if (done) ...{'Checks Passed': '5/5', 'Result': 'Passed'},
+          if (j.weightGrams != null) 'Final Weight': '${j.weightGrams!.toStringAsFixed(1)} g',
+        };
+      case JobStage.certification:
+        return {
+          'Laboratory': 'IGI Antwerp',
+          'Status': done ? 'Certified' : 'At Lab',
+          if (done) 'Certificate Number': 'IGI 58${(n * 37) % 100000}'.padRight(12, '0'),
+        };
+      case JobStage.dispatch:
+        return {
+          'Courier': 'Brinks Secure Logistics',
+          'Insurance Value': money(j.value),
+          'Destination': j.customer,
+          if (done) 'Waybill': 'BRK-${(n * 7919) % 1000000}',
+        };
+      case JobStage.delivered:
+        return {'Received By': j.customer, 'Delivered At': Fmt.dateLong(j.stageEnteredAt ?? DateTime.now())};
+    }
+  }
 
   static List<Partner> partners() => const [
-        Partner(name: 'Sarah J.', role: 'Lead Designer', avatar: Img.avatarSarah, company: 'AuraForge Design Studio', location: 'Mumbai, IN', phone: '+91 98200 11223', activeJobs: 6, rating: 4.9),
-        Partner(name: 'Elena Rostova', role: 'Lead CAD Designer', company: 'AuraForge Design Studio', location: 'Antwerp, BE', phone: '+32 3 555 0190', activeJobs: 4, rating: 4.8),
-        Partner(name: 'Mike T.', role: 'CAD Designer', company: 'AuraForge Design Studio', location: 'Surat, IN', activeJobs: 3, rating: 4.6),
-        Partner(name: 'Patel Casting Works', role: 'Casting', avatar: Img.avatarPatel, company: 'Patel Casting Works', location: 'Rajkot, IN', phone: '+91 98250 44556', activeJobs: 12, rating: 4.7),
-        Partner(name: 'Scottsdale Diamond Co.', role: 'Retailer', company: 'Scottsdale Diamond Co.', location: 'Scottsdale, AZ', phone: '+1 480 555 0142', activeJobs: 5, rating: 4.9),
-        Partner(name: 'Aurum Jewelers', role: 'Retailer', company: 'Aurum Jewelers', location: 'New York, NY', phone: '+1 212 555 0118', activeJobs: 4, rating: 4.8),
-        Partner(name: 'GemSource', role: 'Stone Provider', company: 'GemSource Ltd.', location: 'Surat, IN', phone: '+91 261 555 7788', activeJobs: 9, rating: 4.6),
-        Partner(name: 'Marco V.', role: 'Setter', company: 'AuraForge Bench', location: 'Mumbai, IN', activeJobs: 7, rating: 4.9),
-        Partner(name: 'E. Carter', role: 'QC Specialist', company: 'AuraForge QC', location: 'Mumbai, IN', activeJobs: 5, rating: 5.0),
-        Partner(name: 'IGI Antwerp', role: 'Gem Lab', company: 'International Gemological Institute', location: 'Antwerp, BE', activeJobs: 3, rating: 4.7),
-        Partner(name: 'Brinks Secure Logistics', role: 'Courier', company: 'Brinks', location: 'Global', activeJobs: 2, rating: 4.8),
-      ];
+    Partner(
+      name: 'Sarah J.',
+      role: 'Lead Designer',
+      avatar: Img.avatarSarah,
+      company: 'AuraForge Design Studio',
+      location: 'Mumbai, IN',
+      phone: '+91 98200 11223',
+      activeJobs: 6,
+      rating: 4.9,
+    ),
+    Partner(
+      name: 'Elena Rostova',
+      role: 'Lead CAD Designer',
+      company: 'AuraForge Design Studio',
+      location: 'Antwerp, BE',
+      phone: '+32 3 555 0190',
+      activeJobs: 4,
+      rating: 4.8,
+    ),
+    Partner(
+      name: 'Mike T.',
+      role: 'CAD Designer',
+      company: 'AuraForge Design Studio',
+      location: 'Surat, IN',
+      activeJobs: 3,
+      rating: 4.6,
+    ),
+    Partner(
+      name: 'Patel Casting Works',
+      role: 'Casting',
+      avatar: Img.avatarPatel,
+      company: 'Patel Casting Works',
+      location: 'Rajkot, IN',
+      phone: '+91 98250 44556',
+      activeJobs: 12,
+      rating: 4.7,
+    ),
+    Partner(
+      name: 'Scottsdale Diamond Co.',
+      role: 'Retailer',
+      company: 'Scottsdale Diamond Co.',
+      location: 'Scottsdale, AZ',
+      phone: '+1 480 555 0142',
+      activeJobs: 5,
+      rating: 4.9,
+    ),
+    Partner(
+      name: 'Aurum Jewelers',
+      role: 'Retailer',
+      company: 'Aurum Jewelers',
+      location: 'New York, NY',
+      phone: '+1 212 555 0118',
+      activeJobs: 4,
+      rating: 4.8,
+    ),
+    Partner(
+      name: 'GemSource',
+      role: 'Stone Provider',
+      company: 'GemSource Ltd.',
+      location: 'Surat, IN',
+      phone: '+91 261 555 7788',
+      activeJobs: 9,
+      rating: 4.6,
+    ),
+    Partner(
+      name: 'Marco V.',
+      role: 'Setter',
+      company: 'AuraForge Bench',
+      location: 'Mumbai, IN',
+      activeJobs: 7,
+      rating: 4.9,
+    ),
+    Partner(
+      name: 'E. Carter',
+      role: 'QC Specialist',
+      company: 'AuraForge QC',
+      location: 'Mumbai, IN',
+      activeJobs: 5,
+      rating: 5.0,
+    ),
+    Partner(
+      name: 'IGI Antwerp',
+      role: 'Gem Lab',
+      company: 'International Gemological Institute',
+      location: 'Antwerp, BE',
+      activeJobs: 3,
+      rating: 4.7,
+    ),
+    Partner(
+      name: 'Brinks Secure Logistics',
+      role: 'Courier',
+      company: 'Brinks',
+      location: 'Global',
+      activeJobs: 2,
+      rating: 4.8,
+    ),
+  ];
 
   static List<MetalStock> metals() => [
-        MetalStock(code: 'AU-750', name: '18K Gold', grams: 1240.5, capacityGrams: 2000, color: const Color(0xFFD4AF37)),
-        MetalStock(code: 'PT-950', name: 'Platinum', grams: 450.2, capacityGrams: 1000, color: const Color(0xFFB8C4D6)),
-        MetalStock(code: 'AU-585', name: '14K Gold', grams: 820.0, capacityGrams: 1500, color: const Color(0xFFE3B866)),
-        MetalStock(code: 'AG-925', name: 'Sterling Silver', grams: 3200.0, capacityGrams: 5000, color: const Color(0xFF9CA3AF)),
-      ];
+    MetalStock(code: 'AU-750', name: '18K Gold', grams: 1240.5, capacityGrams: 2000, color: const Color(0xFFD4AF37)),
+    MetalStock(code: 'PT-950', name: 'Platinum', grams: 450.2, capacityGrams: 1000, color: const Color(0xFFB8C4D6)),
+    MetalStock(code: 'AU-585', name: '14K Gold', grams: 820.0, capacityGrams: 1500, color: const Color(0xFFE3B866)),
+    MetalStock(
+      code: 'AG-925',
+      name: 'Sterling Silver',
+      grams: 3200.0,
+      capacityGrams: 5000,
+      color: const Color(0xFF9CA3AF),
+    ),
+  ];
 
   static List<GemStock> gems() => [
-        GemStock(
-          id: 'DIA-9982-A',
-          name: 'Round Brilliant Diamond',
-          tag: 'GIA Cert',
-          carat: 1.24,
-          specs: const {'CARAT': '1.24ct', 'COLOR': 'F', 'CLARITY': 'VVS2'},
-          location: 'Vault A, Tray 4',
-          image: Img.gemDiamond,
-        ),
-        GemStock(
-          id: 'RUB-4421-C',
-          name: 'Oval Burmese Ruby',
-          tag: 'Unheated',
-          carat: 2.10,
-          specs: const {'CARAT': '2.10ct', 'CUT': 'EX', 'ORIGIN': 'MMR'},
-          location: 'Vault B, Tray 1',
-          image: Img.gemRuby,
-        ),
-        GemStock(
-          id: 'SAP-3310-B',
-          name: 'Pear Ceylon Sapphire',
-          tag: 'Heated',
-          carat: 2.05,
-          specs: const {'CARAT': '2.05ct', 'COLOR': 'Royal Blue', 'ORIGIN': 'LKA'},
-          location: 'Vault B, Tray 3',
-          assignedJobId: 'DH-2081',
-        ),
-        GemStock(
-          id: 'DIA-7710-L',
-          name: 'Oval Lab Diamond',
-          tag: 'IGI Cert',
-          carat: 1.50,
-          specs: const {'CARAT': '1.50ct', 'COLOR': 'E', 'CLARITY': 'VS1'},
-          location: 'Vault A, Tray 2',
-        ),
-        GemStock(
-          id: 'MEL-0412-P',
-          name: 'Melee Parcel — Round',
-          tag: '1.0–1.5mm',
-          carat: 0.25,
-          specs: const {'CTW': '0.25', 'COLOR': 'G-H', 'CLARITY': 'VS'},
-          location: 'Vault C, Drawer 7',
-        ),
-      ];
+    GemStock(
+      id: 'DIA-9982-A',
+      name: 'Round Brilliant Diamond',
+      tag: 'GIA Cert',
+      carat: 1.24,
+      specs: const {'CARAT': '1.24ct', 'COLOR': 'F', 'CLARITY': 'VVS2'},
+      location: 'Vault A, Tray 4',
+      image: Img.gemDiamond,
+    ),
+    GemStock(
+      id: 'RUB-4421-C',
+      name: 'Oval Burmese Ruby',
+      tag: 'Unheated',
+      carat: 2.10,
+      specs: const {'CARAT': '2.10ct', 'CUT': 'EX', 'ORIGIN': 'MMR'},
+      location: 'Vault B, Tray 1',
+      image: Img.gemRuby,
+    ),
+    GemStock(
+      id: 'SAP-3310-B',
+      name: 'Pear Ceylon Sapphire',
+      tag: 'Heated',
+      carat: 2.05,
+      specs: const {'CARAT': '2.05ct', 'COLOR': 'Royal Blue', 'ORIGIN': 'LKA'},
+      location: 'Vault B, Tray 3',
+      assignedJobId: 'DH-2081',
+    ),
+    GemStock(
+      id: 'DIA-7710-L',
+      name: 'Oval Lab Diamond',
+      tag: 'IGI Cert',
+      carat: 1.50,
+      specs: const {'CARAT': '1.50ct', 'COLOR': 'E', 'CLARITY': 'VS1'},
+      location: 'Vault A, Tray 2',
+    ),
+    GemStock(
+      id: 'MEL-0412-P',
+      name: 'Melee Parcel — Round',
+      tag: '1.0–1.5mm',
+      carat: 0.25,
+      specs: const {'CTW': '0.25', 'COLOR': 'G-H', 'CLARITY': 'VS'},
+      location: 'Vault C, Drawer 7',
+    ),
+  ];
 
   static List<ActionItem> actions() => [
-        ActionItem(kind: ActionKind.cadReview, title: 'Approve CAD revision for DH-1052', subtitle: 'Client requested minor prong adjustment.', jobId: 'DH-1052', cta: 'Review'),
-        ActionItem(kind: ActionKind.pricing, title: 'Price Job DH-1055', subtitle: 'BOM finalized, awaiting final quote.', jobId: 'DH-1055', cta: 'Price'),
-        ActionItem(kind: ActionKind.delay, title: 'Caster delayed on DH-1048', subtitle: 'Expected today, vendor reported equipment issue.', jobId: 'DH-1048', cta: 'Follow Up'),
-        ActionItem(kind: ActionKind.missing, title: 'Stones missing for DH-1061', subtitle: 'Melee diamonds count mismatch at receiving.', jobId: 'DH-1061', cta: 'Resolve'),
-        ActionItem(kind: ActionKind.certification, title: 'Certification completed for DH-1042', subtitle: 'GIA report uploaded, ready for final dispatch.', jobId: 'DH-1042', cta: 'View'),
-      ];
+    ActionItem(
+      kind: ActionKind.cadReview,
+      title: 'Approve CAD revision for DH-1052',
+      subtitle: 'Client requested minor prong adjustment.',
+      jobId: 'DH-1052',
+      cta: 'Review',
+    ),
+    ActionItem(
+      kind: ActionKind.pricing,
+      title: 'Price Job DH-1055',
+      subtitle: 'BOM finalized, awaiting final quote.',
+      jobId: 'DH-1055',
+      cta: 'Price',
+    ),
+    ActionItem(
+      kind: ActionKind.delay,
+      title: 'Caster delayed on DH-1048',
+      subtitle: 'Expected today, vendor reported equipment issue.',
+      jobId: 'DH-1048',
+      cta: 'Follow Up',
+    ),
+    ActionItem(
+      kind: ActionKind.missing,
+      title: 'Stones missing for DH-1061',
+      subtitle: 'Melee diamonds count mismatch at receiving.',
+      jobId: 'DH-1061',
+      cta: 'Resolve',
+    ),
+    ActionItem(
+      kind: ActionKind.certification,
+      title: 'Certification completed for DH-1042',
+      subtitle: 'GIA report uploaded, ready for final dispatch.',
+      jobId: 'DH-1042',
+      cta: 'View',
+    ),
+  ];
 
   static List<ActivityItem> activity() {
     final n = DateTime.now();
     return [
-      ActivityItem(text: 'QC Passed for', jobId: 'DH-1050', time: n.subtract(const Duration(minutes: 10)), by: 'Sarah J.'),
-      ActivityItem(text: 'Wax model approved', jobId: 'DH-1058', time: n.subtract(const Duration(hours: 1)), by: 'Client Portal'),
-      ActivityItem(text: 'Assembly started', jobId: 'DH-1049', time: n.subtract(const Duration(hours: 2)), by: 'Bench 4'),
-      ActivityItem(text: 'CAD files uploaded', jobId: 'DH-1065', time: n.subtract(const Duration(hours: 3)), by: 'Mike T.'),
+      ActivityItem(
+        text: 'QC Passed for',
+        jobId: 'DH-1050',
+        time: n.subtract(const Duration(minutes: 10)),
+        by: 'Sarah J.',
+      ),
+      ActivityItem(
+        text: 'Wax model approved',
+        jobId: 'DH-1058',
+        time: n.subtract(const Duration(hours: 1)),
+        by: 'Client Portal',
+      ),
+      ActivityItem(
+        text: 'Assembly started',
+        jobId: 'DH-1049',
+        time: n.subtract(const Duration(hours: 2)),
+        by: 'Bench 4',
+      ),
+      ActivityItem(
+        text: 'CAD files uploaded',
+        jobId: 'DH-1065',
+        time: n.subtract(const Duration(hours: 3)),
+        by: 'Mike T.',
+      ),
     ];
   }
 }

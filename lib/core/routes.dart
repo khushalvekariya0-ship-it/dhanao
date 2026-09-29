@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/inquiry/new_inquiry_screen.dart';
 import '../screens/jobs/job_detail_screen.dart';
+import '../screens/jobs/stage_detail_screen.dart';
 import '../screens/more/files_screen.dart';
 import '../screens/more/partners_screen.dart';
 import '../screens/more/settings_screen.dart';
@@ -28,6 +29,7 @@ import '../screens/stages/quality_control_screen.dart';
 import '../screens/stages/shipping_screen.dart';
 import '../screens/stages/workflow_tracker_screen.dart';
 import 'models.dart';
+import 'stage_info.dart';
 
 /// Named routes. Job-scoped routes take the job id (String) as `arguments`.
 ///
@@ -47,6 +49,9 @@ class Routes {
   static const shipping = '/job/shipping';
   static const tracker = '/job/tracker';
   static const orderDetails = '/job/order';
+
+  /// Process Detail for one stage of a job. arguments: StageRef(jobId, stage).
+  static const stage = '/job/stage';
 
   static const inquiry = '/inquiry';
   static const partners = '/partners';
@@ -108,6 +113,9 @@ class Routes {
         page = const HomeShell();
       case job:
         page = JobDetailScreen(jobId: id ?? 'DH-1048');
+      case stage:
+        final ref = s.arguments is StageRef ? s.arguments as StageRef : const StageRef('DH-1048', JobStage.inquiry);
+        page = StageDetailScreen(jobId: ref.jobId, initialStage: ref.stage);
       case cadReview:
         page = CadReviewScreen(jobId: id);
       case pricing:

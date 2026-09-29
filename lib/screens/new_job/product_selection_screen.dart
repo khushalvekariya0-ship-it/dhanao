@@ -248,6 +248,10 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
           label: const Text('Create from Previous Job'),
         ),
         const SizedBox(height: 32),
+        Text('Piece Name', style: _sectionStyle(c)),
+        const SizedBox(height: 12),
+        DhTextField(value: d.title, hint: 'e.g. Gold Signet Ring', onChanged: (v) => d.title = v),
+        const SizedBox(height: 32),
         Text('Additional Product Notes', style: _sectionStyle(c)),
         const SizedBox(height: 12),
         DhTextField(

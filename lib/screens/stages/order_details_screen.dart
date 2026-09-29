@@ -59,6 +59,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       showSnack(context, 'Type a note first', icon: Icons.edit_outlined);
       return;
     }
+    app.recordStage(job, job.stage, {'Last Workshop Note': text});
     app.postMessage(job, text);
     _note.clear();
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollNotesToEnd());

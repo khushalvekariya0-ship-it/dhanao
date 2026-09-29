@@ -65,6 +65,10 @@ class _PricingApprovalScreenState extends State<PricingApprovalScreen> {
     );
     if (value == null || !mounted) return;
     setState(() => line.amount = value);
+    app.recordStage(app.jobOrDefault(widget.jobId), JobStage.pricing, {
+      line.category: Fmt.money(value),
+      'Quote Total': Fmt.money(_total),
+    });
     showSnack(context, '${line.category} updated to ${Fmt.money(value)}', icon: Icons.edit_outlined);
   }
 
@@ -80,6 +84,7 @@ class _PricingApprovalScreenState extends State<PricingApprovalScreen> {
       ),
     );
     if (note == null || !mounted) return;
+    app.recordStage(job, JobStage.pricing, {'Change Requested': note});
     app.addEvent(job, title: 'Quote changes requested', text: note);
     showSnack(context, 'Change request sent for ${job.id}', icon: Icons.send_outlined);
   }
@@ -93,6 +98,16 @@ class _PricingApprovalScreenState extends State<PricingApprovalScreen> {
       confirm: 'Approve',
     );
     if (!ok || !mounted) return;
+    app.recordStage(job, JobStage.pricing, {
+      for (final l in _lines) l.category: Fmt.money(l.amount),
+      'Quote Total': Fmt.money(total),
+      if (total != _quoted) 'Original Quote': Fmt.money(_quoted),
+    });
+    app.recordStage(job, JobStage.finalApproval, {
+      'Approved Price': Fmt.money(total),
+      'Approved By': app.userName,
+      'Approved At': Fmt.dateTime(DateTime.now()),
+    });
     job.value = total;
     if (job.stage.isBefore(JobStage.wax)) {
       app.setStage(job, JobStage.wax, note: 'Quote approved. Released to manufacturing.');

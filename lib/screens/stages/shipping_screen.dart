@@ -29,6 +29,8 @@ class _Address {
   final String country;
 
   String get lines => [street, suite, city, country].where((l) => l.trim().isNotEmpty).join('\n');
+
+  String get oneLine => [name, street, suite, city, country].where((l) => l.trim().isNotEmpty).join(', ');
 }
 
 class _SummaryEntry {
@@ -200,6 +202,16 @@ class _ShippingScreenState extends State<ShippingScreen> {
       confirm: 'Dispatch',
     );
     if (!ok || !mounted) return;
+    final insured = double.tryParse(_insurance.text.replaceAll(',', '').trim());
+    app.recordStage(job, JobStage.dispatch, {
+      'Routing': _route == 0 ? 'Return to Jeweler' : 'Direct to Customer',
+      'Courier': _courier,
+      'Insurance Value': insured == null ? _insurance.text.trim() : Fmt.money(insured),
+      'Destination': _address.oneLine,
+      'Waybill': waybill,
+      if (_security.contains(0)) 'Security Seal': 'Seal #TE-921',
+      'Dispatched At': Fmt.dateTime(DateTime.now()),
+    });
     if (job.stage.isBefore(JobStage.dispatch)) {
       app.setStage(
         job,
@@ -219,6 +231,10 @@ class _ShippingScreenState extends State<ShippingScreen> {
       confirm: 'Delivered',
     );
     if (!ok || !mounted) return;
+    app.recordStage(job, JobStage.delivered, {
+      'Delivered At': Fmt.dateTime(DateTime.now()),
+      'Received By': _address.name,
+    });
     app.setStage(job, JobStage.delivered, note: 'Delivered to ${_address.name}.');
     showSnack(context, '${job.id} delivered', icon: Icons.inventory_2_outlined);
   }

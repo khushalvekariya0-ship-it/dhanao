@@ -65,6 +65,19 @@ class _CadReviewScreenState extends State<CadReviewScreen> {
     );
     if (!ok || !mounted) return;
     final note = _comment.text.trim();
+    app.recordStage(job, JobStage.cad, {
+      'Designer': 'Elena Rostova',
+      'Final Version': 'v2.0',
+      'Previous Version': 'v1.2',
+      'Change': 'Halo increased from 0.3ct to 0.45ct tw',
+    });
+    app.recordStage(job, JobStage.approval, {
+      'Approved Version': 'v2.0',
+      'Approved By': app.userName,
+      'Decision': 'Design locked',
+      'Approved At': Fmt.dateTime(DateTime.now()),
+      'Approval Note': note,
+    });
     if (job.stage.index <= JobStage.approval.index) {
       app.setStage(job, JobStage.pricing, note: 'Design v2.0 approved and locked.');
     } else {
@@ -92,6 +105,8 @@ class _CadReviewScreenState extends State<CadReviewScreen> {
       ),
     );
     if (note == null || !mounted) return;
+    final count = (int.tryParse(job.stageData[JobStage.approval]?['Revisions Requested'] ?? '') ?? 0) + 1;
+    app.recordStage(job, JobStage.approval, {'Revisions Requested': '$count', 'Last Revision Note': note});
     app.addEvent(job, title: 'Revision requested', text: note);
     setState(() {
       _comment.clear();

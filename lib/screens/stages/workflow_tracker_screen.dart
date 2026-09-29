@@ -7,6 +7,7 @@ import '../../core/assets.dart';
 import '../../core/format.dart';
 import '../../core/models.dart';
 import '../../core/routes.dart';
+import '../../core/stage_info.dart';
 import '../../core/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -22,22 +23,31 @@ class WorkflowTrackerScreen extends StatefulWidget {
 }
 
 class _Step {
-  const _Step(this.label, this.activity, this.defaultBy, this.defaultDate);
+  const _Step(this.label, this.activity, this.defaultBy, this.defaultDate, this.stage);
 
   final String label;
   final String activity;
   final String defaultBy;
   final String defaultDate;
+
+  /// Stage opened on the Process Detail page when the step is tapped.
+  final JobStage stage;
 }
 
 class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with SingleTickerProviderStateMixin {
   static const _steps = [
-    _Step('CAD Design', 'Designer refining the 3D model for client approval.', 'JD', 'Oct 12'),
-    _Step('3D Printing', 'Resin wax model printing on PR-02.', 'PR-02', 'Oct 13'),
-    _Step('Casting', 'Casting house pouring metal into the investment flask.', 'Forge-A', 'Oct 14'),
-    _Step('Stone Setting', 'Bench jeweler currently mounting main diamond.', 'Bench 4', 'Oct 15'),
-    _Step('Polishing', 'Final polish and surface finishing in progress.', 'Polish-1', 'Oct 16'),
-    _Step('Final QC & Hallmarking', 'Inspection against CAD, weight check and hallmark stamping.', 'QC-1', 'Oct 17'),
+    _Step('CAD Design', 'Designer refining the 3D model for client approval.', 'JD', 'Oct 12', JobStage.cad),
+    _Step('3D Printing', 'Resin wax model printing on PR-02.', 'PR-02', 'Oct 13', JobStage.wax),
+    _Step('Casting', 'Casting house pouring metal into the investment flask.', 'Forge-A', 'Oct 14', JobStage.casting),
+    _Step('Stone Setting', 'Bench jeweler currently mounting main diamond.', 'Bench 4', 'Oct 15', JobStage.setting),
+    _Step('Polishing', 'Final polish and surface finishing in progress.', 'Polish-1', 'Oct 16', JobStage.polishing),
+    _Step(
+      'Final QC & Hallmarking',
+      'Inspection against CAD, weight check and hallmark stamping.',
+      'QC-1',
+      'Oct 17',
+      JobStage.qc,
+    ),
   ];
 
   late final AnimationController _spin = AnimationController(vsync: this, duration: const Duration(milliseconds: 1600));
@@ -80,7 +90,8 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
   }
 
   void _markComplete(Job job) {
-    final next = app.advance(job);
+    // Records 'Completed By' on the job's current stage, then advances.
+    final next = app.completeStage(job, by: app.userName);
     showSnack(
       context,
       next == null ? '${job.id} is already complete' : '${job.id} moved to ${next.label}',
@@ -230,9 +241,21 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
     );
   }
 
+  /// Opens the Process Detail page for pipeline step [i]. The active step opens the job's
+  /// current stage (e.g. Assembly within "Stone Setting").
+  void _openStep(Job job, int i) {
+    final stage = _stepOf(job.stage) == i ? job.stage : _steps[i].stage;
+    Navigator.pushNamed(context, Routes.stage, arguments: StageRef(job.id, stage));
+  }
+
   Widget _pipeline(Job job) {
     final c = context.c;
     final current = _stepOf(job.stage);
+    final chevron = Icon(Icons.chevron_right, size: 20, color: c.textFaint);
+    Widget tappable(int i, Widget child) => Material(
+      type: MaterialType.transparency,
+      child: InkWell(onTap: () => _openStep(job, i), borderRadius: BorderRadius.circular(8), child: child),
+    );
     return DhCard(
       color: c.isDark ? c.surfaceHigh : c.surface,
       padding: const EdgeInsets.all(20),
@@ -246,14 +269,20 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
               const Expanded(child: Text('Manufacturing Pipeline', style: AppText.titleMd)),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 4),
+          Text('Tap a step to view its process details.', style: AppText.bodySm.copyWith(color: c.textFaint)),
+          const SizedBox(height: 16),
           for (var i = 0; i < _steps.length; i++)
             if (i < current)
-              PipelineTile(
-                title: _steps[i].label,
-                subtitle: _completedLine(job, i),
-                mono: true,
-                isLast: i == _steps.length - 1,
+              tappable(
+                i,
+                PipelineTile(
+                  title: _steps[i].label,
+                  subtitle: _completedLine(job, i),
+                  mono: true,
+                  trailing: chevron,
+                  isLast: i == _steps.length - 1,
+                ),
               )
             else if (i == current)
               _ActiveStep(
@@ -262,16 +291,21 @@ class _WorkflowTrackerScreenState extends State<WorkflowTrackerScreen> with Sing
                 stage: job.stage,
                 isLast: i == _steps.length - 1,
                 onComplete: () => _markComplete(job),
+                onDetails: () => _openStep(job, i),
               )
             else
-              Opacity(
-                opacity: 0.6,
-                child: PipelineTile(
-                  title: _steps[i].label,
-                  subtitle: 'Pending',
-                  mono: true,
-                  state: PipelineState.pending,
-                  isLast: i == _steps.length - 1,
+              tappable(
+                i,
+                Opacity(
+                  opacity: 0.6,
+                  child: PipelineTile(
+                    title: _steps[i].label,
+                    subtitle: 'Pending',
+                    mono: true,
+                    state: PipelineState.pending,
+                    trailing: chevron,
+                    isLast: i == _steps.length - 1,
+                  ),
                 ),
               ),
           if (current >= _steps.length) ...[
@@ -318,6 +352,7 @@ class _ActiveStep extends StatelessWidget {
     required this.stage,
     required this.isLast,
     required this.onComplete,
+    required this.onDetails,
   });
 
   final String title;
@@ -325,6 +360,9 @@ class _ActiveStep extends StatelessWidget {
   final JobStage stage;
   final bool isLast;
   final VoidCallback onComplete;
+
+  /// Opens the Process Detail page for [stage].
+  final VoidCallback onDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -365,50 +403,61 @@ class _ActiveStep extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.05),
+              child: Material(
+                color: accent.withValues(alpha: 0.05),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: accent.withValues(alpha: 0.2)),
+                  side: BorderSide(color: accent.withValues(alpha: 0.2)),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
+                child: InkWell(
+                  onTap: onDetails,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(
-                          child: Text(title, style: AppText.monoLg.copyWith(color: accent)),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(title, style: AppText.monoLg.copyWith(color: accent)),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: accent.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              child: Text('In Progress', style: AppText.monoCaps.copyWith(color: accent, fontSize: 12)),
+                            ),
+                            const SizedBox(width: 2),
+                            Icon(Icons.chevron_right, size: 20, color: accent.withValues(alpha: 0.7)),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: accent.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(2),
+                        const SizedBox(height: 6),
+                        Text(activity, style: AppText.bodyMd.copyWith(color: c.textMuted)),
+                        const SizedBox(height: 4),
+                        Text(
+                          'STAGE: ${stage.label.toUpperCase()}',
+                          style: AppText.monoCaps.copyWith(color: c.textFaint),
+                        ),
+                        const SizedBox(height: 12),
+                        OutlinedButton.icon(
+                          onPressed: onComplete,
+                          icon: const Icon(Icons.touch_app_outlined, size: 16),
+                          label: Text('Mark Complete', style: AppText.monoCaps.copyWith(fontSize: 13)),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: accent,
+                            backgroundColor: c.isDark ? c.bg : c.surface,
+                            minimumSize: const Size(0, 42),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            side: BorderSide(color: accent.withValues(alpha: 0.3)),
                           ),
-                          child: Text('In Progress', style: AppText.monoCaps.copyWith(color: accent, fontSize: 12)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(activity, style: AppText.bodyMd.copyWith(color: c.textMuted)),
-                    const SizedBox(height: 4),
-                    Text('STAGE: ${stage.label.toUpperCase()}', style: AppText.monoCaps.copyWith(color: c.textFaint)),
-                    const SizedBox(height: 12),
-                    OutlinedButton.icon(
-                      onPressed: onComplete,
-                      icon: const Icon(Icons.touch_app_outlined, size: 16),
-                      label: Text('Mark Complete', style: AppText.monoCaps.copyWith(fontSize: 13)),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: accent,
-                        backgroundColor: c.isDark ? c.bg : c.surface,
-                        minimumSize: const Size(0, 42),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                        side: BorderSide(color: accent.withValues(alpha: 0.3)),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

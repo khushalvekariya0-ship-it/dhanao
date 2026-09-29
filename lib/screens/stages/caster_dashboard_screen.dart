@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_state.dart';
 import '../../core/assets.dart';
+import '../../core/format.dart';
 import '../../core/models.dart';
 import '../../core/routes.dart';
 import '../../core/theme.dart';
@@ -79,15 +80,19 @@ class _CasterDashboardScreenState extends State<CasterDashboardScreen> {
   void _complete(Job job) {
     final photo = _photo;
     if (photo == null) return;
+    final temps = _castingTemps(job.metal);
+    final photoName = 'casting_${job.id}.jpg';
+    app.recordStage(job, JobStage.casting, {
+      'Caster': 'Patel Casting Works',
+      'Alloy': job.metal,
+      'Flask Temp': temps.$1,
+      'Metal Temp': temps.$2,
+      'Casting Photo': photoName,
+      'Completed At': Fmt.dateTime(DateTime.now()),
+    });
     app.addFile(
       job,
-      ProjectFile(
-        name: 'casting_${job.id}.jpg',
-        kind: FileKind.image,
-        localPath: photo,
-        jobId: job.id,
-        uploadedBy: _vendor,
-      ),
+      ProjectFile(name: photoName, kind: FileKind.image, localPath: photo, jobId: job.id, uploadedBy: _vendor),
     );
     final next = app.advance(job, by: _vendor, note: 'Casting complete. Photo uploaded by Patel Casting Works.');
     setState(() => _photo = null);
@@ -99,6 +104,10 @@ class _CasterDashboardScreenState extends State<CasterDashboardScreen> {
   }
 
   void _receiveWax(Job job) {
+    app.recordStage(job, JobStage.wax, {
+      'Wax Received By': 'Patel Casting Works',
+      'Received At': Fmt.dateTime(DateTime.now()),
+    });
     app.advance(job, by: _vendor, note: 'Wax model received at Patel Casting Works.');
     showSnack(context, 'Wax received · ${job.id} ready for casting', icon: Icons.inventory_2_outlined);
   }
@@ -111,6 +120,7 @@ class _CasterDashboardScreenState extends State<CasterDashboardScreen> {
     );
     if (report == null || !mounted) return;
     final (type, note) = report;
+    app.recordStage(job, job.stage, {'Issue Reported': type, 'Issue Note': note});
     app.addEvent(
       job,
       title: 'Issue reported: $type',

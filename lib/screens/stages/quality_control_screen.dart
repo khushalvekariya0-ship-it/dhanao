@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_state.dart';
 import '../../core/assets.dart';
+import '../../core/format.dart';
 import '../../core/models.dart';
 import '../../core/routes.dart';
 import '../../core/theme.dart';
@@ -135,6 +136,15 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
       confirm: 'Authorize',
     );
     if (!ok || !mounted) return;
+    final items = _items(job);
+    app.recordStage(job, JobStage.qc, {
+      'Specialist': 'E. Carter',
+      'Checks Passed': '${items.length}/${items.length}',
+      for (final item in items) item.title: 'Pass',
+      'Evidence Photos': '${_evidence.length}',
+      'Result': 'Passed',
+      'Inspected At': Fmt.dateTime(DateTime.now()),
+    });
     _saveEvidence(job);
     if (job.stage.isBefore(JobStage.certification)) {
       app.setStage(job, JobStage.certification, note: 'QC passed final inspection.');
@@ -151,6 +161,14 @@ class _QualityControlScreenState extends State<QualityControlScreen> {
   Future<void> _sendBack(Job job) async {
     final reason = await showDialog<String>(context: context, builder: (_) => const _SendBackDialog());
     if (reason == null || !mounted) return;
+    app.recordStage(job, JobStage.qc, {
+      'Specialist': 'E. Carter',
+      'Result': 'Sent back to polishing',
+      'Reason': reason,
+      'Checks Passed': '${_checked.length}/${_items(job).length}',
+      if (_evidence.isNotEmpty) 'Evidence Photos': '${_evidence.length}',
+      'Inspected At': Fmt.dateTime(DateTime.now()),
+    });
     _saveEvidence(job);
     if (job.stage == JobStage.polishing) {
       app.addEvent(job, title: 'QC failed', text: reason);

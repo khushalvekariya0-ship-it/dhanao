@@ -222,9 +222,11 @@ class Job {
     List<ThreadMessage>? thread,
     List<ProjectFile>? files,
     List<StageEvent>? history,
-  })  : thread = thread ?? [],
-        files = files ?? [],
-        history = history ?? [];
+    Map<JobStage, Map<String, String>>? stageData,
+  }) : thread = thread ?? [],
+       files = files ?? [],
+       history = history ?? [],
+       stageData = stageData ?? {};
 
   final String id;
   String title;
@@ -259,11 +261,14 @@ class Job {
   final List<ProjectFile> files;
   final List<StageEvent> history;
 
+  /// What was recorded in each stage (e.g. pricing → quote lines, dispatch → courier + waybill).
+  /// Shown on the Process Detail screen.
+  final Map<JobStage, Map<String, String>> stageData;
+
   /// 0..1 progress through the pipeline.
   double get progress => stage.index / (JobStage.values.length - 1);
 
-  int get daysInStage =>
-      stageEnteredAt == null ? 0 : DateTime.now().difference(stageEnteredAt!).inDays;
+  int get daysInStage => stageEnteredAt == null ? 0 : DateTime.now().difference(stageEnteredAt!).inDays;
 
   int get daysUntilDue {
     final now = DateTime.now();
@@ -321,13 +326,7 @@ class GemStock {
 enum ActionKind { cadReview, pricing, delay, missing, certification }
 
 class ActionItem {
-  ActionItem({
-    required this.kind,
-    required this.title,
-    required this.subtitle,
-    required this.jobId,
-    required this.cta,
-  });
+  ActionItem({required this.kind, required this.title, required this.subtitle, required this.jobId, required this.cta});
 
   final ActionKind kind;
   final String title;
@@ -382,6 +381,9 @@ class CostLine {
 /// Everything captured by the New Job wizard. One instance lives in
 /// [AppState.draft] and is reset when a job is created or cancelled.
 class JobDraft {
+  /// Name of the piece ("Gold Signet Ring"); used as the job title when set.
+  String title = '';
+
   // Job type / flow
   String jobType = 'New Custom Design';
   String productCategory = 'Ring';
