@@ -1,0 +1,2523 @@
+{
+  "exportedAt": "2026-09-29T11:41:10.266897Z",
+  "stages": [
+    {
+      "key": "inquiry",
+      "label": "Inquiry",
+      "short": "Inquiry",
+      "color": "#94a3b8",
+      "summary": "Customer request is captured: product, metal, stones, references, budget and delivery date.",
+      "owner": "Manufacturing Engineer",
+      "checklist": [
+        "Product & design specs captured",
+        "Reference images / voice brief attached",
+        "Budget and delivery date agreed"
+      ],
+      "workspace": "Order Details"
+    },
+    {
+      "key": "cad",
+      "label": "CAD Design",
+      "short": "CAD",
+      "color": "#0ea5e9",
+      "summary": "CAD designer builds the 3D model from the brief and uploads versions for review.",
+      "owner": "CAD Designer",
+      "checklist": [
+        "3D model uploaded (STL / STEP)",
+        "Stone sizes and proportions match specs",
+        "Renders shared for review"
+      ],
+      "workspace": "CAD Review"
+    },
+    {
+      "key": "approval",
+      "label": "Design Approval",
+      "short": "Approval",
+      "color": "#10b981",
+      "summary": "The design is reviewed; revisions are requested or the version is approved and locked.",
+      "owner": "Manufacturing Engineer / Customer",
+      "checklist": [
+        "Latest version compared with previous",
+        "Revision feedback resolved",
+        "Design version locked"
+      ],
+      "workspace": "CAD Review"
+    },
+    {
+      "key": "pricing",
+      "label": "Pricing",
+      "short": "Pricing",
+      "color": "#10b981",
+      "summary": "Bill of materials is costed: metal, gemstones, labour, setting and certification.",
+      "owner": "Manufacturing Engineer",
+      "checklist": [
+        "Metal weight and rate confirmed",
+        "Stone costs confirmed",
+        "Itemised quote prepared"
+      ],
+      "workspace": "Pricing Approval"
+    },
+    {
+      "key": "finalApproval",
+      "label": "Final Approval",
+      "short": "Final App",
+      "color": "#10b981",
+      "summary": "Customer approves the final design and price; the job is released to manufacturing.",
+      "owner": "Customer",
+      "checklist": [
+        "Quote approved",
+        "Design approved",
+        "Released to production"
+      ],
+      "workspace": "Pricing Approval"
+    },
+    {
+      "key": "wax",
+      "label": "Wax / 3D Print",
+      "short": "Wax",
+      "color": "#f59e0b",
+      "summary": "The approved CAD is 3D printed in castable wax/resin and inspected.",
+      "owner": "3D Print Bureau",
+      "checklist": [
+        "Wax model printed",
+        "Wax inspected for defects",
+        "Wax sent to caster"
+      ],
+      "workspace": "Casting Dashboard"
+    },
+    {
+      "key": "casting",
+      "label": "Casting",
+      "short": "Casting",
+      "color": "#f59e0b",
+      "summary": "The wax is invested, burnt out and cast in the chosen alloy.",
+      "owner": "Casting House",
+      "checklist": [
+        "Complete burnout before casting",
+        "Casting photo uploaded",
+        "No porosity or incomplete fill"
+      ],
+      "workspace": "Casting Dashboard"
+    },
+    {
+      "key": "assembly",
+      "label": "Assembly",
+      "short": "Assembly",
+      "color": "#f59e0b",
+      "summary": "Sprues are removed, parts cleaned up, pre-polished and assembled at the bench.",
+      "owner": "Bench Jeweler",
+      "checklist": [
+        "Sprues removed",
+        "Components assembled / soldered",
+        "Pre-polish done"
+      ],
+      "workspace": "Workflow Tracker"
+    },
+    {
+      "key": "setting",
+      "label": "Stone Setting",
+      "short": "Setting",
+      "color": "#f59e0b",
+      "summary": "Center and accent stones are set and secured.",
+      "owner": "Stone Setter",
+      "checklist": [
+        "Center stone set",
+        "Melee / accent stones set",
+        "Prongs checked for security"
+      ],
+      "workspace": "Workflow Tracker"
+    },
+    {
+      "key": "polishing",
+      "label": "Polishing",
+      "short": "Polishing",
+      "color": "#f59e0b",
+      "summary": "Final polishing and finishing (high polish, matte, texture) as specified.",
+      "owner": "Polisher",
+      "checklist": [
+        "Finish matches spec",
+        "No tool marks or scratches",
+        "Cleaned ultrasonically"
+      ],
+      "workspace": "Workflow Tracker"
+    },
+    {
+      "key": "qc",
+      "label": "Quality Control",
+      "short": "QC",
+      "color": "#6366f1",
+      "summary": "Final inspection against the approved CAD, dimensions, weight, stone security and finish.",
+      "owner": "QC Specialist",
+      "checklist": [
+        "Design matches approved CAD",
+        "Dimensions and weight in tolerance",
+        "Stones secure, finish approved"
+      ],
+      "workspace": "Quality Control"
+    },
+    {
+      "key": "certification",
+      "label": "Certification",
+      "short": "Cert",
+      "color": "#6366f1",
+      "summary": "Stones / piece are sent to a gem lab (IGI, GIA, HRD) and the certificate is logged.",
+      "owner": "Gem Lab",
+      "checklist": [
+        "Package sent to lab",
+        "Certificate received",
+        "Certificate number logged"
+      ],
+      "workspace": "Certification"
+    },
+    {
+      "key": "dispatch",
+      "label": "Dispatch",
+      "short": "Dispatch",
+      "color": "#64748b",
+      "summary": "Secure packing, insurance and courier manifest; the piece is shipped.",
+      "owner": "Logistics",
+      "checklist": [
+        "Tamper-evident seal applied",
+        "Insurance value declared",
+        "Waybill generated"
+      ],
+      "workspace": "Shipping"
+    },
+    {
+      "key": "delivered",
+      "label": "Delivered",
+      "short": "Delivered",
+      "color": "#64748b",
+      "summary": "The piece is received by the jeweler or customer.",
+      "owner": "Customer / Jeweler",
+      "checklist": [
+        "Delivery confirmed",
+        "Documents handed over"
+      ],
+      "workspace": "Shipping"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "DH-1048",
+      "title": "Solitaire Crown Ring",
+      "productType": "Engagement Ring",
+      "customer": "Scottsdale Diamond Co.",
+      "manufacturer": "AuraForge India",
+      "stage": "casting",
+      "priority": "high",
+      "dueDate": "2026-10-05T04:30:00.000Z",
+      "value": 4850.0,
+      "image": "cad_ring_monitor.jpg",
+      "metal": "18K Yellow Gold",
+      "centerStone": "2.4ct Lab Diamond",
+      "settingStyle": "6-Prong Crown",
+      "weightGrams": 14.2,
+      "ringSize": "US 6.5",
+      "assignee": "Patel Casting Works",
+      "stageEnteredAt": "2026-09-29T04:00:00.000Z",
+      "atRisk": true,
+      "quantity": 1,
+      "notes": "Attention to sharp internal corners. Ensure complete burnout before casting to prevent porosity.",
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-15T04:30:00.000Z",
+          "by": "Scottsdale Dia.",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-17T04:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-20T04:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-21T04:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-22T04:30:00.000Z",
+          "by": "Scottsdale Dia.",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-26T04:30:00.000Z",
+          "by": "PR-02",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-29T04:00:00.000Z",
+          "by": "Patel Works",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Scottsdale Diamond Co.",
+          "Product": "Engagement Ring",
+          "Piece": "Solitaire Crown Ring",
+          "Metal": "18K Yellow Gold",
+          "Center Stone": "2.4ct Lab Diamond",
+          "Setting Style": "6-Prong Crown",
+          "Ring Size": "US 6.5",
+          "Quantity": "1",
+          "Target Value": "$4,850",
+          "Requested Delivery": "Oct 5, 2026",
+          "Notes": "Attention to sharp internal corners. Ensure complete burnout before casting to prevent porosity.",
+          "Completed By": "Scottsdale Diamond Co."
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$2,086",
+          "Gemstones": "$1,213",
+          "Labor": "$776",
+          "Setting": "$388",
+          "Certification": "$387",
+          "Quote Total": "$4,850",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Scottsdale Diamond Co.",
+          "Approved Price": "$4,850",
+          "Released To": "Manufacturing",
+          "Completed By": "Scottsdale Diamond Co."
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "18K Yellow Gold",
+          "Flask Temp": "650°C",
+          "Metal Temp": "1020°C"
+        }
+      },
+      "thread": [
+        {
+          "author": "Sarah J.",
+          "text": "Sarah J. updated the main 3D file.",
+          "time": "2026-09-29T05:12:00.000Z",
+          "kind": "file",
+          "title": "CAD revision uploaded",
+          "isMe": false,
+          "avatar": "avatar_sarah.jpg"
+        },
+        {
+          "author": "Patel Works",
+          "text": "We've received the wax. Starting the casting process now. Looks clean.",
+          "time": "2026-09-29T05:45:00.000Z",
+          "kind": "message",
+          "title": null,
+          "isMe": false,
+          "avatar": "avatar_patel.jpg"
+        },
+        {
+          "author": "System",
+          "text": "System updated status automatically.",
+          "time": "2026-09-29T05:46:00.000Z",
+          "kind": "stage",
+          "title": "Stage Changed: Casting",
+          "isMe": false,
+          "avatar": null
+        },
+        {
+          "author": "Ravi S.",
+          "text": "Excellent. Please upload a photo once it cools, before clipping the sprues.",
+          "time": "2026-09-29T06:00:00.000Z",
+          "kind": "message",
+          "title": null,
+          "isMe": true,
+          "avatar": null
+        }
+      ],
+      "files": [
+        {
+          "name": "ref_ring_01.jpg",
+          "kind": "image",
+          "asset": "ring_gold_solitaire.jpg",
+          "uploadedBy": "Scottsdale Dia.",
+          "date": "2026-09-29T11:41:10.270371Z",
+          "sizeLabel": "1.2 MB"
+        },
+        {
+          "name": "cad_mesh_v2.png",
+          "kind": "cad",
+          "asset": "cad_mesh_green.jpg",
+          "uploadedBy": "Sarah J.",
+          "date": "2026-09-29T11:41:10.270371Z",
+          "sizeLabel": "4.8 MB"
+        },
+        {
+          "name": "specs_final.pdf",
+          "kind": "pdf",
+          "asset": null,
+          "uploadedBy": "Ravi S.",
+          "date": "2026-09-29T11:41:10.270371Z",
+          "sizeLabel": "320 KB"
+        },
+        {
+          "name": "pricing_sheet.xlsx",
+          "kind": "sheet",
+          "asset": null,
+          "uploadedBy": "Ravi S.",
+          "date": "2026-09-29T11:41:10.270371Z",
+          "sizeLabel": "88 KB"
+        }
+      ]
+    },
+    {
+      "id": "DH-1033",
+      "title": "Platinum Solitaire Engagement Ring",
+      "productType": "Engagement Ring",
+      "customer": "Aurum Jewelers",
+      "manufacturer": "AuraForge India",
+      "stage": "polishing",
+      "priority": "critical",
+      "dueDate": "2026-09-29T04:30:00.000Z",
+      "value": 6200.0,
+      "image": "ring_emerald_cut_white.jpg",
+      "metal": "Platinum 950",
+      "centerStone": "1.8ct Emerald Cut",
+      "settingStyle": "4-Prong Cathedral",
+      "weightGrams": 5.1,
+      "ringSize": "US 6",
+      "assignee": "Bench 2",
+      "stageEnteredAt": "2026-09-28T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-18T10:30:00.000Z",
+          "by": "Aurum Jewelers",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-19T05:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-20T11:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-21T06:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-22T12:30:00.000Z",
+          "by": "Aurum Jewelers",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-23T18:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-24T13:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-25T19:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        },
+        {
+          "stage": "setting",
+          "at": "2026-09-27T01:30:00.000Z",
+          "by": "Marco V.",
+          "note": null
+        },
+        {
+          "stage": "polishing",
+          "at": "2026-09-28T04:30:00.000Z",
+          "by": "Bench 2",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Aurum Jewelers",
+          "Product": "Engagement Ring",
+          "Piece": "Platinum Solitaire Engagement Ring",
+          "Metal": "Platinum 950",
+          "Center Stone": "1.8ct Emerald Cut",
+          "Setting Style": "4-Prong Cathedral",
+          "Ring Size": "US 6",
+          "Quantity": "1",
+          "Target Value": "$6,200",
+          "Requested Delivery": "Sep 29, 2026",
+          "Completed By": "Aurum Jewelers"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$2,666",
+          "Gemstones": "$1,550",
+          "Labor": "$992",
+          "Setting": "$496",
+          "Certification": "$496",
+          "Quote Total": "$6,200",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Aurum Jewelers",
+          "Approved Price": "$6,200",
+          "Released To": "Manufacturing",
+          "Completed By": "Aurum Jewelers"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "Platinum 950",
+          "Flask Temp": "650°C",
+          "Metal Temp": "2000°C",
+          "Result": "Clean cast, no porosity",
+          "Cast Weight": "5.5 g",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish",
+          "Status": "Assembled",
+          "Completed By": "Bench 4"
+        },
+        "setting": {
+          "Setter": "Marco V.",
+          "Stone": "1.8ct Emerald Cut",
+          "Setting Style": "4-Prong Cathedral",
+          "Security Check": "Passed",
+          "Completed By": "Marco V."
+        },
+        "polishing": {
+          "Polisher": "Bench 2",
+          "Finish": "High polish exterior, matte interior"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1040",
+      "title": "Custom Sapphire Tennis Bracelet",
+      "productType": "Bracelet",
+      "customer": "Alara Vane",
+      "manufacturer": "AuraForge India",
+      "stage": "setting",
+      "priority": "rush",
+      "dueDate": "2026-09-30T04:30:00.000Z",
+      "value": 9400.0,
+      "image": "cad_pendant_sapphire.jpg",
+      "metal": "18K White Gold",
+      "centerStone": "42 × Sapphire 0.10ct",
+      "settingStyle": "Shared Prong",
+      "weightGrams": 12.6,
+      "ringSize": null,
+      "assignee": "Bench 4",
+      "stageEnteredAt": "2026-09-27T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-18T12:30:00.000Z",
+          "by": "Alara Vane",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-19T07:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-20T13:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-21T08:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-22T14:30:00.000Z",
+          "by": "Alara Vane",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-23T20:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-24T15:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-25T21:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        },
+        {
+          "stage": "setting",
+          "at": "2026-09-27T04:30:00.000Z",
+          "by": "Marco V.",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Alara Vane",
+          "Product": "Bracelet",
+          "Piece": "Custom Sapphire Tennis Bracelet",
+          "Metal": "18K White Gold",
+          "Center Stone": "42 × Sapphire 0.10ct",
+          "Setting Style": "Shared Prong",
+          "Quantity": "1",
+          "Target Value": "$9,400",
+          "Requested Delivery": "Sep 30, 2026",
+          "Completed By": "Alara Vane"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$4,042",
+          "Gemstones": "$2,350",
+          "Labor": "$1,504",
+          "Setting": "$752",
+          "Certification": "$752",
+          "Quote Total": "$9,400",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Alara Vane",
+          "Approved Price": "$9,400",
+          "Released To": "Manufacturing",
+          "Completed By": "Alara Vane"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "18K White Gold",
+          "Flask Temp": "650°C",
+          "Metal Temp": "1020°C",
+          "Result": "Clean cast, no porosity",
+          "Cast Weight": "13.6 g",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish",
+          "Status": "Assembled",
+          "Completed By": "Bench 4"
+        },
+        "setting": {
+          "Setter": "Marco V.",
+          "Stone": "42 × Sapphire 0.10ct",
+          "Setting Style": "Shared Prong"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-2094",
+      "title": "Custom Oval Halo Ring",
+      "productType": "Ring",
+      "customer": "E. Chen",
+      "manufacturer": "AuraForge India",
+      "stage": "finalApproval",
+      "priority": "high",
+      "dueDate": "2026-10-01T04:30:00.000Z",
+      "value": 5300.0,
+      "image": "ring_oval_halo.jpg",
+      "metal": "14K White Gold",
+      "centerStone": "1.5ct Oval Diamond",
+      "settingStyle": "Halo",
+      "weightGrams": null,
+      "ringSize": "US 7",
+      "assignee": null,
+      "stageEnteredAt": "2026-09-28T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-23T20:30:00.000Z",
+          "by": "E. Chen",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-24T15:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-25T21:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-26T16:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-28T04:30:00.000Z",
+          "by": "E. Chen",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "E. Chen",
+          "Product": "Ring",
+          "Piece": "Custom Oval Halo Ring",
+          "Metal": "14K White Gold",
+          "Center Stone": "1.5ct Oval Diamond",
+          "Setting Style": "Halo",
+          "Ring Size": "US 7",
+          "Quantity": "1",
+          "Target Value": "$5,300",
+          "Requested Delivery": "Oct 1, 2026",
+          "Completed By": "E. Chen"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$2,279",
+          "Gemstones": "$1,325",
+          "Labor": "$848",
+          "Setting": "$424",
+          "Certification": "$424",
+          "Quote Total": "$5,300",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Awaiting": "Customer approval of quote",
+          "Quoted Price": "$5,300"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-2098",
+      "title": "Gold Signet Ring Restocking",
+      "productType": "Ring",
+      "customer": "Boutique X",
+      "manufacturer": "AuraForge India",
+      "stage": "finalApproval",
+      "priority": "standard",
+      "dueDate": "2026-10-07T04:30:00.000Z",
+      "value": 2100.0,
+      "image": null,
+      "metal": "18K Yellow Gold",
+      "centerStone": "—",
+      "settingStyle": "Plain",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": null,
+      "stageEnteredAt": "2026-09-29T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 5,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-24T20:30:00.000Z",
+          "by": "Boutique X",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-25T15:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-26T21:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-27T16:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-29T04:30:00.000Z",
+          "by": "Boutique X",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Boutique X",
+          "Product": "Ring",
+          "Piece": "Gold Signet Ring Restocking",
+          "Metal": "18K Yellow Gold",
+          "Setting Style": "Plain",
+          "Quantity": "5",
+          "Target Value": "$2,100",
+          "Requested Delivery": "Oct 7, 2026",
+          "Completed By": "Boutique X"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$903",
+          "Gemstones": "$525",
+          "Labor": "$336",
+          "Setting": "$168",
+          "Certification": "$168",
+          "Quote Total": "$2,100",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Awaiting": "Customer approval of quote",
+          "Quoted Price": "$2,100"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-2081",
+      "title": "Sapphire Pendant Drop",
+      "productType": "Pendant",
+      "customer": "T. Nguyen",
+      "manufacturer": "AuraForge India",
+      "stage": "wax",
+      "priority": "standard",
+      "dueDate": "2026-10-04T04:30:00.000Z",
+      "value": 3100.0,
+      "image": "cad_pendant_sapphire.jpg",
+      "metal": "18K White Gold",
+      "centerStone": "2.1ct Pear Sapphire",
+      "settingStyle": "Micro-pave Halo",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": "PR-02 Printer",
+      "stageEnteredAt": "2026-09-27T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-21T18:30:00.000Z",
+          "by": "T. Nguyen",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-22T13:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-23T19:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-24T14:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-25T20:30:00.000Z",
+          "by": "T. Nguyen",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-27T04:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "T. Nguyen",
+          "Product": "Pendant",
+          "Piece": "Sapphire Pendant Drop",
+          "Metal": "18K White Gold",
+          "Center Stone": "2.1ct Pear Sapphire",
+          "Setting Style": "Micro-pave Halo",
+          "Quantity": "1",
+          "Target Value": "$3,100",
+          "Requested Delivery": "Oct 4, 2026",
+          "Completed By": "T. Nguyen"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$1,333",
+          "Gemstones": "$775",
+          "Labor": "$496",
+          "Setting": "$248",
+          "Certification": "$248",
+          "Quote Total": "$3,100",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "T. Nguyen",
+          "Approved Price": "$3,100",
+          "Released To": "Manufacturing",
+          "Completed By": "T. Nguyen"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1052",
+      "title": "Classic Solitaire Setting",
+      "productType": "Ring",
+      "customer": "Scottsdale Diamond Co.",
+      "manufacturer": "AuraForge India",
+      "stage": "approval",
+      "priority": "standard",
+      "dueDate": "2026-10-11T04:30:00.000Z",
+      "value": 2800.0,
+      "image": "ring_halo_v2.jpg",
+      "metal": "Platinum 950",
+      "centerStone": "1.5ct Oval Cut",
+      "settingStyle": "Halo",
+      "weightGrams": null,
+      "ringSize": "US 6.5",
+      "assignee": "Elena Rostova",
+      "stageEnteredAt": "2026-09-28T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": "Client requested minor prong adjustment.",
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-26T00:30:00.000Z",
+          "by": "Scottsdale Diamond Co.",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-26T19:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-28T04:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Scottsdale Diamond Co.",
+          "Product": "Ring",
+          "Piece": "Classic Solitaire Setting",
+          "Metal": "Platinum 950",
+          "Center Stone": "1.5ct Oval Cut",
+          "Setting Style": "Halo",
+          "Ring Size": "US 6.5",
+          "Quantity": "1",
+          "Target Value": "$2,800",
+          "Requested Delivery": "Oct 11, 2026",
+          "Notes": "Client requested minor prong adjustment.",
+          "Completed By": "Scottsdale Diamond Co."
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Awaiting": "Design review of latest CAD",
+          "Note": "Client requested minor prong adjustment."
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1055",
+      "title": "Halo Diamond Studs",
+      "productType": "Earrings",
+      "customer": "ABC Jewelers",
+      "manufacturer": "AuraForge India",
+      "stage": "pricing",
+      "priority": "standard",
+      "dueDate": "2026-10-14T04:30:00.000Z",
+      "value": 4850.0,
+      "image": "ring_diamond_prongs.jpg",
+      "metal": "18K White Gold",
+      "centerStone": "2 × 0.75ct Round",
+      "settingStyle": "Halo",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": null,
+      "stageEnteredAt": "2026-09-28T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": "BOM finalized, awaiting final quote.",
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-24T22:30:00.000Z",
+          "by": "ABC Jewelers",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-25T17:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-26T23:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-28T04:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "ABC Jewelers",
+          "Product": "Earrings",
+          "Piece": "Halo Diamond Studs",
+          "Metal": "18K White Gold",
+          "Center Stone": "2 × 0.75ct Round",
+          "Setting Style": "Halo",
+          "Quantity": "1",
+          "Target Value": "$4,850",
+          "Requested Delivery": "Oct 14, 2026",
+          "Notes": "BOM finalized, awaiting final quote.",
+          "Completed By": "ABC Jewelers"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Status": "Quote being prepared",
+          "Note": "BOM finalized, awaiting final quote."
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1061",
+      "title": "Eternity Band",
+      "productType": "Ring",
+      "customer": "Aurum Jewelers",
+      "manufacturer": "AuraForge India",
+      "stage": "assembly",
+      "priority": "standard",
+      "dueDate": "2026-10-03T04:30:00.000Z",
+      "value": 3600.0,
+      "image": null,
+      "metal": "Platinum 950",
+      "centerStone": "24 × 0.05ct Melee",
+      "settingStyle": "Channel",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": "Bench 1",
+      "stageEnteredAt": "2026-09-26T04:30:00.000Z",
+      "atRisk": true,
+      "quantity": 1,
+      "notes": "Melee diamonds count mismatch at receiving.",
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-18T14:30:00.000Z",
+          "by": "Aurum Jewelers",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-19T09:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-20T15:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-21T10:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-22T16:30:00.000Z",
+          "by": "Aurum Jewelers",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-23T22:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-24T17:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-26T04:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Aurum Jewelers",
+          "Product": "Ring",
+          "Piece": "Eternity Band",
+          "Metal": "Platinum 950",
+          "Center Stone": "24 × 0.05ct Melee",
+          "Setting Style": "Channel",
+          "Quantity": "1",
+          "Target Value": "$3,600",
+          "Requested Delivery": "Oct 3, 2026",
+          "Notes": "Melee diamonds count mismatch at receiving.",
+          "Completed By": "Aurum Jewelers"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$1,548",
+          "Gemstones": "$900",
+          "Labor": "$576",
+          "Setting": "$288",
+          "Certification": "$288",
+          "Quote Total": "$3,600",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Aurum Jewelers",
+          "Approved Price": "$3,600",
+          "Released To": "Manufacturing",
+          "Completed By": "Aurum Jewelers"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "Platinum 950",
+          "Flask Temp": "650°C",
+          "Metal Temp": "2000°C",
+          "Result": "Clean cast, no porosity",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1042",
+      "title": "Emerald Cut Engagement Ring",
+      "productType": "Ring",
+      "customer": "Aurum Jewelers",
+      "manufacturer": "AuraForge India",
+      "stage": "dispatch",
+      "priority": "standard",
+      "dueDate": "2026-09-30T04:30:00.000Z",
+      "value": 7800.0,
+      "image": "ring_emerald_cut_white.jpg",
+      "metal": "Platinum 950",
+      "centerStone": "2.0ct Emerald Cut (GIA 44921)",
+      "settingStyle": "4-Prong",
+      "weightGrams": null,
+      "ringSize": "US 6.5",
+      "assignee": null,
+      "stageEnteredAt": "2026-09-29T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-16T04:30:00.000Z",
+          "by": "Aurum Jewelers",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-16T23:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-18T05:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-19T00:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-20T06:30:00.000Z",
+          "by": "Aurum Jewelers",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-21T12:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-22T07:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-23T13:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        },
+        {
+          "stage": "setting",
+          "at": "2026-09-24T19:30:00.000Z",
+          "by": "Marco V.",
+          "note": null
+        },
+        {
+          "stage": "polishing",
+          "at": "2026-09-25T14:30:00.000Z",
+          "by": "Bench 2",
+          "note": null
+        },
+        {
+          "stage": "qc",
+          "at": "2026-09-26T20:30:00.000Z",
+          "by": "E. Carter",
+          "note": null
+        },
+        {
+          "stage": "certification",
+          "at": "2026-09-28T02:30:00.000Z",
+          "by": "IGI Antwerp",
+          "note": null
+        },
+        {
+          "stage": "dispatch",
+          "at": "2026-09-29T04:30:00.000Z",
+          "by": "Brinks Secure Logistics",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Aurum Jewelers",
+          "Product": "Ring",
+          "Piece": "Emerald Cut Engagement Ring",
+          "Metal": "Platinum 950",
+          "Center Stone": "2.0ct Emerald Cut (GIA 44921)",
+          "Setting Style": "4-Prong",
+          "Ring Size": "US 6.5",
+          "Quantity": "1",
+          "Target Value": "$7,800",
+          "Requested Delivery": "Sep 30, 2026",
+          "Completed By": "Aurum Jewelers"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$3,354",
+          "Gemstones": "$1,950",
+          "Labor": "$1,248",
+          "Setting": "$624",
+          "Certification": "$624",
+          "Quote Total": "$7,800",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Aurum Jewelers",
+          "Approved Price": "$7,800",
+          "Released To": "Manufacturing",
+          "Completed By": "Aurum Jewelers"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "Platinum 950",
+          "Flask Temp": "650°C",
+          "Metal Temp": "2000°C",
+          "Result": "Clean cast, no porosity",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish",
+          "Status": "Assembled",
+          "Completed By": "Bench 4"
+        },
+        "setting": {
+          "Setter": "Marco V.",
+          "Stone": "2.0ct Emerald Cut (GIA 44921)",
+          "Setting Style": "4-Prong",
+          "Security Check": "Passed",
+          "Completed By": "Marco V."
+        },
+        "polishing": {
+          "Polisher": "Bench 2",
+          "Finish": "High polish exterior, matte interior",
+          "Ultrasonic Clean": "Done",
+          "Completed By": "Bench 2"
+        },
+        "qc": {
+          "Specialist": "E. Carter",
+          "Checks Passed": "5/5",
+          "Result": "Passed",
+          "Completed By": "E. Carter"
+        },
+        "certification": {
+          "Laboratory": "IGI Antwerp",
+          "Status": "Certified",
+          "Certificate Number": "IGI 58385540",
+          "Completed By": "IGI Antwerp"
+        },
+        "dispatch": {
+          "Courier": "Brinks Secure Logistics",
+          "Insurance Value": "$7,800",
+          "Destination": "Aurum Jewelers"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1050",
+      "title": "Platinum & Sapphire Halo Ring",
+      "productType": "Ring",
+      "customer": "Alara Vane",
+      "manufacturer": "AuraForge India",
+      "stage": "certification",
+      "priority": "standard",
+      "dueDate": "2026-10-06T04:30:00.000Z",
+      "value": 5900.0,
+      "image": "ring_platinum_bench.jpg",
+      "metal": "Platinum 950",
+      "centerStone": "1.2ct Sapphire",
+      "settingStyle": "Halo",
+      "weightGrams": null,
+      "ringSize": "US 6.5",
+      "assignee": null,
+      "stageEnteredAt": "2026-09-27T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-15T06:30:00.000Z",
+          "by": "Alara Vane",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-16T01:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-17T07:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-18T02:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-19T08:30:00.000Z",
+          "by": "Alara Vane",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-20T14:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-21T09:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-22T15:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        },
+        {
+          "stage": "setting",
+          "at": "2026-09-23T21:30:00.000Z",
+          "by": "Marco V.",
+          "note": null
+        },
+        {
+          "stage": "polishing",
+          "at": "2026-09-24T16:30:00.000Z",
+          "by": "Bench 2",
+          "note": null
+        },
+        {
+          "stage": "qc",
+          "at": "2026-09-25T22:30:00.000Z",
+          "by": "E. Carter",
+          "note": null
+        },
+        {
+          "stage": "certification",
+          "at": "2026-09-27T04:30:00.000Z",
+          "by": "IGI Antwerp",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Alara Vane",
+          "Product": "Ring",
+          "Piece": "Platinum & Sapphire Halo Ring",
+          "Metal": "Platinum 950",
+          "Center Stone": "1.2ct Sapphire",
+          "Setting Style": "Halo",
+          "Ring Size": "US 6.5",
+          "Quantity": "1",
+          "Target Value": "$5,900",
+          "Requested Delivery": "Oct 6, 2026",
+          "Completed By": "Alara Vane"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$2,537",
+          "Gemstones": "$1,475",
+          "Labor": "$944",
+          "Setting": "$472",
+          "Certification": "$472",
+          "Quote Total": "$5,900",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Alara Vane",
+          "Approved Price": "$5,900",
+          "Released To": "Manufacturing",
+          "Completed By": "Alara Vane"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "Platinum 950",
+          "Flask Temp": "650°C",
+          "Metal Temp": "2000°C",
+          "Result": "Clean cast, no porosity",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish",
+          "Status": "Assembled",
+          "Completed By": "Bench 4"
+        },
+        "setting": {
+          "Setter": "Marco V.",
+          "Stone": "1.2ct Sapphire",
+          "Setting Style": "Halo",
+          "Security Check": "Passed",
+          "Completed By": "Marco V."
+        },
+        "polishing": {
+          "Polisher": "Bench 2",
+          "Finish": "High polish exterior, matte interior",
+          "Ultrasonic Clean": "Done",
+          "Completed By": "Bench 2"
+        },
+        "qc": {
+          "Specialist": "E. Carter",
+          "Checks Passed": "5/5",
+          "Result": "Passed",
+          "Completed By": "E. Carter"
+        },
+        "certification": {
+          "Laboratory": "IGI Antwerp",
+          "Status": "At Lab"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1058",
+      "title": "Complex Geometric Ring",
+      "productType": "Ring",
+      "customer": "ABC Jewelers",
+      "manufacturer": "AuraForge India",
+      "stage": "wax",
+      "priority": "standard",
+      "dueDate": "2026-10-08T04:30:00.000Z",
+      "value": 2400.0,
+      "image": "wax_model_blue.jpg",
+      "metal": "18K Yellow Gold",
+      "centerStone": "—",
+      "settingStyle": "Bezel",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": "PR-02 Printer",
+      "stageEnteredAt": "2026-09-29T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-23T18:30:00.000Z",
+          "by": "ABC Jewelers",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-24T13:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-25T19:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-26T14:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-27T20:30:00.000Z",
+          "by": "ABC Jewelers",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-29T04:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "ABC Jewelers",
+          "Product": "Ring",
+          "Piece": "Complex Geometric Ring",
+          "Metal": "18K Yellow Gold",
+          "Setting Style": "Bezel",
+          "Quantity": "1",
+          "Target Value": "$2,400",
+          "Requested Delivery": "Oct 8, 2026",
+          "Completed By": "ABC Jewelers"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$1,032",
+          "Gemstones": "$600",
+          "Labor": "$384",
+          "Setting": "$192",
+          "Certification": "$192",
+          "Quote Total": "$2,400",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "ABC Jewelers",
+          "Approved Price": "$2,400",
+          "Released To": "Manufacturing",
+          "Completed By": "ABC Jewelers"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1049",
+      "title": "Bespoke Solitaire Ring",
+      "productType": "Ring",
+      "customer": "E. Chen",
+      "manufacturer": "AuraForge India",
+      "stage": "assembly",
+      "priority": "standard",
+      "dueDate": "2026-10-09T04:30:00.000Z",
+      "value": 4200.0,
+      "image": "ring_gold_render.jpg",
+      "metal": "18K Yellow Gold",
+      "centerStone": "1.2ct Round Brilliant, VVS1, D",
+      "settingStyle": "6-Prong",
+      "weightGrams": 4.2,
+      "ringSize": null,
+      "assignee": "Bench 4",
+      "stageEnteredAt": "2026-09-29T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-21T14:30:00.000Z",
+          "by": "E. Chen",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-22T09:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-23T15:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-24T10:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-25T16:30:00.000Z",
+          "by": "E. Chen",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-26T22:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-27T17:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-29T04:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "E. Chen",
+          "Product": "Ring",
+          "Piece": "Bespoke Solitaire Ring",
+          "Metal": "18K Yellow Gold",
+          "Center Stone": "1.2ct Round Brilliant, VVS1, D",
+          "Setting Style": "6-Prong",
+          "Quantity": "1",
+          "Target Value": "$4,200",
+          "Requested Delivery": "Oct 9, 2026",
+          "Completed By": "E. Chen"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$1,806",
+          "Gemstones": "$1,050",
+          "Labor": "$672",
+          "Setting": "$336",
+          "Certification": "$336",
+          "Quote Total": "$4,200",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "E. Chen",
+          "Approved Price": "$4,200",
+          "Released To": "Manufacturing",
+          "Completed By": "E. Chen"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "18K Yellow Gold",
+          "Flask Temp": "650°C",
+          "Metal Temp": "1020°C",
+          "Result": "Clean cast, no porosity",
+          "Cast Weight": "4.5 g",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1065",
+      "title": "Vintage Milgrain Band",
+      "productType": "Ring",
+      "customer": "Boutique X",
+      "manufacturer": "AuraForge India",
+      "stage": "cad",
+      "priority": "standard",
+      "dueDate": "2026-10-19T04:30:00.000Z",
+      "value": 1900.0,
+      "image": "cad_wireframe_halo.jpg",
+      "metal": "14K Rose Gold",
+      "centerStone": "—",
+      "settingStyle": "Milgrain",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": "Mike T.",
+      "stageEnteredAt": "2026-09-29T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-28T02:30:00.000Z",
+          "by": "Boutique X",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-29T04:30:00.000Z",
+          "by": "Mike T.",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Boutique X",
+          "Product": "Ring",
+          "Piece": "Vintage Milgrain Band",
+          "Metal": "14K Rose Gold",
+          "Setting Style": "Milgrain",
+          "Quantity": "1",
+          "Target Value": "$1,900",
+          "Requested Delivery": "Oct 19, 2026",
+          "Completed By": "Boutique X"
+        },
+        "cad": {
+          "Designer": "Mike T.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Current Version": "v1.0 (modelling)"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1070",
+      "title": "Pearl Drop Necklace",
+      "productType": "Necklace",
+      "customer": "T. Nguyen",
+      "manufacturer": "AuraForge India",
+      "stage": "inquiry",
+      "priority": "standard",
+      "dueDate": "2026-10-29T04:30:00.000Z",
+      "value": 1500.0,
+      "image": null,
+      "metal": "18K Yellow Gold",
+      "centerStone": "10mm South Sea Pearl",
+      "settingStyle": "—",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": null,
+      "stageEnteredAt": "2026-09-29T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-29T04:30:00.000Z",
+          "by": "T. Nguyen",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "T. Nguyen",
+          "Product": "Necklace",
+          "Piece": "Pearl Drop Necklace",
+          "Metal": "18K Yellow Gold",
+          "Center Stone": "10mm South Sea Pearl",
+          "Quantity": "1",
+          "Target Value": "$1,500",
+          "Requested Delivery": "Oct 29, 2026"
+        }
+      },
+      "thread": [],
+      "files": []
+    },
+    {
+      "id": "DH-1056",
+      "title": "Signet Ring (Silver)",
+      "productType": "Ring",
+      "customer": "Boutique X",
+      "manufacturer": "AuraForge India",
+      "stage": "delivered",
+      "priority": "standard",
+      "dueDate": "2026-09-27T04:30:00.000Z",
+      "value": 650.0,
+      "image": "wax_model_signet.jpg",
+      "metal": "925 Silver",
+      "centerStone": "—",
+      "settingStyle": "Plain",
+      "weightGrams": null,
+      "ringSize": null,
+      "assignee": null,
+      "stageEnteredAt": "2026-09-28T04:30:00.000Z",
+      "atRisk": false,
+      "quantity": 1,
+      "notes": null,
+      "history": [
+        {
+          "stage": "inquiry",
+          "at": "2026-09-14T02:30:00.000Z",
+          "by": "Boutique X",
+          "note": null
+        },
+        {
+          "stage": "cad",
+          "at": "2026-09-14T21:30:00.000Z",
+          "by": "Sarah J.",
+          "note": null
+        },
+        {
+          "stage": "approval",
+          "at": "2026-09-16T03:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "pricing",
+          "at": "2026-09-16T22:30:00.000Z",
+          "by": "Ravi S.",
+          "note": null
+        },
+        {
+          "stage": "finalApproval",
+          "at": "2026-09-18T04:30:00.000Z",
+          "by": "Boutique X",
+          "note": null
+        },
+        {
+          "stage": "wax",
+          "at": "2026-09-19T10:30:00.000Z",
+          "by": "PR-02 Printer",
+          "note": null
+        },
+        {
+          "stage": "casting",
+          "at": "2026-09-20T05:30:00.000Z",
+          "by": "Patel Casting Works",
+          "note": null
+        },
+        {
+          "stage": "assembly",
+          "at": "2026-09-21T11:30:00.000Z",
+          "by": "Bench 4",
+          "note": null
+        },
+        {
+          "stage": "setting",
+          "at": "2026-09-22T17:30:00.000Z",
+          "by": "Marco V.",
+          "note": null
+        },
+        {
+          "stage": "polishing",
+          "at": "2026-09-23T12:30:00.000Z",
+          "by": "Bench 2",
+          "note": null
+        },
+        {
+          "stage": "qc",
+          "at": "2026-09-24T18:30:00.000Z",
+          "by": "E. Carter",
+          "note": null
+        },
+        {
+          "stage": "certification",
+          "at": "2026-09-26T00:30:00.000Z",
+          "by": "IGI Antwerp",
+          "note": null
+        },
+        {
+          "stage": "dispatch",
+          "at": "2026-09-26T19:30:00.000Z",
+          "by": "Brinks Secure Logistics",
+          "note": null
+        },
+        {
+          "stage": "delivered",
+          "at": "2026-09-28T04:30:00.000Z",
+          "by": "Boutique X",
+          "note": null
+        }
+      ],
+      "stageData": {
+        "inquiry": {
+          "Customer": "Boutique X",
+          "Product": "Ring",
+          "Piece": "Signet Ring (Silver)",
+          "Metal": "925 Silver",
+          "Setting Style": "Plain",
+          "Quantity": "1",
+          "Target Value": "$650",
+          "Requested Delivery": "Sep 27, 2026",
+          "Completed By": "Boutique X"
+        },
+        "cad": {
+          "Designer": "Sarah J.",
+          "Software": "Rhino 8 + MatrixGold",
+          "Final Version": "v2.0",
+          "Revisions": "1",
+          "Files": "STL, STEP, renders",
+          "Completed By": "Sarah J."
+        },
+        "approval": {
+          "Approved Version": "v2.0",
+          "Approved By": "Ravi S.",
+          "Decision": "Design locked",
+          "Completed By": "Ravi S."
+        },
+        "pricing": {
+          "Metal": "$280",
+          "Gemstones": "$163",
+          "Labor": "$104",
+          "Setting": "$52",
+          "Certification": "$51",
+          "Quote Total": "$650",
+          "Completed By": "Ravi S."
+        },
+        "finalApproval": {
+          "Approved By": "Boutique X",
+          "Approved Price": "$650",
+          "Released To": "Manufacturing",
+          "Completed By": "Boutique X"
+        },
+        "wax": {
+          "Printer": "PR-02 (Formlabs 3B)",
+          "Material": "Castable Wax Resin",
+          "Print Time": "3h 40m",
+          "Inspection": "Passed — sent to caster",
+          "Completed By": "PR-02 Printer"
+        },
+        "casting": {
+          "Caster": "Patel Casting Works",
+          "Alloy": "925 Silver",
+          "Flask Temp": "650°C",
+          "Metal Temp": "980°C",
+          "Result": "Clean cast, no porosity",
+          "Completed By": "Patel Casting Works"
+        },
+        "assembly": {
+          "Bench": "Bench 4",
+          "Work": "Sprue removal, clean-up, pre-polish",
+          "Status": "Assembled",
+          "Completed By": "Bench 4"
+        },
+        "setting": {
+          "Setter": "Marco V.",
+          "Setting Style": "Plain",
+          "Security Check": "Passed",
+          "Completed By": "Marco V."
+        },
+        "polishing": {
+          "Polisher": "Bench 2",
+          "Finish": "High polish exterior, matte interior",
+          "Ultrasonic Clean": "Done",
+          "Completed By": "Bench 2"
+        },
+        "qc": {
+          "Specialist": "E. Carter",
+          "Checks Passed": "5/5",
+          "Result": "Passed",
+          "Completed By": "E. Carter"
+        },
+        "certification": {
+          "Laboratory": "IGI Antwerp",
+          "Status": "Certified",
+          "Certificate Number": "IGI 58390720",
+          "Completed By": "IGI Antwerp"
+        },
+        "dispatch": {
+          "Courier": "Brinks Secure Logistics",
+          "Insurance Value": "$650",
+          "Destination": "Boutique X",
+          "Waybill": "BRK-362464",
+          "Completed By": "Brinks Secure Logistics"
+        },
+        "delivered": {
+          "Received By": "Boutique X",
+          "Delivered At": "Sep 28, 2026"
+        }
+      },
+      "thread": [],
+      "files": []
+    }
+  ],
+  "partners": [
+    {
+      "name": "Sarah J.",
+      "role": "Lead Designer",
+      "avatar": "avatar_sarah.jpg",
+      "company": "AuraForge Design Studio",
+      "location": "Mumbai, IN",
+      "phone": "+91 98200 11223",
+      "activeJobs": 6,
+      "rating": 4.9
+    },
+    {
+      "name": "Elena Rostova",
+      "role": "Lead CAD Designer",
+      "avatar": null,
+      "company": "AuraForge Design Studio",
+      "location": "Antwerp, BE",
+      "phone": "+32 3 555 0190",
+      "activeJobs": 4,
+      "rating": 4.8
+    },
+    {
+      "name": "Mike T.",
+      "role": "CAD Designer",
+      "avatar": null,
+      "company": "AuraForge Design Studio",
+      "location": "Surat, IN",
+      "phone": null,
+      "activeJobs": 3,
+      "rating": 4.6
+    },
+    {
+      "name": "Patel Casting Works",
+      "role": "Casting",
+      "avatar": "avatar_patel.jpg",
+      "company": "Patel Casting Works",
+      "location": "Rajkot, IN",
+      "phone": "+91 98250 44556",
+      "activeJobs": 12,
+      "rating": 4.7
+    },
+    {
+      "name": "Scottsdale Diamond Co.",
+      "role": "Retailer",
+      "avatar": null,
+      "company": "Scottsdale Diamond Co.",
+      "location": "Scottsdale, AZ",
+      "phone": "+1 480 555 0142",
+      "activeJobs": 5,
+      "rating": 4.9
+    },
+    {
+      "name": "Aurum Jewelers",
+      "role": "Retailer",
+      "avatar": null,
+      "company": "Aurum Jewelers",
+      "location": "New York, NY",
+      "phone": "+1 212 555 0118",
+      "activeJobs": 4,
+      "rating": 4.8
+    },
+    {
+      "name": "GemSource",
+      "role": "Stone Provider",
+      "avatar": null,
+      "company": "GemSource Ltd.",
+      "location": "Surat, IN",
+      "phone": "+91 261 555 7788",
+      "activeJobs": 9,
+      "rating": 4.6
+    },
+    {
+      "name": "Marco V.",
+      "role": "Setter",
+      "avatar": null,
+      "company": "AuraForge Bench",
+      "location": "Mumbai, IN",
+      "phone": null,
+      "activeJobs": 7,
+      "rating": 4.9
+    },
+    {
+      "name": "E. Carter",
+      "role": "QC Specialist",
+      "avatar": null,
+      "company": "AuraForge QC",
+      "location": "Mumbai, IN",
+      "phone": null,
+      "activeJobs": 5,
+      "rating": 5.0
+    },
+    {
+      "name": "IGI Antwerp",
+      "role": "Gem Lab",
+      "avatar": null,
+      "company": "International Gemological Institute",
+      "location": "Antwerp, BE",
+      "phone": null,
+      "activeJobs": 3,
+      "rating": 4.7
+    },
+    {
+      "name": "Brinks Secure Logistics",
+      "role": "Courier",
+      "avatar": null,
+      "company": "Brinks",
+      "location": "Global",
+      "phone": null,
+      "activeJobs": 2,
+      "rating": 4.8
+    }
+  ],
+  "metals": [
+    {
+      "code": "AU-750",
+      "name": "18K Gold",
+      "grams": 1240.5,
+      "capacityGrams": 2000.0,
+      "color": "#d4af37"
+    },
+    {
+      "code": "PT-950",
+      "name": "Platinum",
+      "grams": 450.2,
+      "capacityGrams": 1000.0,
+      "color": "#b8c4d6"
+    },
+    {
+      "code": "AU-585",
+      "name": "14K Gold",
+      "grams": 820.0,
+      "capacityGrams": 1500.0,
+      "color": "#e3b866"
+    },
+    {
+      "code": "AG-925",
+      "name": "Sterling Silver",
+      "grams": 3200.0,
+      "capacityGrams": 5000.0,
+      "color": "#9ca3af"
+    }
+  ],
+  "gems": [
+    {
+      "id": "DIA-9982-A",
+      "name": "Round Brilliant Diamond",
+      "tag": "GIA Cert",
+      "carat": 1.24,
+      "specs": {
+        "CARAT": "1.24ct",
+        "COLOR": "F",
+        "CLARITY": "VVS2"
+      },
+      "location": "Vault A, Tray 4",
+      "image": "gem_diamond.jpg",
+      "assignedJobId": null
+    },
+    {
+      "id": "RUB-4421-C",
+      "name": "Oval Burmese Ruby",
+      "tag": "Unheated",
+      "carat": 2.1,
+      "specs": {
+        "CARAT": "2.10ct",
+        "CUT": "EX",
+        "ORIGIN": "MMR"
+      },
+      "location": "Vault B, Tray 1",
+      "image": "gem_ruby.jpg",
+      "assignedJobId": null
+    },
+    {
+      "id": "SAP-3310-B",
+      "name": "Pear Ceylon Sapphire",
+      "tag": "Heated",
+      "carat": 2.05,
+      "specs": {
+        "CARAT": "2.05ct",
+        "COLOR": "Royal Blue",
+        "ORIGIN": "LKA"
+      },
+      "location": "Vault B, Tray 3",
+      "image": null,
+      "assignedJobId": "DH-2081"
+    },
+    {
+      "id": "DIA-7710-L",
+      "name": "Oval Lab Diamond",
+      "tag": "IGI Cert",
+      "carat": 1.5,
+      "specs": {
+        "CARAT": "1.50ct",
+        "COLOR": "E",
+        "CLARITY": "VS1"
+      },
+      "location": "Vault A, Tray 2",
+      "image": null,
+      "assignedJobId": null
+    },
+    {
+      "id": "MEL-0412-P",
+      "name": "Melee Parcel — Round",
+      "tag": "1.0–1.5mm",
+      "carat": 0.25,
+      "specs": {
+        "CTW": "0.25",
+        "COLOR": "G-H",
+        "CLARITY": "VS"
+      },
+      "location": "Vault C, Drawer 7",
+      "image": null,
+      "assignedJobId": null
+    }
+  ],
+  "actions": [
+    {
+      "kind": "cadReview",
+      "title": "Approve CAD revision for DH-1052",
+      "subtitle": "Client requested minor prong adjustment.",
+      "jobId": "DH-1052",
+      "cta": "Review"
+    },
+    {
+      "kind": "pricing",
+      "title": "Price Job DH-1055",
+      "subtitle": "BOM finalized, awaiting final quote.",
+      "jobId": "DH-1055",
+      "cta": "Price"
+    },
+    {
+      "kind": "delay",
+      "title": "Caster delayed on DH-1048",
+      "subtitle": "Expected today, vendor reported equipment issue.",
+      "jobId": "DH-1048",
+      "cta": "Follow Up"
+    },
+    {
+      "kind": "missing",
+      "title": "Stones missing for DH-1061",
+      "subtitle": "Melee diamonds count mismatch at receiving.",
+      "jobId": "DH-1061",
+      "cta": "Resolve"
+    },
+    {
+      "kind": "certification",
+      "title": "Certification completed for DH-1042",
+      "subtitle": "GIA report uploaded, ready for final dispatch.",
+      "jobId": "DH-1042",
+      "cta": "View"
+    }
+  ],
+  "activity": [
+    {
+      "text": "QC Passed for",
+      "jobId": "DH-1050",
+      "time": "2026-09-29T11:31:10.290471Z",
+      "by": "Sarah J."
+    },
+    {
+      "text": "Wax model approved",
+      "jobId": "DH-1058",
+      "time": "2026-09-29T10:41:10.290471Z",
+      "by": "Client Portal"
+    },
+    {
+      "text": "Assembly started",
+      "jobId": "DH-1049",
+      "time": "2026-09-29T09:41:10.290471Z",
+      "by": "Bench 4"
+    },
+    {
+      "text": "CAD files uploaded",
+      "jobId": "DH-1065",
+      "time": "2026-09-29T08:41:10.290471Z",
+      "by": "Mike T."
+    }
+  ]
+}

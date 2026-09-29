@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: <html class="dark"> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens — same semantics as the Flutter app's DhColors.
+ * Light = "DhanaOS" (navy / indigo / gold on cool white)
+ * Dark  = "Industrial Precision" (metallic gold on midnight blue)
+ */
+:root {
+  --bg: #f7f9fb;
+  --surface: #ffffff;
+  --surface-low: #f2f4f6;
+  --surface-high: #e6e8ea;
+  --surface-highest: #e0e3e5;
+  --fg: #191c1e;
+  --fg-muted: #45464d;
+  --fg-faint: #76777d;
+  --border: #e2e8f0;
+  --border-strong: #c6c6cd;
+  --action: #000000;
+  --on-action: #ffffff;
+  --accent: #4648d4;
+  --accent-soft: #e1e0ff;
+  --on-accent: #ffffff;
+  --gold: #a67e00;
+  --gold-soft: #fff4d6;
+  --success: #059669;
+  --success-soft: #d1fae5;
+  --warning: #d97706;
+  --warning-soft: #fef3c7;
+  --danger: #ba1a1a;
+  --danger-soft: #ffdad6;
+  --info: #0ea5e9;
+  --nav-active: #131b2e;
+  --on-nav-active: #ffffff;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #041329;
+  --surface: #112036;
+  --surface-low: #0d1c32;
+  --surface-high: #1c2a41;
+  --surface-highest: #27354c;
+  --fg: #d6e3ff;
+  --fg-muted: #d0c5af;
+  --fg-faint: #99907c;
+  --border: #27354c;
+  --border-strong: #4d4635;
+  --action: #f2ca50;
+  --on-action: #3c2f00;
+  --accent: #f2ca50;
+  --accent-soft: rgb(242 202 80 / 0.15);
+  --on-accent: #3c2f00;
+  --gold: #f2ca50;
+  --gold-soft: rgb(242 202 80 / 0.15);
+  --success: #45e6c3;
+  --success-soft: rgb(69 230 195 / 0.15);
+  --warning: #fbbf24;
+  --warning-soft: rgb(251 191 36 / 0.15);
+  --danger: #ffb4ab;
+  --danger-soft: rgb(255 180 171 / 0.2);
+  --info: #7dd3fc;
+  --nav-active: rgb(242 202 80 / 0.2);
+  --on-nav-active: #f2ca50;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-low: var(--surface-low);
+  --color-surface-high: var(--surface-high);
+  --color-surface-highest: var(--surface-highest);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-action: var(--action);
+  --color-on-action: var(--on-action);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-nav-active: var(--nav-active);
+  --color-on-nav-active: var(--on-nav-active);
+
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Uppercase tracked label — the design's "technical blueprint" section labels. */
+@utility label-caps {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+::selection {
+  background: var(--accent-soft);
+}
