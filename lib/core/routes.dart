@@ -19,6 +19,7 @@ import '../screens/new_job/review_job_order_screen.dart';
 import '../screens/new_job/start_new_job_screen.dart';
 import '../screens/new_job/stone_requirements_screen.dart';
 import '../screens/shell/home_shell.dart';
+import '../screens/splash/splash_screen.dart';
 import '../screens/stages/cad_review_screen.dart';
 import '../screens/stages/caster_dashboard_screen.dart';
 import '../screens/stages/certification_screen.dart';
@@ -36,6 +37,9 @@ class Routes {
   Routes._();
 
   static const home = '/';
+
+  /// Launch splash (logo + name); replaces itself with [home].
+  static const splash = '/splash';
 
   // Job + stage screens (arguments: String jobId)
   static const job = '/job';
@@ -106,6 +110,8 @@ class Routes {
     switch (s.name) {
       case home:
         page = const HomeShell();
+      case splash:
+        page = const SplashScreen();
       case job:
         page = JobDetailScreen(jobId: id ?? 'DH-1048');
       case cadReview:

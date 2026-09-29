@@ -24,13 +24,13 @@ class DhanaApp extends StatelessWidget {
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: mode,
-        initialRoute: Routes.home,
+        initialRoute: Routes.splash,
+        // Start on the splash alone (not '/' + '/splash'); it replaces itself with the dashboard.
+        onGenerateInitialRoutes: (_) => [Routes.generate(const RouteSettings(name: Routes.splash))!],
         onGenerateRoute: Routes.generate,
         // iOS number pads have no Done key: tapping any empty area closes the keyboard.
-        builder: (context, child) => GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: child,
-        ),
+        builder: (context, child) =>
+            GestureDetector(onTap: () => FocusManager.instance.primaryFocus?.unfocus(), child: child),
       ),
     );
   }
