@@ -182,46 +182,7 @@ void _openFile(BuildContext context, ProjectFile f) {
     showSnack(context, 'Opening ${f.name}…', icon: f.icon);
     return;
   }
-  showDialog<void>(
-    context: context,
-    barrierColor: Colors.black,
-    builder: (ctx) => Dialog.fullscreen(
-      backgroundColor: Colors.black,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: InteractiveViewer(
-              maxScale: 5,
-              child: Center(child: f.localPath != null ? Image.file(File(f.localPath!)) : Image.asset(f.asset!)),
-            ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  IconButton(
-                    tooltip: 'Close',
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.pop(ctx),
-                  ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      f.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppText.monoMd.copyWith(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+  showImageViewer(context, asset: f.asset, file: f.localPath, caption: f.name);
 }
 
 /// Image thumbnail for viewable files, otherwise a big file-type icon.
@@ -811,7 +772,7 @@ class _NetworkHub extends StatelessWidget {
 
   void _showDetails(BuildContext context, _Participant part) {
     final p = part.partner;
-    showModalBottomSheet<void>(
+    showDhSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) {

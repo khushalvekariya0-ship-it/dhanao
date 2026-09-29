@@ -52,7 +52,7 @@ class _ProductSelectionScreenState extends State<ProductSelectionScreen> {
   }
 
   Future<void> _fromPrevious() async {
-    final job = await showModalBottomSheet<Job>(
+    final job = await showDhSheet<Job>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => DraggableScrollableSheet(

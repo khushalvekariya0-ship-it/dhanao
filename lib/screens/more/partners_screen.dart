@@ -153,7 +153,7 @@ class _PartnersScreenState extends State<PartnersScreen> {
 }
 
 void _showPartner(BuildContext context, Partner p) {
-  showModalBottomSheet<void>(
+  showDhSheet<void>(
     context: context,
     isScrollControlled: true,
     builder: (ctx) => DraggableScrollableSheet(

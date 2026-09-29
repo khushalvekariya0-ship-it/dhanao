@@ -276,29 +276,7 @@ class _RefThumb extends StatelessWidget {
   final String? file;
 
   void _preview(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => Dialog(
-        clipBehavior: Clip.antiAlias,
-        insetPadding: const EdgeInsets.all(16),
-        child: Stack(
-          children: [
-            InteractiveViewer(
-              child: DhImage(asset: asset, file: file, radius: 0, fit: BoxFit.contain),
-            ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: IconButton.filledTonal(
-                tooltip: 'Close',
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(ctx),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    showImageViewer(context, asset: asset, file: file, caption: caption);
   }
 
   @override

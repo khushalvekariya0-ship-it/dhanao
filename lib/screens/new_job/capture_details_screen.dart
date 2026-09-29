@@ -38,7 +38,7 @@ class _CaptureDetailsScreenState extends State<CaptureDetailsScreen> with Single
   }
 
   Future<void> _recordVoice() async {
-    final length = await showModalBottomSheet<Duration>(
+    final length = await showDhSheet<Duration>(
       context: context,
       isDismissible: false,
       enableDrag: false,

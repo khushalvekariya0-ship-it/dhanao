@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../core/format.dart';
 import '../core/theme.dart';
 import 'common.dart';
+import 'sheets.dart';
 
 /// Paints a dashed rounded-rect border around its child.
 class DashedBorder extends StatelessWidget {
@@ -196,7 +197,7 @@ class UploadBox extends StatelessWidget {
 
 /// Asks Camera vs Gallery, then returns the picked image path (or null).
 Future<String?> pickImage(BuildContext context, {String title = 'Add Photo'}) async {
-  final source = await showModalBottomSheet<ImageSource>(
+  final source = await showDhSheet<ImageSource>(
     context: context,
     builder: (ctx) {
       final c = ctx.c;

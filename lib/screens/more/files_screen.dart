@@ -55,52 +55,18 @@ class _FilesScreenState extends State<FilesScreen> {
       showSnack(context, 'Opening ${f.name}…', icon: f.icon);
       return;
     }
-    showDialog<void>(
-      context: context,
-      barrierColor: Colors.black,
-      builder: (ctx) => Dialog.fullscreen(
-        backgroundColor: Colors.black,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: InteractiveViewer(
-                maxScale: 5,
-                child: Center(child: f.localPath != null ? Image.file(File(f.localPath!)) : Image.asset(f.asset!)),
-              ),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      tooltip: 'Close',
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () => Navigator.pop(ctx),
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        f.jobId == null ? f.name : '${f.name} · ${f.jobId}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppText.monoMd.copyWith(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    showImageViewer(
+      context,
+      asset: f.asset,
+      file: f.localPath,
+      caption: f.jobId == null ? f.name : '${f.name} · ${f.jobId}',
     );
   }
 
   void _openJob(String id) => Navigator.pushNamed(context, Routes.job, arguments: id);
 
   Future<void> _upload() async {
-    final job = await showModalBottomSheet<Job>(
+    final job = await showDhSheet<Job>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => DraggableScrollableSheet(

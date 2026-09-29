@@ -81,7 +81,7 @@ class _ProductionBoardScreenState extends State<ProductionBoardScreen> {
 
   void _openFilter() {
     final customers = {for (final j in app.jobs) j.customer}.toList()..sort();
-    showModalBottomSheet<void>(
+    showDhSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => StatefulBuilder(

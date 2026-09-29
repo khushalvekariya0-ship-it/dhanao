@@ -73,7 +73,7 @@ class _PricingApprovalScreenState extends State<PricingApprovalScreen> {
   }
 
   Future<void> _requestChanges(Job job) async {
-    final note = await showModalBottomSheet<String>(
+    final note = await showDhSheet<String>(
       context: context,
       isScrollControlled: true,
       builder: (_) => const _NoteSheet(

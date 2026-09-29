@@ -26,6 +26,11 @@ class DhanaApp extends StatelessWidget {
         themeMode: mode,
         initialRoute: Routes.home,
         onGenerateRoute: Routes.generate,
+        // iOS number pads have no Done key: tapping any empty area closes the keyboard.
+        builder: (context, child) => GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: child,
+        ),
       ),
     );
   }

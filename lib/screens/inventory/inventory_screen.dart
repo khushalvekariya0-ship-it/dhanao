@@ -81,7 +81,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   // ---- Gems -----------------------------------------------------------------
 
   void _assignGem(GemStock gem) {
-    showModalBottomSheet<void>(
+    showDhSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (ctx) => DraggableScrollableSheet(
@@ -140,7 +140,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   // ---- Filter ---------------------------------------------------------------
 
   void _openFilter() {
-    showModalBottomSheet<void>(
+    showDhSheet<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheet) {

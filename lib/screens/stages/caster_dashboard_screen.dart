@@ -113,7 +113,7 @@ class _CasterDashboardScreenState extends State<CasterDashboardScreen> {
   }
 
   Future<void> _reportIssue(Job job) async {
-    final report = await showModalBottomSheet<(String, String)>(
+    final report = await showDhSheet<(String, String)>(
       context: context,
       isScrollControlled: true,
       builder: (_) => _ReportIssueSheet(jobId: job.id),

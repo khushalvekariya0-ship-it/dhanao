@@ -139,7 +139,7 @@ class HomeShell extends StatelessWidget {
   }
 
   void _showNotifications(BuildContext context) {
-    showModalBottomSheet(
+    showDhSheet(
       context: context,
       isScrollControlled: true,
       builder: (ctx) {
@@ -242,7 +242,7 @@ class _AppDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+              padding: const EdgeInsets.fromLTRB(24, 12, 8, 12),
               child: Row(
                 children: [
                   ClipRRect(
@@ -250,7 +250,12 @@ class _AppDrawer extends StatelessWidget {
                     child: Image.asset(Img.logo, width: 36, height: 36),
                   ),
                   const SizedBox(width: 12),
-                  Text('DhanaOS', style: AppText.headlineSm),
+                  Expanded(child: Text('DhanaOS', style: AppText.headlineSm)),
+                  IconButton(
+                    tooltip: 'Close menu',
+                    icon: Icon(Icons.close, color: c.textMuted),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                 ],
               ),
             ),

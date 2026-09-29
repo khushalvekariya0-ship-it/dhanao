@@ -42,7 +42,7 @@ String? _heldBy(Job job, StageRecord r) {
 /// Slides up the details of [stage] over the current page (scrolls when long).
 Future<void> openStage(BuildContext context, Job job, JobStage stage) {
   final c = context.c;
-  return showModalBottomSheet<void>(
+  return showDhSheet<void>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -395,18 +395,7 @@ class _FilesStrip extends StatelessWidget {
   }
 
   void _view(BuildContext context, ProjectFile f) {
-    showDialog<void>(
-      context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.9),
-      builder: (ctx) => GestureDetector(
-        onTap: () => Navigator.pop(ctx),
-        child: InteractiveViewer(
-          child: Center(
-            child: DhImage(asset: f.asset, file: f.localPath, fit: BoxFit.contain, radius: 0),
-          ),
-        ),
-      ),
-    );
+    showImageViewer(context, asset: f.asset, file: f.localPath, caption: f.name);
   }
 }
 
@@ -501,7 +490,7 @@ Future<void> showAssignStageSheet(BuildContext context, Job job, JobStage stage)
   bool fits(Partner p) => hints.any((h) => p.role.contains(h));
   final partners = [...app.partners]..sort((a, b) => (fits(b) ? 1 : 0) - (fits(a) ? 1 : 0));
   DateTime? expected;
-  final picked = await showModalBottomSheet<Partner>(
+  final picked = await showDhSheet<Partner>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -704,7 +693,7 @@ Future<void> showCompleteStageSheet(BuildContext context, Job job) async {
   final by = TextEditingController(text: job.stageData[stage]?['Assigned To'] ?? job.assignee ?? app.userName);
   final note = TextEditingController();
   String? photo;
-  final done = await showModalBottomSheet<bool>(
+  final done = await showDhSheet<bool>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
