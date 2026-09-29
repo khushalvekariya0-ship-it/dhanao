@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_state.dart';
 import '../../core/assets.dart';
+import '../../core/routes.dart';
 import '../../core/theme.dart';
 import '../../widgets/widgets.dart';
+import '../jobs/jobs_screen.dart';
+import '../shell/home_shell.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -72,20 +75,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: (v) => setState(() => app.notificationsEnabled = v),
           ),
           const SizedBox(height: 24),
-          const SectionLabel('About'),
+          const SectionLabel('Workspace'),
           const SizedBox(height: 8),
           DhCard(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
-                const KeyValueRow('App', 'DhanaOS', divider: true),
-                const KeyValueRow('Version', '1.0.0 (1)', divider: true),
-                KeyValueRow('Active jobs', '${app.activeJobs.length}', divider: true),
-                KeyValueRow('Partners', '${app.partners.length}'),
+                _LinkRow(
+                  icon: Icons.precision_manufacturing_outlined,
+                  label: 'Active jobs',
+                  count: app.activeJobs.length,
+                  onTap: () {
+                    // Back to the shell's Orders tab, pre-filtered to active jobs.
+                    jobsFilter.value = JobsFilter.active;
+                    homeTab.value = HomeTabs.orders;
+                    Navigator.popUntil(context, (r) => r.isFirst);
+                  },
+                ),
+                Divider(height: 1, indent: 52, color: c.border),
+                _LinkRow(
+                  icon: Icons.hub_outlined,
+                  label: 'Partners',
+                  count: app.partners.length,
+                  onTap: () => Navigator.pushNamed(context, Routes.partners),
+                ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Tappable settings row: icon, label, count badge and a chevron.
+class _LinkRow extends StatelessWidget {
+  const _LinkRow({required this.icon, required this.label, required this.count, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final int count;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.c;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(icon, size: 22, color: c.textMuted),
+            const SizedBox(width: 14),
+            Expanded(child: Text(label, style: AppText.titleMd.copyWith(fontSize: 15))),
+            Text('$count', style: AppText.monoLg.copyWith(color: c.textMuted)),
+            const SizedBox(width: 6),
+            Icon(Icons.chevron_right, color: c.textFaint),
+          ],
+        ),
       ),
     );
   }
