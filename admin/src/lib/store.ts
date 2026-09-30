@@ -30,7 +30,8 @@ interface State extends SeedData {
   seq: number;
 
   // Session
-  login: (email: string, password: string) => string | null;
+  /** Returns an error message, or null on success. `remember` keeps the session after the browser closes. */
+  login: (email: string, password: string, remember?: boolean) => string | null;
   logout: () => void;
 
   // Settings
@@ -73,12 +74,17 @@ interface State extends SeedData {
 const nowIso = () => new Date().toISOString();
 const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 9)}`;
 
-function setCookie(on: boolean) {
+function setCookie(on: boolean, remember = true) {
   if (typeof document === "undefined") return;
+  // Without "remember me" it's a session cookie that ends when the browser closes.
   document.cookie = on
-    ? `${SESSION_COOKIE}=1; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`
+    ? `${SESSION_COOKIE}=1; path=/;${remember ? ` max-age=${60 * 60 * 24 * 7};` : ""} samesite=lax`
     : `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
 }
+
+/** True when the session cookie the proxy checks is present. */
+export const hasSessionCookie = () =>
+  typeof document !== "undefined" && document.cookie.split("; ").includes(`${SESSION_COOKIE}=1`);
 
 export const useStore = create<State>()(
   persist(
@@ -98,14 +104,14 @@ export const useStore = create<State>()(
         session: null,
         seq: 1842,
 
-        login: (email, password) => {
+        login: (email, password, remember = true) => {
           const u = get().users.find((x) => x.email.toLowerCase() === email.trim().toLowerCase());
           if (!u || u.password !== password) return "Incorrect email or password.";
           if (!u.active) return "This account is deactivated.";
           if (u.role !== "Admin" && u.role !== "Manufacturing Engineer") {
             return "Only Admin and Manufacturing Engineer accounts can open the admin panel.";
           }
-          setCookie(true);
+          setCookie(true, remember);
           set((s) => ({
             session: { userId: u.id, name: u.name, email: u.email, role: u.role },
             users: s.users.map((x) => (x.id === u.id ? { ...x, lastActive: nowIso() } : x)),
