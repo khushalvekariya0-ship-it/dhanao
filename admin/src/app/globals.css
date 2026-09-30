@@ -103,6 +103,8 @@
 @theme {
   --animate-shake: shake 0.4s ease-in-out;
   --animate-fade-up: fade-up 0.5s ease-out both;
+  --animate-kenburns: kenburns 8s ease-out both;
+  --animate-grow: grow 5.5s linear both;
 
   @keyframes shake {
     0%,
@@ -116,6 +118,24 @@
     40%,
     80% {
       transform: translateX(6px);
+    }
+  }
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1.1);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes grow {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
     }
   }
 
